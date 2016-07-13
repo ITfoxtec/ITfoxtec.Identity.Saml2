@@ -11,3 +11,10 @@ The ITfoxtec Identity Saml2 package is tested for compliance with Active Directo
 The Danish OIOSAML 2.0 profile is supported and tested for compliance with NemLog-in. 
 
 <a href="http://itfoxtec.com/identitysaml2">ITfoxtec Identity Saml2 Project Home Page</a> with description and link to NuGet.
+
+<br/>
+Needs to track time?<br />
+Sortingtime makes it easy to track time on tasks and gives you a quick overview of registered time. You can afterword's select tasks or groups and send PDF reports as well as invoices. Furthermore, you get a overview of the expected monthly turnover and historically turnover.<br />
+<a href="https://sortingtime.com" target="_blank">https://sortingtime.com</a>
+
+
