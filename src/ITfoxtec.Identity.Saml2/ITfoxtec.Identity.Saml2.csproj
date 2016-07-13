@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BB8FE53F-B198-4DCF-B51C-B11CC0215AE7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ITfoxtec.Identity.Saml2</RootNamespace>
+    <AssemblyName>ITfoxtec.Identity.Saml2</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Services" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bindings\InvalidSaml2BindingException.cs" />
+    <Compile Include="Bindings\Saml2Binding.cs" />
+    <Compile Include="Bindings\Saml2BindingException.cs" />
+    <Compile Include="Bindings\Saml2PostBinding.cs" />
+    <Compile Include="Bindings\Saml2RedirectBinding.cs" />
+    <Compile Include="Claims\Saml2ClaimTypes.cs" />
+    <Compile Include="Configuration\Saml2Configuration.cs" />
+    <Compile Include="Configuration\Saml2ConfigurationException.cs" />
+    <Compile Include="Configuration\Saml2IdentityConfiguration.cs" />
+    <Compile Include="Cryptography\Saml2EncryptedXml.cs" />
+    <Compile Include="Cryptography\Saml2SignedText.cs" />
+    <Compile Include="Cryptography\Saml2SignedXml.cs" />
+    <Compile Include="Cryptography\Saml2Signer.cs" />
+    <Compile Include="Cryptography\SignatureAlgorithm.cs" />
+    <Compile Include="Extensions\Saml2BindingExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\XDocumentExtensions.cs" />
+    <Compile Include="Extensions\XElementExtensions.cs" />
+    <Compile Include="Extensions\XmlAttributeExtensions.cs" />
+    <Compile Include="Extensions\XmlDocumentExtensions.cs" />
+    <Compile Include="Extensions\XmlElementExtensions.cs" />
+    <Compile Include="Http\HttpRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\Saml2AuthnRequest.cs" />
+    <Compile Include="Request\Saml2AuthnResponse.cs" />
+    <Compile Include="Request\Saml2LogoutRequest.cs" />
+    <Compile Include="Request\Saml2LogoutResponse.cs" />
+    <Compile Include="Request\Saml2Metadata.cs" />
+    <Compile Include="Request\Saml2Request.cs" />
+    <Compile Include="Request\Saml2Response.cs" />
+    <Compile Include="Request\Saml2RequestException.cs" />
+    <Compile Include="Schemas\AuthnContextClassTypes.cs" />
+    <Compile Include="Schemas\AuthnContextComparisonTypes.cs" />
+    <Compile Include="Schemas\ConsentIdentifierTypes.cs" />
+    <Compile Include="Schemas\Extensions.cs" />
+    <Compile Include="Schemas\Metadata\AssertionConsumerService.cs" />
+    <Compile Include="Schemas\Metadata\AttributeConsumingService.cs" />
+    <Compile Include="Schemas\Metadata\ContactPerson.cs" />
+    <Compile Include="Schemas\Metadata\ContactTypes.cs" />
+    <Compile Include="Schemas\Metadata\EndpointType.cs" />
+    <Compile Include="Schemas\Metadata\EntityDescriptor.cs" />
+    <Compile Include="Schemas\Metadata\IdPSsoDescriptor.cs" />
+    <Compile Include="Schemas\Metadata\RequestedAttribute.cs" />
+    <Compile Include="Schemas\Metadata\Saml2MetadataConstants.cs" />
+    <Compile Include="Schemas\Metadata\ServiceName.cs" />
+    <Compile Include="Schemas\Metadata\SingleLogoutService.cs" />
+    <Compile Include="Schemas\Metadata\SingleSignOnService.cs" />
+    <Compile Include="Schemas\Metadata\SPSsoDescriptor.cs" />
+    <Compile Include="Schemas\Metadata\SsoDescriptorType.cs" />
+    <Compile Include="Schemas\NameIdentifierFormats.cs" />
+    <Compile Include="Schemas\NameIDPolicy.cs" />
+    <Compile Include="Schemas\ProcessingRules.cs" />
+    <Compile Include="Schemas\ProtocolBindings.cs" />
+    <Compile Include="Schemas\RequestedAuthnContext.cs" />
+    <Compile Include="Schemas\Saml2Constants.cs" />
+    <Compile Include="Schemas\Saml2StatusCodes.cs" />
+    <Compile Include="Schemas\SamlTokenTypes.cs" />
+    <Compile Include="Tokens\Saml2ResponseIssuerNameRegistry.cs" />
+    <Compile Include="Tokens\Saml2ResponseSecurityTokenHandler.cs" />
+    <Compile Include="Util\CertificateUtil.cs" />
+    <Compile Include="Util\GenericTypeConverter.cs" />
+    <Compile Include="Util\RawSaml2QueryString.cs" />
+    <Compile Include="Util\Saml2StatusCodeUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ITfoxtec.SAML2.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
