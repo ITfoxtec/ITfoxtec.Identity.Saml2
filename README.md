@@ -16,6 +16,6 @@ The Danish OIOSAML 2.0 profile is supported and tested for compliance with NemLo
 <hr />
 Needs to track time?<br />
 Sortingtime makes it easy to track time on tasks and gives you a quick overview of registered time. You can afterword's select tasks or groups and send PDF reports as well as invoices. Furthermore, you get a overview of the expected monthly turnover and historically turnover.<br />
-<a href="https://sortingtime.com" target="_blank">https://sortingtime.com</a>
+<a href="https://sortingtime.com">http://sortingtime.com</a>
 
 
