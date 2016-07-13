@@ -1,4 +1,4 @@
-<a href="http://itfoxtec.com/identity.saml2">ITfoxtec.Identity.Saml2</a>
+<a href="http://itfoxtec.com/identitysaml2">ITfoxtec.Identity.Saml2</a>
 ==============
 The ITfoxtec.Identity.Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) 
 on top of the SAML 2.0 functionality implemented in the .NET framework.
@@ -10,4 +10,4 @@ logout and metadata. Both SP Initiated and IdP Initiated sign on is supported.
 The ITfoxtec.Identity.Saml2 package is tested for compliance with Active Directory Federation Services (AD FS). 
 The Danish OIOSAML 2.0 profile is supported and tested for compliance with NemLog-in. 
 
-<a href="http://itfoxtec.com/identity.saml2">ITfoxtec.Identity.Saml2 Project Home Page</a> with description and link to NuGet.
+<a href="http://itfoxtec.com/identitysaml2">ITfoxtec.Identity.Saml2 Project Home Page</a> with description and link to NuGet.
