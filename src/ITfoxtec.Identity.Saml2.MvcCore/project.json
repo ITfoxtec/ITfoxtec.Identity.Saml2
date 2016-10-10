@@ -1,6 +1,5 @@
 {
   "version": "1.0.0.0",
-
   "dependencies": {
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
@@ -9,7 +8,6 @@
     "Microsoft.AspNetCore.Mvc.Core": "1.0.1",
     "NETStandard.Library": "1.6.0"
   },
-
   "frameworks": {
     "net451": {
       "dependencies": {
@@ -18,5 +16,8 @@
         }
       }
     }
+  },
+  "buildOptions": {
+    "xmlDoc": true
   }
 }
