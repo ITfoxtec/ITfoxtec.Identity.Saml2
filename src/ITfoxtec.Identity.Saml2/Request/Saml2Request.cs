@@ -17,7 +17,7 @@ namespace ITfoxtec.Identity.Saml2
     /// Generic Saml2 Request.
     /// </summary>
     public abstract class Saml2Request
-    {        
+    {
         public Saml2Configuration Config { get; protected set; }
 
         public XmlDocument XmlDocument { get; protected set; }
@@ -105,7 +105,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public IEnumerable<X509Certificate2> SignatureValidationCertificates { get; set; }
 
-        public string SignatureAlgorithm { get; set; }     
+        public string SignatureAlgorithm { get; set; }
 
         internal IdentityConfiguration IdentityConfiguration { get; private set; }
 
@@ -151,7 +151,7 @@ namespace ITfoxtec.Identity.Saml2
             if (Extensions != null)
             {
                 yield return Extensions.ToXElement();
-            }            
+            }
         }
 
         public abstract XmlDocument ToXml();
@@ -161,7 +161,7 @@ namespace ITfoxtec.Identity.Saml2
 #if DEBUG
             Debug.WriteLine("Saml2P: " + xml);
 #endif
-            
+
             XmlDocument = xml.ToXmlDocument();
 
             if (XmlDocument.DocumentElement.NamespaceURI != Saml2Constants.ProtocolNamespace.OriginalString)
@@ -186,14 +186,14 @@ namespace ITfoxtec.Identity.Saml2
             Destination = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.Destination].GetValueOrNull<Uri>();
 
             var extensionsData = XmlDocument.DocumentElement[Saml2Constants.Message.Extensions, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
-            if(extensionsData != null)
+            if (extensionsData != null)
             {
                 Extensions = new Schemas.Extensions { Data = extensionsData };
             }
 
             DecryptMessage();
 
-            if (validateXmlSignature)
+            if (!(this is Saml2AuthnRequest) && validateXmlSignature)
             {
                 ValidateXmlSignature();
             }
@@ -212,25 +212,25 @@ namespace ITfoxtec.Identity.Saml2
         private void ValidateXmlSignature()
         {
             var assertionElement = GetAssertionElement();
-            if(assertionElement == null)
+            if (assertionElement == null)
             {
                 if (ValidateXmlSignature(XmlDocument.DocumentElement) != SignatureValidation.Valid)
-                    throw new Saml2RequestException("Signature is invalid.");                
+                    throw new Saml2RequestException("Signature is invalid.");
             }
             else
             {
                 var documentValidationResult = ValidateXmlSignature(XmlDocument.DocumentElement);
                 var assertionValidationResult = ValidateXmlSignature(assertionElement);
-                if (documentValidationResult == SignatureValidation.Invalid || assertionValidationResult == SignatureValidation.Invalid || 
+                if (documentValidationResult == SignatureValidation.Invalid || assertionValidationResult == SignatureValidation.Invalid ||
                     !(documentValidationResult == SignatureValidation.Valid || assertionValidationResult == SignatureValidation.Valid))
                     throw new Saml2RequestException("Signature is invalid.");
-            }            
+            }
         }
 
         protected SignatureValidation ValidateXmlSignature(XmlElement xmlElement)
         {
             var xmlSignatures = xmlElement.SelectNodes($"*[local-name()='{Saml2Constants.Message.Signature}' and namespace-uri()='{Saml2SignedXml.XmlDsigNamespaceUrl}']");
-            if(xmlSignatures.Count == 0)
+            if (xmlSignatures.Count == 0)
             {
                 return SignatureValidation.NotPresent;
             }
