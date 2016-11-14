@@ -53,6 +53,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             public const string Use = "use";
 
+            public const string KeyInfo = "KeyInfo";
+
             public const string SingleLogoutService = "SingleLogoutService";
 
             public const string SingleSignOnService = "SingleSignOnService";            
