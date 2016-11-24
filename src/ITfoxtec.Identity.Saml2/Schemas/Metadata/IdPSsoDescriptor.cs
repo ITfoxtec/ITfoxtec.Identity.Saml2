@@ -115,7 +115,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             foreach (XmlElement keyDescriptorElement in keyDescriptorElements)
             {
-                var keyInfoElement = keyDescriptorElement.FirstChild as XmlElement;
+                var keyInfoElement = keyDescriptorElement.SelectSingleNode($"*[local-name()='{Saml2MetadataConstants.Message.KeyInfo}']") as XmlElement;
                 if (keyInfoElement != null)
                 {
                     var keyInfo = new KeyInfo();
