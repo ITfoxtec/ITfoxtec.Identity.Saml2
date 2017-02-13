@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "ITfoxtec.Identity.Saml2.MvcCore": "1.0.0-*",
+    "ITfoxtec.Identity.Saml2.MvcCore": "*",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.1",
     "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview2-final",
