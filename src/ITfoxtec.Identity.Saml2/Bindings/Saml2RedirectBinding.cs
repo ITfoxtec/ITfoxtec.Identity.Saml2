@@ -24,14 +24,14 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.BindInternal(saml2RequestResponse);
 
-            if (!(saml2RequestResponse is Saml2AuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
                 SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;
             }
 
             var requestQueryString = string.Join("&", RequestQueryString(saml2RequestResponse, messageName));
-            if (!(saml2RequestResponse is Saml2AuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 requestQueryString = SigneQueryString(requestQueryString, saml2RequestResponse.Config.SigningCertificate);
             }
@@ -58,7 +58,7 @@ namespace ITfoxtec.Identity.Saml2
                 yield return string.Join("=", Saml2Constants.Message.RelayState, Uri.EscapeDataString(RelayState));
             }
 
-            if (!(saml2RequestResponse is Saml2AuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 yield return string.Join("=", Saml2Constants.Message.SigAlg, Uri.EscapeDataString(SignatureAlgorithm));
             }
@@ -88,7 +88,7 @@ namespace ITfoxtec.Identity.Saml2
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
 
-            if (!(saml2RequestResponse is Saml2AuthnRequest) &&
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
                 saml2RequestResponse.Config.SignatureValidationCertificates != null && saml2RequestResponse.Config.SignatureValidationCertificates.Count() > 0)
             {
                 if (!request.Query.AllKeys.Contains(Saml2Constants.Message.Signature))
@@ -103,7 +103,7 @@ namespace ITfoxtec.Identity.Saml2
                 RelayState = request.Query[Saml2Constants.Message.RelayState];
             }
 
-            if (!(saml2RequestResponse is Saml2AuthnRequest) &&
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
                 saml2RequestResponse.Config.SignatureValidationCertificates != null && saml2RequestResponse.Config.SignatureValidationCertificates.Count() > 0)
             {
                 var actualAignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
