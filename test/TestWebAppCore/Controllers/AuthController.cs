@@ -50,7 +50,7 @@ namespace TestWebAppCore.Controllers
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
 
             binding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnResponse);
-            await saml2AuthnResponse.CreateSession(HttpContext, ClaimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
+            await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
 
             var returnUrl = binding.GetRelayStateQuery()[relayStateReturnUrl];
             return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? Url.Content("~/") : returnUrl);

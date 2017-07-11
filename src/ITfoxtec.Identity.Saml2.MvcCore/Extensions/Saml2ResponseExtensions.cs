@@ -15,7 +15,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
         /// </summary>
         /// <param name="lifetime">The period from the current time during which the token is valid. The ValidFrom property will be set to UtcNow and the ValidTo property will be set to ValidFrom plus the period specified by this parameter. Default lifetime is 10 Hours.</param>
         /// <param name="isPersistent">If the IsPersistent property is true, the cookie is written as a persistent cookie. Persistent cookies remain valid after the browser is closed until they expire.</param>
-        public static async Task<ClaimsPrincipal> CreateSession(this Saml2AuthnResponse saml2AuthnResponse, HttpContext httpContext, TimeSpan? lifetime = null, bool isPersistent = false, Action<ClaimsPrincipal> ClaimsTransform = null)
+        public static async Task<ClaimsPrincipal> CreateSession(this Saml2AuthnResponse saml2AuthnResponse, HttpContext httpContext, TimeSpan? lifetime = null, bool isPersistent = false, Func<ClaimsPrincipal, ClaimsPrincipal> claimsTransform = null)
         {
             if (Thread.CurrentPrincipal.Identity.IsAuthenticated)
             {
@@ -32,6 +32,11 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             if (principal.Identity == null || !principal.Identity.IsAuthenticated)
             {
                 throw new InvalidOperationException("No Claims Identity created from SAML2 Response.");
+            }
+
+            if (claimsTransform != null)
+            {
+                principal = claimsTransform(principal);
             }
 
             await httpContext.Authentication.SignInAsync(Saml2Constants.AuthenticationScheme, principal, 
