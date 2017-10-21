@@ -1,9 +1,6 @@
-﻿using ITfoxtec.Identity.Saml2.Cryptography;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
+using ITfoxtec.Identity.Saml2.Schemas;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
 {
@@ -16,7 +13,13 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         {           
             services.AddSingleton(configuration);
 
+            services.AddAuthentication(Saml2Constants.AuthenticationScheme)
+                .AddCookie(Saml2Constants.AuthenticationScheme, o =>
+                {
+                    o.LoginPath = new PathString("/Auth/Login");
+                });
+
             return services;
-        }
+        }   
     }
 }

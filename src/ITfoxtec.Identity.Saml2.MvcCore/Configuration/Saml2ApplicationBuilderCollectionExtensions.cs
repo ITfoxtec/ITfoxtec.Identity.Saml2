@@ -1,6 +1,4 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
 {
@@ -11,13 +9,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         /// </summary>
         public static IApplicationBuilder UseSaml2(this IApplicationBuilder app)
         {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = Saml2Constants.AuthenticationScheme,
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                LoginPath = new PathString("/Auth/Login"),
-            });
+            app.UseAuthentication();                       
 
             return app;
         }

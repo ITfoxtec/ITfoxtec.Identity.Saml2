@@ -1,26 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A05F26DE-17C2-497F-B244-EE6790789066}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80F86A4F-9009-4FB4-9E92-33B6513CF2D7}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITfoxtec.Identity.Saml2", "src\ITfoxtec.Identity.Saml2\ITfoxtec.Identity.Saml2.csproj", "{BB8FE53F-B198-4DCF-B51C-B11CC0215AE7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ITfoxtec.Identity.Saml2.MvcCore", "src\ITfoxtec.Identity.Saml2.MvcCore\ITfoxtec.Identity.Saml2.MvcCore.xproj", "{FA372444-40AE-4F9E-97A3-6A3DC7B719E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITfoxtec.Identity.Saml2.MvcCore", "src\ITfoxtec.Identity.Saml2.MvcCore\ITfoxtec.Identity.Saml2.MvcCore.csproj", "{FA372444-40AE-4F9E-97A3-6A3DC7B719E0}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TestWebAppCore", "test\TestWebAppCore\TestWebAppCore.xproj", "{4C3E929B-D5AA-45EA-8945-97C0C7E3309D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebAppCore", "test\TestWebAppCore\TestWebAppCore.csproj", "{4C3E929B-D5AA-45EA-8945-97C0C7E3309D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITfoxtec.Identity.Saml2.Mvc", "src\ITfoxtec.Identity.Saml2.Mvc\ITfoxtec.Identity.Saml2.Mvc.csproj", "{DA5D0686-F694-4667-8CF9-CCF1B9BB1626}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TestIdPCore", "test\TestIdPCore\TestIdPCore.xproj", "{732D6B51-DF98-48E6-96AC-E16FED8FB3CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestIdPCore", "test\TestIdPCore\TestIdPCore.csproj", "{732D6B51-DF98-48E6-96AC-E16FED8FB3CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebApp", "test\TestWebApp\TestWebApp.csproj", "{9FEC1868-DF03-43B2-8AB9-DBE5F4E223D2}"
 EndProject
@@ -65,5 +62,8 @@ Global
 		{DA5D0686-F694-4667-8CF9-CCF1B9BB1626} = {A05F26DE-17C2-497F-B244-EE6790789066}
 		{732D6B51-DF98-48E6-96AC-E16FED8FB3CE} = {DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}
 		{9FEC1868-DF03-43B2-8AB9-DBE5F4E223D2} = {DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64BB7D39-E92F-466D-B601-276E16FF6EB4}
 	EndGlobalSection
 EndGlobal
