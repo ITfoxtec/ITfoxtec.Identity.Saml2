@@ -35,14 +35,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             yield return new XAttribute(Saml2MetadataConstants.Message.ProtocolSupportEnumeration, protocolSupportEnumeration);
 
-            if (SigningCertificates != null)
-            {
-                foreach (var signingCertificate in SigningCertificates)
-                {
-                    yield return KeyDescriptor(signingCertificate, Saml2MetadataConstants.KeyTypes.Signing);
-                }
-            }
-
             if (EncryptionCertificates != null)
             {
                 foreach (var encryptionCertificate in EncryptionCertificates)
@@ -51,11 +43,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 }
             }
 
-            if (SingleSignOnServices != null)
+            if (SigningCertificates != null)
             {
-                foreach (var singleSignOnService in SingleSignOnServices)
+                foreach (var signingCertificate in SigningCertificates)
                 {
-                    yield return singleSignOnService.ToXElement();
+                    yield return KeyDescriptor(signingCertificate, Saml2MetadataConstants.KeyTypes.Signing);
                 }
             }
 
@@ -73,7 +65,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 {
                     yield return new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.NameIDFormat, nameIDFormat.OriginalString);
                 }
-            }   
+            }
+
+            if (SingleSignOnServices != null)
+            {
+                foreach (var singleSignOnService in SingleSignOnServices)
+                {
+                    yield return singleSignOnService.ToXElement();
+                }
+            }
         }
 
         protected internal IdPSsoDescriptor Read(XmlElement xmlElement)

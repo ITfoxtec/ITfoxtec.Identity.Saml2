@@ -68,6 +68,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 yield return new XAttribute(Saml2MetadataConstants.Message.WantAssertionsSigned, WantAssertionsSigned.Value);
             }
 
+            if (EncryptionCertificates != null)
+            {
+                foreach(var encryptionCertificate in EncryptionCertificates)
+                {
+                    yield return KeyDescriptor(encryptionCertificate, Saml2MetadataConstants.KeyTypes.Encryption);
+                }                
+            }
+
             if (SigningCertificates != null)
             {
                 foreach (var signingCertificate in SigningCertificates)
@@ -76,14 +84,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 }
             }
 
-            if (EncryptionCertificates != null)
-            {
-                foreach(var encryptionCertificate in EncryptionCertificates)
-                {
-                    yield return KeyDescriptor(encryptionCertificate, Saml2MetadataConstants.KeyTypes.Encryption);
-                }                
-            }
-            
             if (SingleLogoutServices != null)
             {
                 foreach (var singleLogoutService in SingleLogoutServices)
