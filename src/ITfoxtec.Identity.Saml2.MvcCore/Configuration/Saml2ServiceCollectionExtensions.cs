@@ -9,10 +9,8 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         /// <summary>
         /// Add SAML 2.0 configuration.
         /// </summary>
-        public static IServiceCollection AddSaml2(this IServiceCollection services, Saml2Configuration configuration)
-        {           
-            services.AddSingleton(configuration);
-
+        public static IServiceCollection AddSaml2(this IServiceCollection services)
+        {
             services.AddAuthentication(Saml2Constants.AuthenticationScheme)
                 .AddCookie(Saml2Constants.AuthenticationScheme, o =>
                 {

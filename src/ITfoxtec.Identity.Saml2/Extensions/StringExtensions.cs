@@ -16,7 +16,7 @@ namespace ITfoxtec.Identity.Saml2
             using (var stringReader = new StringReader(xml))
             using (var xmlReader = XmlReader.Create(stringReader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null }))
             {
-                XmlDocument xmlDocument = new XmlDocument();
+                var xmlDocument = new XmlDocument();
                 xmlDocument.XmlResolver = null;
                 xmlDocument.PreserveWhitespace = true;
                 xmlDocument.Load(xmlReader);

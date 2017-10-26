@@ -1,6 +1,5 @@
 ﻿using ITfoxtec.Identity.Saml2.Schemas;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Xml;
 using System.Xml.Linq;
@@ -49,10 +48,6 @@ namespace ITfoxtec.Identity.Saml2
             XmlDocument = envelope.ToXmlDocument();
             return XmlDocument;
         }
-
-        //protected override IEnumerable<XObject> GetXContent()
-        //{
-        //}
 
         protected internal override void Read(string xml, bool validateXmlSignature = false)
         {

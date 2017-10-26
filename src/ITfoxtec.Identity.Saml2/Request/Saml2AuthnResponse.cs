@@ -5,16 +5,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Xml;
 using System.Security.Cryptography.X509Certificates;
-using System.Globalization;
 using System.IdentityModel.Tokens;
 using ITfoxtec.Identity.Saml2.Cryptography;
-using System.Security.Cryptography;
 using System.Diagnostics;
-using ITfoxtec.Identity.Saml2.Util;
 using System.Collections.Generic;
 using System.IdentityModel.Protocols.WSTrust;
 using System.Xml.Linq;
-using System.IO;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -61,13 +57,9 @@ namespace ITfoxtec.Identity.Saml2
             if (config.DecryptionCertificate != null)
             {
                 DecryptionCertificate = config.DecryptionCertificate;
-                if (config.DecryptionCertificate.PrivateKey == null)
+                if (config.DecryptionCertificate.GetRSAPrivateKey() == null)
                 {
-                    throw new ArgumentException("No Private Key present in Decryption Certificate or missing private key read credentials.");
-                }
-                if (!(config.DecryptionCertificate.PrivateKey is RSA))
-                {
-                    throw new ArgumentException("The Private Key present in Decryption Certificate must be RSA.");
+                    throw new ArgumentException("No RSA Private Key present in Decryption Certificate or missing private key read credentials.");
                 }
             }
             Saml2SecurityTokenHandler = Saml2ResponseSecurityTokenHandler.GetSaml2SecurityTokenHandler(IdentityConfiguration);
@@ -229,9 +221,9 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     throw new Saml2RequestException("There is not exactly one Assertion element.");
                 }
-                assertionElement = assertionElements[0] as XmlElement;
-            }
-            return assertionElement;
+                assertionElement = (assertionElements[0] as XmlElement).ToXmlDocument().DocumentElement;
+            }            
+            return assertionElement;            
         }
 
         private void ValidateAssertionExpiration(XmlNode assertionElement)
@@ -276,7 +268,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (DecryptionCertificate != null)
             {
-                new Saml2EncryptedXml(XmlDocument, DecryptionCertificate.PrivateKey as RSA).DecryptDocument();
+                new Saml2EncryptedXml(XmlDocument, DecryptionCertificate.GetRSAPrivateKey()).DecryptDocument();
 #if DEBUG
                 Debug.WriteLine("Saml2P (Decrypted): " + XmlDocument.OuterXml);
 #endif

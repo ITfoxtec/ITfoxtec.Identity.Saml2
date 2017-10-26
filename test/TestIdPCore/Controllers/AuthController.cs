@@ -11,6 +11,7 @@ using System.Linq;
 using System.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Util;
+using Microsoft.Extensions.Options;
 
 namespace TestIdPCore.Controllers
 {
@@ -23,17 +24,17 @@ namespace TestIdPCore.Controllers
 
         public object SecurityAlgorithms { get; private set; }
 
-        public AuthController(Saml2Configuration config)
+        public AuthController(IOptions<Saml2Configuration> configAccessor)
         {
-            this.config = config;
+            config = configAccessor.Value;
         }
 
         [Route("Login")]
         public IActionResult Login()
         {
-            var relyingParty = ValidateRelyingParty(ReadRelyingPartyFromLoginRequest());
-
             var requestBinding = new Saml2RedirectBinding();
+            var relyingParty = ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(requestBinding));
+
             var saml2AuthnRequest = new Saml2AuthnRequest(config);
             try
             {
@@ -58,9 +59,9 @@ namespace TestIdPCore.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            var relyingParty = ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest());
-
             var requestBinding = new Saml2PostBinding();
+            var relyingParty = ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest(requestBinding));
+
             var saml2LogoutRequest = new Saml2LogoutRequest(config);
             saml2LogoutRequest.SignatureValidationCertificates = new X509Certificate2[] { relyingParty.SignatureValidationCertificate };
             try
@@ -80,14 +81,14 @@ namespace TestIdPCore.Controllers
             }
         }
 
-        private Uri ReadRelyingPartyFromLoginRequest()
+        private Uri ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
         {
-            return new Saml2RedirectBinding().ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(config))?.Issuer;
+            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(config))?.Issuer;
         }
 
-        private Uri ReadRelyingPartyFromLogoutRequest()
+        private Uri ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
         {
-            return new Saml2PostBinding().ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(config))?.Issuer;
+            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(config))?.Issuer;
         }
 
         private IActionResult LoginResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)

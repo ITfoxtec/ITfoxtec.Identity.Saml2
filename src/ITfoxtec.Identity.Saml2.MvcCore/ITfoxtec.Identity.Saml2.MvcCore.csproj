@@ -3,13 +3,15 @@
   <PropertyGroup>
     <AssemblyTitle>ITfoxtec.Identity.Saml2.MvcCore</AssemblyTitle>
     <VersionPrefix>2.0.0.0</VersionPrefix>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>ITfoxtec.Identity.Saml2.MvcCore</AssemblyName>
-    <PackageId>ITfoxtec.Identity.Saml2.MvcCore</PackageId>
+    <PackageId>ITfoxtec Identity SAML 2.0 MVC Core</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <Copyright>Copyright © 2017</Copyright>
+    <Authors />
   </PropertyGroup>
 
   <ItemGroup>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestWebAppCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace TestWebAppCore.Controllers
 {
@@ -20,9 +21,9 @@ namespace TestWebAppCore.Controllers
 
         public object SecurityAlgorithms { get; private set; }
 
-        public AuthController(Saml2Configuration config)
+        public AuthController(IOptions<Saml2Configuration> configAccessor)
         {
-            this.config = config;
+            config = configAccessor.Value;
         }
 
         [Route("Login")]
@@ -52,8 +53,9 @@ namespace TestWebAppCore.Controllers
             binding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnResponse);
             await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
 
-            var returnUrl = binding.GetRelayStateQuery()[relayStateReturnUrl];
-            return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? Url.Content("~/") : returnUrl);
+            var relayStateQuery = binding.GetRelayStateQuery();
+            var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
+            return Redirect(returnUrl);
         }
 
         [HttpPost("Logout")]

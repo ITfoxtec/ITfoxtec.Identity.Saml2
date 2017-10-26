@@ -12,5 +12,17 @@ namespace ITfoxtec.Identity.Saml2
         {
             return GenericTypeConverter.ConvertValue<T>(xmlElement?.InnerText?.Trim(), xmlElement);
         }
+
+        internal static XmlDocument ToXmlDocument(this XmlElement xmlElement)
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.XmlResolver = null;
+            xmlDocument.PreserveWhitespace = true;
+            using (var reader = xmlElement.CreateNavigator().ReadSubtree())
+            {
+                xmlDocument.Load(reader);
+            }
+            return xmlDocument;
+        }
     }
 }

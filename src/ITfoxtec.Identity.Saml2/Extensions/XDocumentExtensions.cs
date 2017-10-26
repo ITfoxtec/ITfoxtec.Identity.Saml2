@@ -13,7 +13,7 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         internal static XmlDocument ToXmlDocument(this XDocument xDocument)
         {
-            XmlDocument xmlDocument = new XmlDocument();
+            var xmlDocument = new XmlDocument();
             xmlDocument.XmlResolver = null;
             xmlDocument.PreserveWhitespace = true;
             using (var reader = xDocument.CreateReader())

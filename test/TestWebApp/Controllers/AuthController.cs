@@ -50,8 +50,9 @@ namespace TestWebApp.Controllers
 
             saml2AuthnResponse.CreateSession(claimsAuthenticationManager: new DefaultClaimsAuthenticationManager());
 
-            var returnUrl = binding.GetRelayStateQuery()[relayStateReturnUrl];
-            return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? Url.Content("~/") : returnUrl);
+            var relayStateQuery = binding.GetRelayStateQuery();
+            var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
+            return Redirect(returnUrl);
         }
 
         [ValidateAntiForgeryToken]

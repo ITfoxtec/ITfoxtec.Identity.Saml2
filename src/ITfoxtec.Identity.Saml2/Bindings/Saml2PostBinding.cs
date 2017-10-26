@@ -32,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             BindInternal(saml2RequestResponse);
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest)  && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
                 XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, CertificateIncludeOption, saml2RequestResponse.Id.Value);
@@ -65,7 +65,7 @@ namespace ITfoxtec.Identity.Saml2
             yield return string.Format(
 @"<input type=""hidden"" name=""{0}"" value=""{1}""/>", messageName, Convert.ToBase64String(Encoding.UTF8.GetBytes(XmlDocument.OuterXml)));
 
-            if (!string.IsNullOrWhiteSpace(RelayState))
+            if(!string.IsNullOrWhiteSpace(RelayState))
             {
                 yield return string.Format(
 @"<input type=""hidden"" name=""{0}"" value=""{1}""/>", Saml2Constants.Message.RelayState, WebUtility.HtmlEncode(RelayState));

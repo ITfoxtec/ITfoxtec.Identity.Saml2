@@ -10,7 +10,6 @@ using ITfoxtec.Identity.Saml2.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Util;
 using ITfoxtec.Identity.Saml2.Http;
-using System.IdentityModel.Tokens;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -40,7 +39,7 @@ namespace ITfoxtec.Identity.Saml2
 
             return this;
         }
-
+        
         private string SigneQueryString(string queryString, X509Certificate2 signingCertificate)
         {
             var saml2Signed = new Saml2SignedText(signingCertificate, SignatureAlgorithm);
@@ -58,7 +57,7 @@ namespace ITfoxtec.Identity.Saml2
                 yield return string.Join("=", Saml2Constants.Message.RelayState, Uri.EscapeDataString(RelayState));
             }
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
+            if((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 yield return string.Join("=", Saml2Constants.Message.SigAlg, Uri.EscapeDataString(SignatureAlgorithm));
             }
@@ -88,13 +87,13 @@ namespace ITfoxtec.Identity.Saml2
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
-                saml2RequestResponse.Config.SignatureValidationCertificates != null && saml2RequestResponse.Config.SignatureValidationCertificates.Count() > 0)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && 
+                saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
-                if (!request.Query.AllKeys.Contains(Saml2Constants.Message.Signature))
+                if(!request.Query.AllKeys.Contains(Saml2Constants.Message.Signature))
                     throw new Saml2BindingException("HTTP Query String does not contain " + Saml2Constants.Message.Signature);
 
-                if (!request.Query.AllKeys.Contains(Saml2Constants.Message.SigAlg))
+                if(!request.Query.AllKeys.Contains(Saml2Constants.Message.SigAlg))
                     throw new Saml2BindingException("HTTP Query String does not contain " + Saml2Constants.Message.SigAlg);
             }
 
@@ -103,23 +102,23 @@ namespace ITfoxtec.Identity.Saml2
                 RelayState = request.Query[Saml2Constants.Message.RelayState];
             }
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
-                saml2RequestResponse.Config.SignatureValidationCertificates != null && saml2RequestResponse.Config.SignatureValidationCertificates.Count() > 0)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && 
+                saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
                 var actualAignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
-                if (saml2RequestResponse.Config.SignatureAlgorithm == null)
+                if (saml2RequestResponse.SignatureAlgorithm == null)
                 {
-                    saml2RequestResponse.Config.SignatureAlgorithm = actualAignatureAlgorithm;
+                    saml2RequestResponse.SignatureAlgorithm = actualAignatureAlgorithm;
                 }
-                else if (!saml2RequestResponse.Config.SignatureAlgorithm.Equals(actualAignatureAlgorithm, StringComparison.InvariantCulture))
+                else if (!saml2RequestResponse.SignatureAlgorithm.Equals(actualAignatureAlgorithm, StringComparison.InvariantCulture))
                 {
-                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.Config.SignatureAlgorithm} actual algorithm {actualAignatureAlgorithm}");
+                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualAignatureAlgorithm}");
                 }
-                Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
-                SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;
+                Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.SignatureAlgorithm);
+                SignatureAlgorithm = saml2RequestResponse.SignatureAlgorithm;
 
                 Signature = request.Query[Saml2Constants.Message.Signature];
-                ValidateQueryStringSignature(saml2RequestResponse, request.QueryString, messageName, Convert.FromBase64String(Signature), saml2RequestResponse.Config.SignatureValidationCertificates);
+                ValidateQueryStringSignature(saml2RequestResponse, request.QueryString, messageName, Convert.FromBase64String(Signature), saml2RequestResponse.SignatureValidationCertificates);
             }
 
             return Read(request, saml2RequestResponse, messageName, false);

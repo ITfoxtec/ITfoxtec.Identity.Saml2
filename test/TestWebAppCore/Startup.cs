@@ -33,36 +33,30 @@ namespace TestWebAppCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var saml2Configuration = new Saml2Configuration
+            services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2"));
+            services.Configure<Saml2Configuration>(saml2Configuration =>
             {
-                Issuer = new Uri(Configuration["Saml2:Issuer"]),
-                // SingleSignOnDestination = new Uri(Configuration["Saml2:SingleSignOnDestination"]),
-                // SingleLogoutDestination = new Uri(Configuration["Saml2:SingleLogoutDestination"]),
+                //c.SignAuthnRequest = true;
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
 
-                SignatureAlgorithm = Configuration["Saml2:SignatureAlgorithm"],
-                SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificate"]), Configuration["Saml2:SigningCertificatePassword"]),
+                //c.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
+                saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
-                CertificateValidationMode = (X509CertificateValidationMode)Enum.Parse(typeof(X509CertificateValidationMode), Configuration["Saml2:CertificateValidationMode"]),
-                RevocationMode = (X509RevocationMode)Enum.Parse(typeof(X509RevocationMode), Configuration["Saml2:RevocationMode"]),
-            };
-            //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificate"])));
-            saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+                var entityDescriptor = new EntityDescriptor();
+                entityDescriptor.ReadIdPSsoDescriptorFromUrl(new Uri(Configuration["Saml2:IdPMetadata"]));
+                if (entityDescriptor.IdPSsoDescriptor != null)
+                {
+                    saml2Configuration.SingleSignOnDestination = entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
+                    saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
+                    saml2Configuration.SignatureValidationCertificates.AddRange(entityDescriptor.IdPSsoDescriptor.SigningCertificates);
+                }
+                else
+                {
+                    throw new Exception("IdPSsoDescriptor not loaded from metadata.");
+                }
+            });
 
-
-            var entityDescriptor = new EntityDescriptor();
-            entityDescriptor.ReadIdPSsoDescriptorFromUrl(new Uri(Configuration["Saml2:IdPMetadata"]));            
-            if (entityDescriptor.IdPSsoDescriptor != null)
-            {
-                saml2Configuration.SingleSignOnDestination = entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
-                saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
-                saml2Configuration.SignatureValidationCertificates.AddRange(entityDescriptor.IdPSsoDescriptor.SigningCertificates);
-            }
-            else
-            {
-                throw new Exception("IdPSsoDescriptor not loaded from metadata.");
-            }
-
-            services.AddSaml2(saml2Configuration);
+            services.AddSaml2();           
 
             // Add framework services.
             services.AddMvc();
