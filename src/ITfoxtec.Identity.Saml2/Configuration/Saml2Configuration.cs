@@ -32,5 +32,7 @@ namespace ITfoxtec.Identity.Saml2
         public List<Uri> AllowedAudienceUris { get; protected set; } = new List<Uri>();
 
         public bool SignAuthnRequest { get; set; } = false;
+
+        public bool ValidateSignature { get; set; }
     }
 }
