@@ -33,6 +33,6 @@ namespace ITfoxtec.Identity.Saml2
 
         public bool SignAuthnRequest { get; set; } = false;
 
-        public bool ValidateSignature { get; set; }
+        public bool ValidateSignature { get; set; } = true;
     }
 }
