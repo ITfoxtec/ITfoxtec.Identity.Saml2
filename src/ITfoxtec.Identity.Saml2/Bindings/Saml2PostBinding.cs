@@ -98,7 +98,7 @@ namespace ITfoxtec.Identity.Saml2
                 RelayState = request.Form[Saml2Constants.Message.RelayState];
             }
 
-            return Read(request, saml2RequestResponse, messageName, true);
+            return Read(request, saml2RequestResponse, messageName, saml2RequestResponse.Config.ValidateSignature);
         }
 
         protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature)

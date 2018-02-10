@@ -18,7 +18,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             var genericType = typeof(T);
             if (genericType == typeof(Uri))
             {
-                return GenericConvertValue<T, Uri>(new Uri(value));
+                return GenericConvertValue<T, Uri>(new Uri(value, UriKind.RelativeOrAbsolute));
             }
             if (genericType == typeof(Saml2Id))
             {
