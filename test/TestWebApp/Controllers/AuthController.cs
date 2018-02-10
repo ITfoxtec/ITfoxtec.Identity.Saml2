@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Security.Claims;
 using TestWebApp.Identity;
 using System.IdentityModel.Services;
+using System.Security.Authentication;
 
 namespace TestWebApp.Controllers
 {
@@ -46,8 +47,12 @@ namespace TestWebApp.Controllers
             var binding = new Saml2PostBinding();
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
 
+            binding.ReadSamlResponse(Request.ToGenericHttpRequest(), saml2AuthnResponse);
+            if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
+            {
+                throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
+            }
             binding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnResponse);
-
             saml2AuthnResponse.CreateSession(claimsAuthenticationManager: new DefaultClaimsAuthenticationManager());
 
             var relayStateQuery = binding.GetRelayStateQuery();
