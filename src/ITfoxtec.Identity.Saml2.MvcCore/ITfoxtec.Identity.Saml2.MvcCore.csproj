@@ -12,6 +12,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <Copyright>Copyright © 2017</Copyright>
     <Authors />
+    <Version>2.0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
