@@ -17,7 +17,6 @@ namespace ITfoxtec.Identity.Saml2
     public class Saml2LogoutRequest : Saml2Request
     {
         const string elementName = Saml2Constants.Message.LogoutRequest;
-        static readonly object[] emptyArray = new object[0];
 
         /// <summary>
         /// [Optional]
@@ -85,17 +84,17 @@ namespace ITfoxtec.Identity.Saml2
 
             if (NameId != null)
             {
-                object[] nameIdFormat;
+                object[] nameIdContent;
                 if (NameId.Format != null)
                 {
-                    nameIdFormat = new object[] { new XAttribute(Saml2Constants.Message.Format, NameId.Format) };
+                    nameIdContent = new object[] { NameId.Value, new XAttribute(Saml2Constants.Message.Format, NameId.Format) };
                 }
                 else
                 {
-                    nameIdFormat = emptyArray;
+                    nameIdContent = new object[] { NameId.Value };
                 }
 
-                yield return new XElement(Saml2Constants.AssertionNamespaceX + Saml2Constants.Message.NameId, NameId.Value, nameIdFormat);
+                yield return new XElement(Saml2Constants.AssertionNamespaceX + Saml2Constants.Message.NameId, nameIdContent);
             }
 
             if (SessionIndex != null)
