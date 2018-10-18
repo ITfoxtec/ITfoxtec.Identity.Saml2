@@ -44,17 +44,24 @@ namespace ITfoxtec.Identity.Saml2
             var identity = currentPrincipal.Identities.First();
             if (identity.IsAuthenticated)
             {
-                NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId), new Uri(ReadClaimValue(identity, Saml2ClaimTypes.NameIdFormat)));
-                SessionIndex = ReadClaimValue(identity, Saml2ClaimTypes.SessionIndex);
+                NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId), new Uri(ReadClaimValue(identity, Saml2ClaimTypes.NameIdFormat, false)));
+                SessionIndex = ReadClaimValue(identity, Saml2ClaimTypes.SessionIndex, false);
             }           
         }
 
-        private static string ReadClaimValue(ClaimsIdentity identity, string claimType)
+        private static string ReadClaimValue(ClaimsIdentity identity, string claimType, bool required = true)
         {
             var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType);
             if (claim == null)
             {
-                throw new InvalidOperationException("Missing Claim Type: " + claimType);
+                if(required)
+                {
+                    throw new InvalidOperationException("Missing Claim Type: " + claimType);
+                }
+                else
+                {
+                    return null;
+                }
             }
             return claim.Value;
         }
@@ -84,7 +91,17 @@ namespace ITfoxtec.Identity.Saml2
 
             if (NameId != null)
             {
-                yield return new XElement(Saml2Constants.AssertionNamespaceX + Saml2Constants.Message.NameId, NameId.Value, new XAttribute(Saml2Constants.Message.Format, NameId.Format));
+                object[] nameIdContent;
+                if (NameId.Format != null)
+                {
+                    nameIdContent = new object[] { NameId.Value, new XAttribute(Saml2Constants.Message.Format, NameId.Format) };
+                }
+                else
+                {
+                    nameIdContent = new object[] { NameId.Value };
+                }
+
+                yield return new XElement(Saml2Constants.AssertionNamespaceX + Saml2Constants.Message.NameId, nameIdContent);
             }
 
             if (SessionIndex != null)
