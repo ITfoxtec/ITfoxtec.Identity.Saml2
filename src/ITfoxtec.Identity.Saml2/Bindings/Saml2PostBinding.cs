@@ -32,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             BindInternal(saml2RequestResponse);
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest)  && saml2RequestResponse.Config.SigningCertificate != null)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
                 XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, CertificateIncludeOption, saml2RequestResponse.Id.Value);
@@ -65,7 +65,7 @@ namespace ITfoxtec.Identity.Saml2
             yield return string.Format(
 @"<input type=""hidden"" name=""{0}"" value=""{1}""/>", messageName, Convert.ToBase64String(Encoding.UTF8.GetBytes(XmlDocument.OuterXml)));
 
-            if(!string.IsNullOrWhiteSpace(RelayState))
+            if (!string.IsNullOrWhiteSpace(RelayState))
             {
                 yield return string.Format(
 @"<input type=""hidden"" name=""{0}"" value=""{1}""/>", Saml2Constants.Message.RelayState, WebUtility.HtmlEncode(RelayState));
@@ -93,16 +93,16 @@ namespace ITfoxtec.Identity.Saml2
             if (!request.Form.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Form does not contain " + messageName);
 
-            if (request.Form.AllKeys.Contains(Saml2Constants.Message.RelayState))
-            {
-                RelayState = request.Form[Saml2Constants.Message.RelayState];
-            }
-
             return Read(request, saml2RequestResponse, messageName, true);
         }
 
         protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature)
         {
+            if (request.Form.AllKeys.Contains(Saml2Constants.Message.RelayState))
+            {
+                RelayState = request.Form[Saml2Constants.Message.RelayState];
+            }
+
             saml2RequestResponse.Read(Encoding.UTF8.GetString(Convert.FromBase64String(request.Form[messageName])), validateXmlSignature);
             XmlDocument = saml2RequestResponse.XmlDocument;
             return saml2RequestResponse;

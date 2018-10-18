@@ -39,7 +39,7 @@ namespace ITfoxtec.Identity.Saml2
 
             return this;
         }
-        
+
         private string SigneQueryString(string queryString, X509Certificate2 signingCertificate)
         {
             var saml2Signed = new Saml2SignedText(signingCertificate, SignatureAlgorithm);
@@ -57,7 +57,7 @@ namespace ITfoxtec.Identity.Saml2
                 yield return string.Join("=", Saml2Constants.Message.RelayState, Uri.EscapeDataString(RelayState));
             }
 
-            if((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 yield return string.Join("=", Saml2Constants.Message.SigAlg, Uri.EscapeDataString(SignatureAlgorithm));
             }
@@ -87,13 +87,13 @@ namespace ITfoxtec.Identity.Saml2
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && 
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
                 saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
-                if(!request.Query.AllKeys.Contains(Saml2Constants.Message.Signature))
+                if (!request.Query.AllKeys.Contains(Saml2Constants.Message.Signature))
                     throw new Saml2BindingException("HTTP Query String does not contain " + Saml2Constants.Message.Signature);
 
-                if(!request.Query.AllKeys.Contains(Saml2Constants.Message.SigAlg))
+                if (!request.Query.AllKeys.Contains(Saml2Constants.Message.SigAlg))
                     throw new Saml2BindingException("HTTP Query String does not contain " + Saml2Constants.Message.SigAlg);
             }
 
@@ -102,7 +102,7 @@ namespace ITfoxtec.Identity.Saml2
                 RelayState = request.Query[Saml2Constants.Message.RelayState];
             }
 
-            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && 
+            if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
                 saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
                 var actualAignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
@@ -131,6 +131,11 @@ namespace ITfoxtec.Identity.Saml2
 
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
+
+            if (request.Query.AllKeys.Contains(Saml2Constants.Message.RelayState))
+            {
+                RelayState = request.Query[Saml2Constants.Message.RelayState];
+            }
 
             saml2RequestResponse.Read(DecompressResponse(request.Query[messageName]), validateXmlSignature);
             XmlDocument = saml2RequestResponse.XmlDocument;
