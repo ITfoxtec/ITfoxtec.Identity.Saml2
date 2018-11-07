@@ -7,6 +7,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 {
     public class Saml2SignedXml : SignedXml
     {
+        public XmlElement Element { get; protected set; }
         public Saml2Signer Saml2Signer { get; protected set; }
 
         public Saml2SignedXml(XmlElement element, X509Certificate2 certificate, string signatureAlgorithm) : base(element)
@@ -14,6 +15,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
             if (signatureAlgorithm == null) throw new ArgumentNullException(nameof(signatureAlgorithm));
 
+            Element = element;
             Saml2Signer = new Saml2Signer(certificate, signatureAlgorithm);
         }
 
@@ -36,6 +38,17 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public new bool CheckSignature()
         {
+            if (SignedInfo.References.Count != 1)
+            {
+                throw new InvalidSignedXmlException("Invalid XML signature reference.");
+            }
+
+            var referenceId = (SignedInfo.References[0] as Reference).Uri.Substring(1);
+            if (Element != GetIdElement(Element.OwnerDocument, referenceId))
+            {
+                throw new InvalidSignedXmlException("XML signature reference do not refer to the root element.");
+            }
+
             var canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == XmlDsigExcC14NTransformUrl;
             var signatureMethodValid = SignedInfo.SignatureMethod == Saml2Signer.SignatureAlgorithm;
             if (!(canonicalizationMethodValid && signatureMethodValid))
