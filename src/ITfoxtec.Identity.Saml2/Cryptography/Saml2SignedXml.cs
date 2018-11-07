@@ -40,13 +40,13 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         {
             if (SignedInfo.References.Count != 1)
             {
-                throw new InvalidSignedXmlException("Invalid XML signature reference.");
+                throw new InvalidSignatureException("Invalid XML signature reference.");
             }
 
             var referenceId = (SignedInfo.References[0] as Reference).Uri.Substring(1);
             if (Element != GetIdElement(Element.OwnerDocument, referenceId))
             {
-                throw new InvalidSignedXmlException("XML signature reference do not refer to the root element.");
+                throw new InvalidSignatureException("XML signature reference do not refer to the root element.");
             }
 
             var canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == XmlDsigExcC14NTransformUrl;

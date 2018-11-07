@@ -64,7 +64,7 @@
     <Compile Include="Configuration\Saml2ConfigurationException.cs" />
     <Compile Include="Configuration\Saml2IdentityConfiguration.cs" />
     <Compile Include="Cryptography\Saml2EncryptedXml.cs" />
-    <Compile Include="Cryptography\InvalidSignedXmlException.cs" />
+    <Compile Include="Cryptography\InvalidSignatureException.cs" />
     <Compile Include="Cryptography\Saml2SignedText.cs" />
     <Compile Include="Cryptography\Saml2SignedXml.cs" />
     <Compile Include="Cryptography\Saml2Signer.cs" />

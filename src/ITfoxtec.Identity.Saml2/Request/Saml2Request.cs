@@ -222,14 +222,14 @@ namespace ITfoxtec.Identity.Saml2
             if(assertionElement == null)
             {
                 if (documentValidationResult != SignatureValidation.Valid)
-                    throw new Saml2RequestException("Signature is invalid.");                
+                    throw new InvalidSignatureException("Signature is invalid.");                
             }
             else
             {                
                 var assertionValidationResult = ValidateXmlSignature(assertionElement);
                 if (documentValidationResult == SignatureValidation.Invalid || assertionValidationResult == SignatureValidation.Invalid || 
                     !(documentValidationResult == SignatureValidation.Valid || assertionValidationResult == SignatureValidation.Valid))
-                    throw new Saml2RequestException("Signature is invalid.");
+                    throw new InvalidSignatureException("Signature is invalid.");
             }            
         }
 
@@ -242,7 +242,7 @@ namespace ITfoxtec.Identity.Saml2
             }
             if (xmlSignatures.Count > 1)
             {
-                throw new Saml2RequestException("There is more then one Signature element.");
+                throw new InvalidSignatureException("There is more then one Signature element.");
             }
 
             foreach (var signatureValidationCertificate in SignatureValidationCertificates)

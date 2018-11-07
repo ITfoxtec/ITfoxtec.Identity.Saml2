@@ -155,7 +155,7 @@ namespace ITfoxtec.Identity.Saml2
                     return;
                 }
             }
-            throw new Saml2RequestException("Signature is invalid.");
+            throw new InvalidSignatureException("Signature is invalid.");
         }
 
         private string DecompressResponse(string value)
