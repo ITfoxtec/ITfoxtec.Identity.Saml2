@@ -115,7 +115,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Id, Id);
             if (ValidUntil.HasValue)
             {
-                yield return new XAttribute(Saml2MetadataConstants.Message.ValidUntil, DateTime.UtcNow.AddDays(ValidUntil.Value).ToString("o", CultureInfo.InvariantCulture));
+                yield return new XAttribute(Saml2MetadataConstants.Message.ValidUntil, DateTimeOffset.UtcNow.AddDays(ValidUntil.Value).UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
             }
             yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
 

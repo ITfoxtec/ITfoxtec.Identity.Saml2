@@ -23,7 +23,7 @@ namespace ITfoxtec.Identity.Saml2
         /// The time at which the request expires, after which the recipient may discard the message. The time
         /// value is encoded in UTC, as described in Section 1.3.3.
         /// </summary>
-        public DateTime? NotOnOrAfter { get; set; }
+        public DateTimeOffset? NotOnOrAfter { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -36,7 +36,7 @@ namespace ITfoxtec.Identity.Saml2
             if (config == null) throw new ArgumentNullException(nameof(config));
 
             Destination = config.SingleLogoutDestination;
-            NotOnOrAfter = DateTime.UtcNow.AddMinutes(10);
+            NotOnOrAfter = DateTimeOffset.UtcNow.AddMinutes(10);
         }
 
         public Saml2LogoutRequest(Saml2Configuration config, ClaimsPrincipal currentPrincipal) : this(config)
@@ -81,7 +81,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (NotOnOrAfter.HasValue)
             {
-                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.ToString("o", CultureInfo.InvariantCulture));
+                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
             }
 
             if (Reason != null)

@@ -24,9 +24,9 @@ namespace ITfoxtec.Identity.Saml2.Util
             {
                 return GenericConvertValue<T, Saml2Id>(new Saml2Id(value));
             }
-            if (genericType == typeof(DateTime))
+            if (genericType == typeof(DateTimeOffset))
             {
-                return GenericConvertValue<T, DateTime>(DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal));
+                return GenericConvertValue<T, DateTimeOffset>(DateTimeOffset.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal));
             }
             if(genericType == typeof(Saml2NameIdentifier))
             {

@@ -44,8 +44,8 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
                 {
                     AllowRefresh = false,
                     IsPersistent = isPersistent,
-                    IssuedUtc = new DateTimeOffset(saml2AuthnResponse.SecurityTokenValidFrom),
-                    ExpiresUtc = lifetime.HasValue ? new DateTimeOffset(DateTime.UtcNow + lifetime.Value) : new DateTimeOffset(saml2AuthnResponse.SecurityTokenValidTo),
+                    IssuedUtc = saml2AuthnResponse.SecurityTokenValidFrom,
+                    ExpiresUtc = lifetime.HasValue ? DateTimeOffset.UtcNow.Add(lifetime.Value) : saml2AuthnResponse.SecurityTokenValidTo,
                 });
 
             return principal;

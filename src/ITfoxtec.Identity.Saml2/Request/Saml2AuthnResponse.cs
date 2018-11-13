@@ -36,12 +36,12 @@ namespace ITfoxtec.Identity.Saml2
         /// <summary>
         /// Gets the first instant in time at which this security token is valid.
         /// </summary>
-        public DateTime SecurityTokenValidFrom { get { return Saml2SecurityToken.ValidFrom; } }
+        public DateTimeOffset SecurityTokenValidFrom { get { return Saml2SecurityToken.ValidFrom; } }
 
         /// <summary>
         /// Gets the last instant in time at which this security token is valid.
         /// </summary>
-        public DateTime SecurityTokenValidTo { get { return Saml2SecurityToken.ValidTo; } }
+        public DateTimeOffset SecurityTokenValidTo { get { return Saml2SecurityToken.ValidTo; } }
 
         /// <summary>
         /// Saml2 Security Token Handler.
@@ -122,10 +122,11 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (Issuer == null) throw new ArgumentNullException("Issuer property");
 
+            var now = DateTimeOffset.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 TokenType = SamlTokenTypes.Saml2TokenProfile11.OriginalString,
-                Lifetime = new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(issuedTokenLifetime)),
+                Lifetime = new Lifetime(now.UtcDateTime, now.AddMinutes(issuedTokenLifetime).UtcDateTime),
                 Subject = new ClaimsIdentity(claims.Where(c => c.Type != ClaimTypes.NameIdentifier)),
                 AppliesToAddress = appliesToAddress.OriginalString,
                 TokenIssuerName = Issuer.OriginalString,
@@ -141,7 +142,7 @@ namespace ITfoxtec.Identity.Saml2
             var subjectConfirmationData = new Saml2SubjectConfirmationData
             {
                 Recipient = Destination,
-                NotOnOrAfter = DateTime.UtcNow.AddMinutes(subjectConfirmationLifetime),
+                NotOnOrAfter = DateTimeOffset.UtcNow.AddMinutes(subjectConfirmationLifetime).UtcDateTime,
             };
 
             if (InResponseTo != null)
@@ -244,8 +245,8 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("SubjectConfirmationData Not Found.");
             }
 
-            var notOnOrAfter = subjectConfirmationData.Attributes[Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTime>();
-            if (notOnOrAfter < DateTime.UtcNow)
+            var notOnOrAfter = subjectConfirmationData.Attributes[Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
+            if (notOnOrAfter < DateTimeOffset.UtcNow)
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");
             }

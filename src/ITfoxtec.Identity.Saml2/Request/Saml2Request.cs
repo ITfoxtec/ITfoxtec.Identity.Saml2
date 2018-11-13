@@ -52,7 +52,7 @@ namespace ITfoxtec.Identity.Saml2
         /// [Required]
         /// The time instant of issue of the request. The time value is encoded in UTC, as described in Section 1.3.3.
         /// </summary>
-        public DateTime IssueInstant { get; set; }
+        public DateTimeOffset IssueInstant { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -119,7 +119,7 @@ namespace ITfoxtec.Identity.Saml2
 
             Id = new Saml2Id();
             Version = Saml2Constants.VersionNumber;
-            IssueInstant = DateTime.UtcNow;
+            IssueInstant = DateTimeOffset.UtcNow;
 #if DEBUG
             Debug.WriteLine("Message ID: " + Id);
 #endif
@@ -131,7 +131,7 @@ namespace ITfoxtec.Identity.Saml2
             yield return new XAttribute(Saml2Constants.AssertionNamespaceNameX, Saml2Constants.AssertionNamespace.OriginalString);
             yield return new XAttribute(Saml2Constants.Message.Id, Id);
             yield return new XAttribute(Saml2Constants.Message.Version, Version);
-            yield return new XAttribute(Saml2Constants.Message.IssueInstant, IssueInstant.ToString("o", CultureInfo.InvariantCulture));
+            yield return new XAttribute(Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
 
             if (!string.IsNullOrWhiteSpace(Consent))
             {
@@ -179,7 +179,7 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("Invalid SAML2 version.");
             }
 
-            IssueInstant = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTime>();
+            IssueInstant = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTimeOffset>();
 
             Issuer = XmlDocument.DocumentElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Uri>();
 
