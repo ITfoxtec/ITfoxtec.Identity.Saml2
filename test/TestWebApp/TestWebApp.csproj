@@ -197,20 +197,20 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\ITfoxtec.Identity.Saml2.Mvc\ITfoxtec.Identity.Saml2.Mvc.csproj">
       <Project>{da5d0686-f694-4667-8cf9-ccf1b9bb1626}</Project>
       <Name>ITfoxtec.Identity.Saml2.Mvc</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\ITfoxtec.Identity.Saml2\ITfoxtec.Identity.Saml2.csproj">
-      <Project>{bb8fe53f-b198-4dcf-b51c-b11cc0215ae7}</Project>
+      <Project>{3ee8359c-dd95-4ac9-8137-2e551cf7cdcd}</Project>
       <Name>ITfoxtec.Identity.Saml2</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

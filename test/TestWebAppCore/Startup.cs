@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,8 +9,6 @@ using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
 using ITfoxtec.Identity.Saml2.Util;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2;
-using System.ServiceModel.Security;
-using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 
 namespace TestWebAppCore
@@ -71,7 +67,6 @@ namespace TestWebAppCore
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {

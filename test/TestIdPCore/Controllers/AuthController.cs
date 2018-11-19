@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Linq;
-using System.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens.Saml2;
 
 namespace TestIdPCore.Controllers
 {
@@ -21,8 +21,6 @@ namespace TestIdPCore.Controllers
     {
         const string relayStateReturnUrl = "ReturnUrl";
         private readonly Saml2Configuration config;
-
-        public object SecurityAlgorithms { get; private set; }
 
         public AuthController(IOptions<Saml2Configuration> configAccessor)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFULL
+using System;
 using System.IdentityModel.Tokens;
 
 namespace ITfoxtec.Identity.Saml2.Tokens
@@ -16,3 +17,4 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         }
     }
 }
+#endif

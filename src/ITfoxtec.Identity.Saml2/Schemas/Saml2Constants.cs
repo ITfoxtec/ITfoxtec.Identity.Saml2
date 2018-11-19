@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Tokens;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas
@@ -132,6 +133,5 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string SubjectConfirmationData = "SubjectConfirmationData";
         }
-
     }
 }

@@ -1,16 +1,25 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas;
+﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using ITfoxtec.Identity.Saml2.Tokens;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Xml;
 using System.Security.Cryptography.X509Certificates;
-using System.IdentityModel.Tokens;
 using ITfoxtec.Identity.Saml2.Cryptography;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.IdentityModel.Protocols.WSTrust;
 using System.Xml.Linq;
+#if NETFULL
+using System.IdentityModel.Configuration;
+using System.IdentityModel.Tokens;
+using System.IdentityModel.Protocols.WSTrust;
+#else
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens.Saml2;
+using System.Security.Claims;
+using System.ServiceModel.Security;
+#endif
+
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -19,7 +28,8 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2AuthnResponse : Saml2Response
     {
-        const string elementName = Saml2Constants.Message.AuthnResponse;
+
+        const string elementName = Schemas.Saml2Constants.Message.AuthnResponse;
 
         internal X509Certificate2 DecryptionCertificate { get; private set; }
 
@@ -123,15 +133,19 @@ namespace ITfoxtec.Identity.Saml2
             if (Issuer == null) throw new ArgumentNullException("Issuer property");
 
             var now = DateTimeOffset.UtcNow;
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                TokenType = SamlTokenTypes.Saml2TokenProfile11.OriginalString,
-                Lifetime = new Lifetime(now.UtcDateTime, now.AddMinutes(issuedTokenLifetime).UtcDateTime),
-                Subject = new ClaimsIdentity(claims.Where(c => c.Type != ClaimTypes.NameIdentifier)),
-                AppliesToAddress = appliesToAddress.OriginalString,
-                TokenIssuerName = Issuer.OriginalString,
-            };
-
+            var tokenDescriptor = new SecurityTokenDescriptor();
+            tokenDescriptor.Subject = new ClaimsIdentity(claims.Where(c => c.Type != ClaimTypes.NameIdentifier));
+#if NETFULL
+            tokenDescriptor.TokenType = Schemas.SamlTokenTypes.Saml2TokenProfile11.OriginalString;
+            tokenDescriptor.Lifetime = new Lifetime(now.UtcDateTime, now.AddMinutes(issuedTokenLifetime).UtcDateTime);
+            tokenDescriptor.AppliesToAddress = appliesToAddress.OriginalString;
+            tokenDescriptor.TokenIssuerName = Issuer.OriginalString;
+#else
+            //TODO What about TokenType?
+            tokenDescriptor.Expires = now.AddMinutes(issuedTokenLifetime).UtcDateTime;
+            tokenDescriptor.Audience = appliesToAddress.OriginalString;
+            tokenDescriptor.Issuer = Issuer.OriginalString;
+#endif
             return tokenDescriptor;
         }
 
@@ -150,12 +164,12 @@ namespace ITfoxtec.Identity.Saml2
                 subjectConfirmationData.InResponseTo = InResponseTo;
             }
 
-            return new Saml2SubjectConfirmation(Saml2Constants.Saml2BearerToken, subjectConfirmationData);
+            return new Saml2SubjectConfirmation(Schemas.Saml2Constants.Saml2BearerToken, subjectConfirmationData);
         }
 
         protected virtual Saml2AuthenticationStatement CreateAuthenticationStatement(Uri authnContext)
         {
-            var authenticationStatement = new Saml2AuthenticationStatement(new Saml2AuthenticationContext(authnContext ?? AuthnContextClassTypes.PasswordProtectedTransport));
+            var authenticationStatement = new Saml2AuthenticationStatement(new Saml2AuthenticationContext(authnContext ?? Schemas.AuthnContextClassTypes.PasswordProtectedTransport));
             authenticationStatement.SessionIndex = SessionIndex;
             return authenticationStatement;
         }
@@ -167,7 +181,7 @@ namespace ITfoxtec.Identity.Saml2
             Saml2SecurityToken.Assertion.Subject.NameId = NameId;
             if (Saml2SecurityToken.Assertion.Subject.NameId.Format == null)
             {
-                Saml2SecurityToken.Assertion.Subject.NameId.Format = NameIdentifierFormats.Persistent;
+                Saml2SecurityToken.Assertion.Subject.NameId.Format = Schemas.NameIdentifierFormats.Persistent;
             }
         }
 
@@ -184,14 +198,15 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
             envelope.Add(base.GetXContent());
             XmlDocument = envelope.ToXmlDocument();
 
             if (Saml2SecurityToken != null)
             {
                 var tokenXml = Saml2SecurityTokenHandler.WriteToken(Saml2SecurityToken);
-                var status = XmlDocument.DocumentElement[Saml2Constants.Message.Status, Saml2Constants.ProtocolNamespace.OriginalString];
+
+                var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
                 XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(tokenXml.ToXmlDocument().DocumentElement, true), status);
             }
 
@@ -202,7 +217,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validateXmlSignature);
 
-            if (Status == Saml2StatusCodes.Success)
+            if (Status == Schemas.Saml2StatusCodes.Success)
             {
                 var assertionElement = GetAssertionElement();
                 ValidateAssertionExpiration(assertionElement);
@@ -217,7 +232,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (assertionElement == null)
             {
-                var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Saml2Constants.Message.Assertion}']");
+                var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
                 if (assertionElements.Count != 1)
                 {
                     throw new Saml2RequestException("There is not exactly one Assertion element.");
@@ -229,23 +244,25 @@ namespace ITfoxtec.Identity.Saml2
 
         private void ValidateAssertionExpiration(XmlNode assertionElement)
         {
-            var subjectElement = assertionElement[Saml2Constants.Message.Subject, Saml2Constants.AssertionNamespace.OriginalString];
+            var subjectElement = assertionElement[Schemas.Saml2Constants.Message.Subject, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             if (subjectElement == null)
             {
                 throw new Saml2RequestException("Subject Not Found.");
             }
-            var subjectConfirmationElement = subjectElement[Saml2Constants.Message.SubjectConfirmation, Saml2Constants.AssertionNamespace.OriginalString];
+
+            var subjectConfirmationElement = subjectElement[Schemas.Saml2Constants.Message.SubjectConfirmation, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             if (subjectConfirmationElement == null)
             {
                 throw new Saml2RequestException("SubjectConfirmationElement Not Found.");
             }
-            var subjectConfirmationData = subjectConfirmationElement[Saml2Constants.Message.SubjectConfirmationData, Saml2Constants.AssertionNamespace.OriginalString];
+
+            var subjectConfirmationData = subjectConfirmationElement[Schemas.Saml2Constants.Message.SubjectConfirmationData, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             if (subjectConfirmationData == null)
             {
                 throw new Saml2RequestException("SubjectConfirmationData Not Found.");
             }
 
-            var notOnOrAfter = subjectConfirmationData.Attributes[Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
+            var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
             if (notOnOrAfter < DateTimeOffset.UtcNow)
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");

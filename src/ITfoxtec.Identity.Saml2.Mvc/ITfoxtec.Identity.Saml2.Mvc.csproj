@@ -99,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ITfoxtec.Identity.Saml2\ITfoxtec.Identity.Saml2.csproj">
-      <Project>{bb8fe53f-b198-4dcf-b51c-b11cc0215ae7}</Project>
+      <Project>{3ee8359c-dd95-4ac9-8137-2e551cf7cdcd}</Project>
       <Name>ITfoxtec.Identity.Saml2</Name>
     </ProjectReference>
   </ItemGroup>

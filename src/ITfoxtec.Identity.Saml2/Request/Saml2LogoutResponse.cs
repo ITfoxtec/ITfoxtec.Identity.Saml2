@@ -1,8 +1,12 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas;
+﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using System;
-using System.IdentityModel.Tokens;
 using System.Xml;
 using System.Xml.Linq;
+#if NETFULL
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -11,7 +15,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2LogoutResponse : Saml2Response
     {
-        const string elementName = Saml2Constants.Message.LogoutResponse;
+        const string elementName = Schemas.Saml2Constants.Message.LogoutResponse;
 
         /// <summary>
         /// The InResponseTo as string.
@@ -40,7 +44,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
 
             envelope.Add(base.GetXContent());
             //envelope.Add(GetXContent());
@@ -53,7 +57,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validateXmlSignature);
 
-            SessionIndex = XmlDocument.DocumentElement[Saml2Constants.Message.SessionIndex, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
+            SessionIndex = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.SessionIndex, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
         }
     }
 }

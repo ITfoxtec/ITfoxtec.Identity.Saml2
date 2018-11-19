@@ -4,9 +4,9 @@ using ITfoxtec.Identity.Saml2.Schemas;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens.Saml2;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 
@@ -28,7 +28,7 @@ namespace TestWebAppCore.Controllers
             config.Issuer = new Uri("http://some-domain.com/this-application");
             config.SingleSignOnDestination = new Uri("https://test-adfs.itfoxtec.com/adfs/ls/");
             config.SigningCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.pfx"));
-            config.SignatureAlgorithm = SecurityAlgorithms.RsaSha256Signature;
+            config.SignatureAlgorithm = Saml2SecurityAlgorithms.RsaSha256Signature;
 
             var appliesToAddress = new Uri("https://test-adfs.itfoxtec.com/adfs/services/trust");
 

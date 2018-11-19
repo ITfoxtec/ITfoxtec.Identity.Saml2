@@ -1,13 +1,17 @@
 ﻿using ITfoxtec.Identity.Saml2.Claims;
-using ITfoxtec.Identity.Saml2.Schemas;
+using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Xml;
 using System.Xml.Linq;
+#if NETFULL
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -16,7 +20,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2LogoutRequest : Saml2Request
     {
-        const string elementName = Saml2Constants.Message.LogoutRequest;
+        const string elementName = Schemas.Saml2Constants.Message.LogoutRequest;
 
         /// <summary>
         /// [Optional]
@@ -68,7 +72,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
 
             envelope.Add(base.GetXContent());
             envelope.Add(GetXContent());
@@ -81,12 +85,12 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (NotOnOrAfter.HasValue)
             {
-                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
+                yield return new XAttribute(Schemas.Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
             }
 
             if (Reason != null)
             {
-                yield return new XAttribute(Saml2Constants.Message.Reason, Reason.OriginalString);
+                yield return new XAttribute(Schemas.Saml2Constants.Message.Reason, Reason.OriginalString);
             }
 
             if (NameId != null)
@@ -94,19 +98,18 @@ namespace ITfoxtec.Identity.Saml2
                 object[] nameIdContent;
                 if (NameId.Format != null)
                 {
-                    nameIdContent = new object[] { NameId.Value, new XAttribute(Saml2Constants.Message.Format, NameId.Format) };
+                    nameIdContent = new object[] { NameId.Value, new XAttribute(Schemas.Saml2Constants.Message.Format, NameId.Format) };
                 }
                 else
                 {
                     nameIdContent = new object[] { NameId.Value };
                 }
-
-                yield return new XElement(Saml2Constants.AssertionNamespaceX + Saml2Constants.Message.NameId, nameIdContent);
+                yield return new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.NameId, nameIdContent);
             }
 
             if (SessionIndex != null)
             {
-                yield return new XElement(Saml2Constants.ProtocolNamespaceX + Saml2Constants.Message.SessionIndex, SessionIndex);
+                yield return new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.SessionIndex, SessionIndex);
             }
         }
 
@@ -114,9 +117,9 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validateXmlSignature);
 
-            NameId = XmlDocument.DocumentElement[Saml2Constants.Message.NameId, Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Saml2NameIdentifier>();
+            NameId = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.NameId, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Saml2NameIdentifier>();
 
-            SessionIndex = XmlDocument.DocumentElement[Saml2Constants.Message.SessionIndex, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
+            SessionIndex = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.SessionIndex, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
         }
 
         protected override void ValidateElementName()

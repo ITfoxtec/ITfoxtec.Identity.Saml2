@@ -3,34 +3,51 @@ using ITfoxtec.Identity.Saml2.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IdentityModel.Configuration;
-using System.IdentityModel.Services;
-using System.IdentityModel.Tokens;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Xml;
+using System.Security.Cryptography.X509Certificates;
+#if NETFULL
+using System.IdentityModel.Configuration;
+using System.IdentityModel.Services;
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens.Saml2;
+using System.Security.Claims;
+using System.ServiceModel.Security;
+#endif
 
 namespace ITfoxtec.Identity.Saml2.Tokens
 {
     public class Saml2ResponseSecurityTokenHandler : Saml2SecurityTokenHandler
     {
-        public static Saml2ResponseSecurityTokenHandler GetSaml2SecurityTokenHandler(IdentityConfiguration identityConfiguration)
+#if NETFULL
+#else
+        public TokenValidationParameters TokenValidationParameters { get; protected set; }
+#endif
+
+        public static Saml2ResponseSecurityTokenHandler GetSaml2SecurityTokenHandler(Saml2IdentityConfiguration configuration)
         {
             var handler = new Saml2ResponseSecurityTokenHandler();
+#if NETFULL
             handler.Configuration = new SecurityTokenHandlerConfiguration
             {
-                SaveBootstrapContext = identityConfiguration.SaveBootstrapContext,
-                AudienceRestriction = identityConfiguration.AudienceRestriction,
-                IssuerNameRegistry = identityConfiguration.IssuerNameRegistry,
-                CertificateValidationMode = identityConfiguration.CertificateValidationMode,
-                RevocationMode = identityConfiguration.RevocationMode,
-                CertificateValidator = identityConfiguration.CertificateValidator,
-                DetectReplayedTokens = identityConfiguration.DetectReplayedTokens,
+                SaveBootstrapContext = configuration.SaveBootstrapContext,
+                AudienceRestriction = configuration.AudienceRestriction,
+                IssuerNameRegistry = configuration.IssuerNameRegistry,
+                CertificateValidationMode = configuration.CertificateValidationMode,
+                RevocationMode = configuration.RevocationMode,
+                CertificateValidator = configuration.CertificateValidator,
+                DetectReplayedTokens = configuration.DetectReplayedTokens,
             };
 
             handler.SamlSecurityTokenRequirement.NameClaimType = ClaimTypes.NameIdentifier;
+#else
+            handler.TokenValidationParameters = configuration;
+#endif
             return handler;
         }
 
@@ -38,14 +55,27 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         {
             var saml2SecurityToken = token as Saml2SecurityToken;
 
-            ValidateConditions(saml2SecurityToken.Assertion.Conditions, SamlSecurityTokenRequirement.ShouldEnforceAudienceRestriction(Configuration.AudienceRestriction.AudienceMode, saml2SecurityToken));
 
+#if NETFULL
+            ValidateConditions(saml2SecurityToken.Assertion.Conditions, SamlSecurityTokenRequirement.ShouldEnforceAudienceRestriction(Configuration.AudienceRestriction.AudienceMode, saml2SecurityToken));
+#else
+            ValidateConditions(saml2SecurityToken, TokenValidationParameters);
+#endif
+
+#if NETFULL
             if (Configuration.DetectReplayedTokens)
             {
                 DetectReplayedToken(saml2SecurityToken);
             }
+#else
+            //TODO Consider replayed detection (ValidateTokenReplay())
+#endif
 
+#if NETFULL
             var identity = CreateClaims(saml2SecurityToken);
+#else
+            var identity = CreateClaimsIdentity(saml2SecurityToken, TokenValidationParameters.ValidIssuer, TokenValidationParameters);
+#endif
             if (saml2SecurityToken.Assertion.Subject.NameId != null)
             {
                 saml2Response.NameId = saml2SecurityToken.Assertion.Subject.NameId;
@@ -64,10 +94,15 @@ namespace ITfoxtec.Identity.Saml2.Tokens
                 identity.AddClaim(new Claim(Saml2ClaimTypes.SessionIndex, saml2Response.SessionIndex));
             }
 
+#if NETFULL
             if (Configuration.SaveBootstrapContext)
             {
                 identity.BootstrapContext = new BootstrapContext(saml2SecurityToken, this);
-            }            
+            }
+#else
+            //TODO Consider bootstrap context
+#endif
+
 
             return new List<ClaimsIdentity>(1) { identity }.AsReadOnly();
         }
