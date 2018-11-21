@@ -22,8 +22,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
 #endif
     {
 
-#if NETFULL
-#else
+#if !NETFULL
         public X509CertificateValidationMode CertificateValidationMode { get; set; }
         public X509RevocationMode RevocationMode { get; set; }
         public Saml2CertificateValidator CertificateValidator { get; set; }

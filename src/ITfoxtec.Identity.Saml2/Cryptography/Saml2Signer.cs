@@ -18,7 +18,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         public Saml2Signer(X509Certificate2 certificate, string signatureAlgorithm)
         {
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
-            if (signatureAlgorithm == null) throw new ArgumentNullException(nameof(SignatureAlgorithm));
+            if (signatureAlgorithm == null) throw new ArgumentNullException(nameof(signatureAlgorithm));
 
             Certificate = certificate;
             SignatureAlgorithm = signatureAlgorithm;

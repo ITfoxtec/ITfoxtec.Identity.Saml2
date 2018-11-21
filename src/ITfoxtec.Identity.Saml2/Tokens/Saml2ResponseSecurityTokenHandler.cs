@@ -24,8 +24,7 @@ namespace ITfoxtec.Identity.Saml2.Tokens
 {
     public class Saml2ResponseSecurityTokenHandler : Saml2SecurityTokenHandler
     {
-#if NETFULL
-#else
+#if !NETFULL
         public TokenValidationParameters TokenValidationParameters { get; protected set; }
 #endif
 

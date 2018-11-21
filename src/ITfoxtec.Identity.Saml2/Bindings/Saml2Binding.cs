@@ -8,8 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
-#if NETFULL
-#else
+#if !NETFULL
 using ITfoxtec.Identity.Saml2.Cryptography;
 using System.Security.Cryptography;
 #endif
@@ -30,9 +29,7 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public string RelayState { get; set; }
 
-#if NETFULL
-#else
-
+#if !NETFULL
         static Saml2Binding()
         {
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA256SignatureDescription),

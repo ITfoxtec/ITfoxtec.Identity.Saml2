@@ -1,5 +1,4 @@
-﻿#if NETFULL
-#else
+﻿#if !NETFULL
 using System;
 using System.Security.Cryptography;
 
