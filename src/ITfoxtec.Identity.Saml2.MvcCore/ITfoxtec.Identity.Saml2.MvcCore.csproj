@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>ITfoxtec</Authors>
+    <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>© 2018 ITfoxtec</Copyright>
     <PackageLicenseUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/blob/master/LICENSE</PackageLicenseUrl>
@@ -15,7 +15,6 @@
     </Description>
     <PackageTags>SAML SAML2.0 SAML2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>1.0.2.6</Version>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
