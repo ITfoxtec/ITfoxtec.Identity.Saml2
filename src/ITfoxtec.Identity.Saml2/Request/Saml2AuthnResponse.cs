@@ -15,8 +15,6 @@ using System.IdentityModel.Protocols.WSTrust;
 #else
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Saml2;
-using System.Security.Claims;
-using System.ServiceModel.Security;
 #endif
 
 

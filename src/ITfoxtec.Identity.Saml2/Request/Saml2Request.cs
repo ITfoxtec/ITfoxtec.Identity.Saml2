@@ -12,10 +12,7 @@ using System.Security.Cryptography.Xml;
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Saml2;
-using System.Security.Claims;
-using System.ServiceModel.Security;
 #endif
 
 namespace ITfoxtec.Identity.Saml2
@@ -254,7 +251,7 @@ namespace ITfoxtec.Identity.Saml2
 
             foreach (var signatureValidationCertificate in SignatureValidationCertificates)
             {
-                IdentityConfiguration.ValidateCertificate(signatureValidationCertificate);
+                IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
 
                 var signedXml = new Saml2SignedXml(xmlElement, signatureValidationCertificate, SignatureAlgorithm);
                 signedXml.LoadXml(xmlSignatures[0] as XmlElement);

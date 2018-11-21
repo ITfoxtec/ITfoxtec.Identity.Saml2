@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 #if !NETFULL
 using ITfoxtec.Identity.Saml2.Schemas;
-using System.Security.Cryptography;
 #endif
 
 namespace ITfoxtec.Identity.Saml2.Cryptography

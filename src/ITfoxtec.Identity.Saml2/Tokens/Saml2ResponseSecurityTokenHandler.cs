@@ -1,22 +1,20 @@
 ﻿using ITfoxtec.Identity.Saml2.Claims;
 using ITfoxtec.Identity.Saml2.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Xml;
 #if NETFULL
+using System;
+using System.IO;
 using System.IdentityModel.Configuration;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
 #else
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Saml2;
-using System.Security.Claims;
-using System.ServiceModel.Security;
 #endif
 
 namespace ITfoxtec.Identity.Saml2.Tokens
@@ -48,19 +46,6 @@ namespace ITfoxtec.Identity.Saml2.Tokens
 #endif
             return handler;
         }
-
-//#if NETFULL
-//        public Saml2SecurityToken ReadSaml2Token(XmlReader reader)
-//        {
-//            return ReadToken(reader) as Saml2SecurityToken;
-//        }
-//#else   
-//        public Saml2SecurityToken ReadSaml2Token(XmlReader reader)
-//        {
-//            var token = reader.ReadOuterXml();
-//            return ReadSaml2Token(token);
-//        }
-//#endif
 
         public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, Saml2Response saml2Response)
         {

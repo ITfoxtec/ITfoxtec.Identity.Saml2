@@ -1,16 +1,16 @@
-﻿using ITfoxtec.Identity.Saml2.Tokens;
+﻿using System.Security.Cryptography.X509Certificates;
+using ITfoxtec.Identity.Saml2.Util;
+#if NETFULL
+using ITfoxtec.Identity.Saml2.Tokens;
 using System;
 using System.Collections.Generic;
-#if NETFULL
 using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
-using System.Security.Cryptography.X509Certificates;
 #else
 using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
-using System.ServiceModel.Security;
+using System.IdentityModel.Selectors;
 #endif
 
 namespace ITfoxtec.Identity.Saml2.Configuration
@@ -24,10 +24,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
     {
 
 #if !NETFULL
-        public X509CertificateValidationMode CertificateValidationMode { get; set; }
-        public X509RevocationMode RevocationMode { get; set; }
-        public Saml2CertificateValidator CertificateValidator { get; set; }
-        
+        public X509CertificateValidator CertificateValidator { get; set; }
 #endif
 
         public static Saml2IdentityConfiguration GetIdentityConfiguration(Saml2Configuration config)
@@ -46,21 +43,16 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             configuration.ValidateAudience = config.AudienceRestricted;
             configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a.OriginalString);
             configuration.ValidIssuer = config.Issuer?.OriginalString;
-            configuration.CertificateValidationMode = config.CertificateValidationMode;
-            configuration.RevocationMode = config.RevocationMode;
+
             configuration.NameClaimType = ClaimTypes.NameIdentifier;
-            configuration.CertificateValidator = new Saml2CertificateValidator { IdentityConfiguration = configuration };
+
+            configuration.CertificateValidator = new Saml2CertificateValidator
+            {
+                CertificateValidationMode = config.CertificateValidationMode,
+                RevocationMode = config.RevocationMode,
+            };
 #endif
             return configuration;
-        }
-
-        public void ValidateCertificate(X509Certificate2 certificate)
-        {
-#if NETFULL
-            CertificateValidator.Validate(certificate);
-#else
-            CertificateValidator.Validate(certificate);
-#endif
         }
 
 #if NETFULL

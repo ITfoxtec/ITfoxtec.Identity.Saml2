@@ -31,11 +31,6 @@ namespace ITfoxtec.Identity.Saml2.Util
             return new X509Certificate2(path, password);
         }
 
-        public static X509Certificate2 Load(object p)
-        {
-            throw new NotImplementedException();
-        }
-
         public static X509Certificate2 LoadBytes(string certificate)
         {
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
