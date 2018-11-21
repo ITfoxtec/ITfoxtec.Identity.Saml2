@@ -10,7 +10,8 @@ logout and metadata. Both SP Initiated and IdP Initiated sign on is supported.
 The ITfoxtec Identity Saml2 package is tested for compliance with Active Directory Federation Services (AD FS). 
 The Danish OIOSAML 2.0 profile is supported and tested for compliance with NemLog-in. 
 
-<a href="https://itfoxtec.com/identitysaml2">ITfoxtec Identity Saml2 Project Home Page</a> with description and link to NuGet.
+### More information
+You can read more on <a href="https://itfoxtec.com/identitysaml2">ITfoxtec Identity Saml2 Project Home Page</a>.
 
 ### Support
 Please ask your question on <a href="https://stackoverflow.com/">Stack Overflow</a> and email a link to <a href="mailto:support@itfoxtec.com?subject=ITfoxtec SAML 2.0">support@itfoxtec.com</a> for me to answer.<br />
