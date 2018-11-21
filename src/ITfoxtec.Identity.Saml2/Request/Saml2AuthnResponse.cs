@@ -138,7 +138,6 @@ namespace ITfoxtec.Identity.Saml2
             tokenDescriptor.AppliesToAddress = appliesToAddress.OriginalString;
             tokenDescriptor.TokenIssuerName = Issuer.OriginalString;
 #else
-            //TODO What about TokenType?
             tokenDescriptor.Expires = now.AddMinutes(issuedTokenLifetime).UtcDateTime;
             tokenDescriptor.Audience = appliesToAddress.OriginalString;
             tokenDescriptor.Issuer = Issuer.OriginalString;

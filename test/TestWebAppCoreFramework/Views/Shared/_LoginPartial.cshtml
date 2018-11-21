@@ -1,0 +1,28 @@
+﻿@if (((System.Security.Claims.ClaimsIdentity)User.Identity).IsAuthenticated)
+{
+    <text>
+    @using (Html.BeginForm("Logout", "Auth", FormMethod.Post, new { id = "logoutForm", autocomplete = "off", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text">
+                @if (User.Identity.Name != null)
+                    {
+                    <text>Hello, @User.Identity.Name!</text>
+                }
+                else
+                {
+                    <text>Hello</text>
+                }
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
+        </ul>
+    }
+    </text>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Log in", "Login", "Auth", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

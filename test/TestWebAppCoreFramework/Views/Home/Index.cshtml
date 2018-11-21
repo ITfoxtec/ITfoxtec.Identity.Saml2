@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Default Page";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="jumbotron">
+    <h2>Login test</h2>
+    <p class="lead">Click login or go to Secure Page to login.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>The users Claims (Iteration on User.Claims)</h2>
+        <p>
+            @foreach (var claim in User.Claims)
+            {
+                <strong>@claim.Type</strong> <br /> <span style="padding-left: 10px">Value: @claim.Value</span> <br />
+            }
+        </p>
+    </div>
+</div>

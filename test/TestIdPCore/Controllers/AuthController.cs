@@ -148,6 +148,13 @@ namespace TestIdPCore.Controllers
                 SingleLogoutResponseDestination = new Uri("https://localhost:44306/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
             });
+            validRelyingPartys.Add(new RelyingParty
+            {
+                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebappcoreframework"),
+                SingleSignOnDestination = new Uri("https://localhost:44307/Auth/AssertionConsumerService"),
+                SingleLogoutResponseDestination = new Uri("https://localhost:44307/Auth/LoggedOut"),
+                SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
+            });
 
             return validRelyingPartys.Where(rp => rp.Issuer.OriginalString.Equals(issuer.OriginalString, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
