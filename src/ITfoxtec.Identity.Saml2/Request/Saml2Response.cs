@@ -31,6 +31,16 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public Saml2Id InResponseTo { get; set; }
 
+        /// <summary>
+        /// The InResponseTo as string.
+        /// </summary>
+        /// <value>The InResponseTo string.</value>
+        public string InResponseToAsString
+        {
+            get { return InResponseTo.Value; }
+            set { InResponseTo = new Saml2Id(value); }
+        }
+
         public Saml2Response(Saml2Configuration config) : base(config)
         { }
 
@@ -47,7 +57,7 @@ namespace ITfoxtec.Identity.Saml2
 
             if (InResponseTo != null)
             {
-                yield return new XAttribute(Schemas.Saml2Constants.Message.InResponseTo, InResponseTo);
+                yield return new XAttribute(Schemas.Saml2Constants.Message.InResponseTo, InResponseToAsString);
             }
         }
 

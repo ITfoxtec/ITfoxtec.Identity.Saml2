@@ -1,7 +1,6 @@
 ﻿using ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +16,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
         /// <param name="isPersistent">If the IsPersistent property is true, the cookie is written as a persistent cookie. Persistent cookies remain valid after the browser is closed until they expire.</param>
         public static async Task<ClaimsPrincipal> CreateSession(this Saml2AuthnResponse saml2AuthnResponse, HttpContext httpContext, TimeSpan? lifetime = null, bool isPersistent = false, Func<ClaimsPrincipal, ClaimsPrincipal> claimsTransform = null)
         {
-            if (Thread.CurrentPrincipal.Identity.IsAuthenticated)
+            if (httpContext.User.Identity.IsAuthenticated)
             {
                 throw new InvalidOperationException("There already exist an Authenticated user.");
             }

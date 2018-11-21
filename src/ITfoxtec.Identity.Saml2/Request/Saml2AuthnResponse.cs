@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml.Linq;
 #if NETFULL
-using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Protocols.WSTrust;
 #else
@@ -271,10 +270,14 @@ namespace ITfoxtec.Identity.Saml2
 
         private Saml2SecurityToken ReadSecurityToken(XmlNode assertionElement)
         {
+#if NETFULL
             using (var reader = new XmlNodeReader(assertionElement))
             {
                 return Saml2SecurityTokenHandler.ReadToken(reader) as Saml2SecurityToken;
             }
+#else   
+            return Saml2SecurityTokenHandler.ReadSaml2Token(assertionElement.OuterXml);
+#endif
         }
 
         private ClaimsIdentity ReadClaimsIdentity()

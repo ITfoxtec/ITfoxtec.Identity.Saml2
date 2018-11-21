@@ -10,7 +10,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Security.Cryptography.Xml;
 #if NETFULL
-using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
 #else
 using Microsoft.IdentityModel.Tokens;
@@ -129,7 +128,7 @@ namespace ITfoxtec.Identity.Saml2
             Version = Schemas.Saml2Constants.VersionNumber;
             IssueInstant = DateTimeOffset.UtcNow;
 #if DEBUG
-            Debug.WriteLine("Message ID: " + Id);
+            Debug.WriteLine("Message ID: " + IdAsString);
 #endif
         }
 
@@ -137,7 +136,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             yield return new XAttribute(Schemas.Saml2Constants.ProtocolNamespaceNameX, Schemas.Saml2Constants.ProtocolNamespace.OriginalString);
             yield return new XAttribute(Schemas.Saml2Constants.AssertionNamespaceNameX, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
-            yield return new XAttribute(Schemas.Saml2Constants.Message.Id, Id);
+            yield return new XAttribute(Schemas.Saml2Constants.Message.Id, IdAsString);
             yield return new XAttribute(Schemas.Saml2Constants.Message.Version, Version);
             yield return new XAttribute(Schemas.Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
 

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Xml;
-using System.Security.Cryptography.X509Certificates;
 #if NETFULL
 using System.IdentityModel.Configuration;
 using System.IdentityModel.Services;
@@ -50,10 +49,23 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             return handler;
         }
 
+//#if NETFULL
+//        public Saml2SecurityToken ReadSaml2Token(XmlReader reader)
+//        {
+//            return ReadToken(reader) as Saml2SecurityToken;
+//        }
+//#else   
+//        public Saml2SecurityToken ReadSaml2Token(XmlReader reader)
+//        {
+//            var token = reader.ReadOuterXml();
+//            return ReadSaml2Token(token);
+//        }
+//#endif
+
         public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, Saml2Response saml2Response)
         {
             var saml2SecurityToken = token as Saml2SecurityToken;
-
+            
 
 #if NETFULL
             ValidateConditions(saml2SecurityToken.Assertion.Conditions, SamlSecurityTokenRequirement.ShouldEnforceAudienceRestriction(Configuration.AudienceRestriction.AudienceMode, saml2SecurityToken));

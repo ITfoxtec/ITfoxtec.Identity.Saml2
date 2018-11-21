@@ -1,18 +1,10 @@
 ﻿using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IdentityModel.Tokens;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
-#if !NETFULL
-using ITfoxtec.Identity.Saml2.Cryptography;
-using System.Security.Cryptography;
-#endif
-
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -28,21 +20,6 @@ namespace ITfoxtec.Identity.Saml2
         /// <para>If the message being built is a request message, the relaystate will be encoded and compressed before being included.</para>
         /// </summary>
         public string RelayState { get; set; }
-
-#if !NETFULL
-        static Saml2Binding()
-        {
-            CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA256SignatureDescription),
-                "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
-            );
-            CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA384SignatureDescription),
-                "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
-            );
-            CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA512SignatureDescription),
-                "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
-            );
-        }
-#endif
 
         public Saml2Binding()
         { }

@@ -17,16 +17,6 @@ namespace ITfoxtec.Identity.Saml2
     {
         const string elementName = Schemas.Saml2Constants.Message.LogoutResponse;
 
-        /// <summary>
-        /// The InResponseTo as string.
-        /// </summary>
-        /// <value>The InResponseTo string.</value>
-        public string InResponseToAsString
-        {
-            get { return InResponseTo.Value; }
-            set { InResponseTo = new Saml2Id(value); }
-        }
-
         public Saml2LogoutResponse(Saml2Configuration config) : base(config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));

@@ -16,14 +16,14 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public byte[] SignData(byte[] input)
         {
-            var formatter = Saml2Signer.CreateFormatter();
-            return formatter.CreateSignature(Saml2Signer.HashAlgorithm.ComputeHash(input));
+            (var formatter, var hashAlgorithm) = Saml2Signer.CreateFormatter();
+            return formatter.CreateSignature(hashAlgorithm.ComputeHash(input));
         }
 
         internal bool CheckSignature(byte[] input, byte[] signature)
         {
-            var deformatter = Saml2Signer.CreateDeformatter();
-            return deformatter.VerifySignature(Saml2Signer.HashAlgorithm.ComputeHash(input), signature);
+            (var deformatter, var hashAlgorithm) = Saml2Signer.CreateDeformatter();
+            return deformatter.VerifySignature(hashAlgorithm.ComputeHash(input), signature);
         }
     }
 }

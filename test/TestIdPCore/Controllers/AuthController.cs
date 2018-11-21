@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.Extensions.Options;
+//using System.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Saml2;
 
 namespace TestIdPCore.Controllers

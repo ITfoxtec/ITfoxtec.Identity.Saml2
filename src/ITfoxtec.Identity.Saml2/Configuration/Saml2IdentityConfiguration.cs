@@ -6,6 +6,7 @@ using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 #else
+using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -43,6 +44,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
 #else
             configuration.SaveSigninToken = config.SaveBootstrapContext;
             configuration.ValidateAudience = config.AudienceRestricted;
+            configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a.OriginalString);
             configuration.ValidIssuer = config.Issuer?.OriginalString;
             configuration.CertificateValidationMode = config.CertificateValidationMode;
             configuration.RevocationMode = config.RevocationMode;
