@@ -37,12 +37,14 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             configuration.IssuerNameRegistry = new Saml2ResponseIssuerNameRegistry();
             configuration.CertificateValidationMode = config.CertificateValidationMode;
             configuration.RevocationMode = config.RevocationMode;
+            configuration.DetectReplayedTokens = config.DetectReplayedTokens;
             configuration.Initialize();
 #else
             configuration.SaveSigninToken = config.SaveBootstrapContext;
             configuration.ValidateAudience = config.AudienceRestricted;
             configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a.OriginalString);
             configuration.ValidIssuer = config.Issuer?.OriginalString;
+            configuration.ValidateTokenReplay = config.DetectReplayedTokens;
 
             configuration.NameClaimType = ClaimTypes.NameIdentifier;
 

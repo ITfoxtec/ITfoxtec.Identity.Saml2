@@ -218,8 +218,14 @@ namespace ITfoxtec.Identity.Saml2
                 var assertionElement = GetAssertionElement();
                 ValidateAssertionExpiration(assertionElement);
 
+#if NETFULL
                 Saml2SecurityToken = ReadSecurityToken(assertionElement);
                 ClaimsIdentity = ReadClaimsIdentity();
+#else
+                var tokenString = assertionElement.OuterXml;
+                Saml2SecurityToken = ReadSecurityToken(tokenString);
+                ClaimsIdentity = ReadClaimsIdentity(tokenString);
+#endif
             }
         }
 
@@ -265,22 +271,30 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
+#if NETFULL
         private Saml2SecurityToken ReadSecurityToken(XmlNode assertionElement)
         {
-#if NETFULL
             using (var reader = new XmlNodeReader(assertionElement))
             {
                 return Saml2SecurityTokenHandler.ReadToken(reader) as Saml2SecurityToken;
             }
-#else   
-            return Saml2SecurityTokenHandler.ReadSaml2Token(assertionElement.OuterXml);
-#endif
         }
 
         private ClaimsIdentity ReadClaimsIdentity()
         {
             return Saml2SecurityTokenHandler.ValidateToken(Saml2SecurityToken, this).First();
         }
+#else
+        private Saml2SecurityToken ReadSecurityToken(string tokenString)
+        {
+            return Saml2SecurityTokenHandler.ReadSaml2Token(tokenString);
+        }
+
+        private ClaimsIdentity ReadClaimsIdentity(string tokenString)
+        {
+            return Saml2SecurityTokenHandler.ValidateToken(Saml2SecurityToken, tokenString, this).First();
+        }
+#endif
 
         protected override void DecryptMessage()
         {

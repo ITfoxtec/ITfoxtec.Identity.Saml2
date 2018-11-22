@@ -28,6 +28,8 @@ namespace ITfoxtec.Identity.Saml2
 
         public bool SaveBootstrapContext { get; set; } = false;
 
+        public bool DetectReplayedTokens { get; set; } = false;
+
         public bool AudienceRestricted { get; set; } = true;
         public List<Uri> AllowedAudienceUris { get; protected set; } = new List<Uri>();
 

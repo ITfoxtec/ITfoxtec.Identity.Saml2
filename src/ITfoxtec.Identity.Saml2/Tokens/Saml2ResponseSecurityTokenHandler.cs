@@ -47,11 +47,14 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             return handler;
         }
 
+#if NETFULL
         public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, Saml2Response saml2Response)
+#else
+        public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, string tokenString, Saml2Response saml2Response)
+#endif
         {
             var saml2SecurityToken = token as Saml2SecurityToken;
             
-
 #if NETFULL
             ValidateConditions(saml2SecurityToken.Assertion.Conditions, SamlSecurityTokenRequirement.ShouldEnforceAudienceRestriction(Configuration.AudienceRestriction.AudienceMode, saml2SecurityToken));
 #else
@@ -64,7 +67,10 @@ namespace ITfoxtec.Identity.Saml2.Tokens
                 DetectReplayedToken(saml2SecurityToken);
             }
 #else
-            //TODO Consider replayed detection (ValidateTokenReplay())
+            if (TokenValidationParameters.ValidateTokenReplay)
+            {
+                ValidateTokenReplay(saml2SecurityToken.Assertion.Conditions.NotBefore, tokenString, TokenValidationParameters);
+            }
 #endif
 
 #if NETFULL
@@ -96,9 +102,11 @@ namespace ITfoxtec.Identity.Saml2.Tokens
                 identity.BootstrapContext = new BootstrapContext(saml2SecurityToken, this);
             }
 #else
-            //TODO Consider bootstrap context
+            if (TokenValidationParameters.SaveSigninToken)
+            {
+                identity.BootstrapContext = tokenString;
+            }
 #endif
-
 
             return new List<ClaimsIdentity>(1) { identity }.AsReadOnly();
         }
