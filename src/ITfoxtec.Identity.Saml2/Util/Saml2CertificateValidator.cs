@@ -16,31 +16,25 @@ namespace ITfoxtec.Identity.Saml2.Util
 
         public override void Validate(X509Certificate2 certificate)
         {
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
+
             switch (CertificateValidationMode)
             {
                 case X509CertificateValidationMode.None:
-                    {
-                        break;
-                    }
+                    break;
 
                 case X509CertificateValidationMode.PeerTrust:
-                    {
-                        ValidatePeerTrust(certificate);
-                        break;
-                    }
+                    ValidatePeerTrust(certificate);
+                    break;
 
                 case X509CertificateValidationMode.ChainTrust:
-                    {
-                        ValidateChainTrust(certificate);
-                        break;
-                    }
+                    ValidateChainTrust(certificate);
+                    break;
 
                 case X509CertificateValidationMode.PeerOrChainTrust:
-                    {
-                        ValidatePeerTrust(certificate);
-                        ValidateChainTrust(certificate);
-                        break;
-                    }
+                    ValidatePeerTrust(certificate);
+                    ValidateChainTrust(certificate);
+                    break;
 
                 case X509CertificateValidationMode.Custom:
                 default:
@@ -82,12 +76,12 @@ namespace ITfoxtec.Identity.Saml2.Util
             }
         }
 
-        string GetCertificateInformation(X509Certificate2 certificate)
+        private string GetCertificateInformation(X509Certificate2 certificate)
         {
             return $" Certificate name:'{certificate.SubjectName?.Name}' and thumbprint:'{certificate.Thumbprint}'.";
         }
 
-        string GetChainStatusInformation(X509ChainStatus[] chainStatus)
+        private string GetChainStatusInformation(X509ChainStatus[] chainStatus)
         {
             if (chainStatus != null)
             {
