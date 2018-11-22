@@ -14,5 +14,5 @@ The Danish OIOSAML 2.0 profile is supported and tested for compliance with NemLo
 You can read more on <a href="https://itfoxtec.com/identitysaml2">ITfoxtec Identity Saml2 Project Home Page</a>.
 
 ### Support
-Please ask your question on <a href="https://stackoverflow.com/">Stack Overflow</a> and email a link to <a href="mailto:support@itfoxtec.com?subject=ITfoxtec SAML 2.0">support@itfoxtec.com</a> for me to answer.<br />
+Please ask your question on <a href="https://stackoverflow.com/">Stack Overflow</a> and add the 'itfoxtec-identity-saml2' tag for me to answer.<br />
 
