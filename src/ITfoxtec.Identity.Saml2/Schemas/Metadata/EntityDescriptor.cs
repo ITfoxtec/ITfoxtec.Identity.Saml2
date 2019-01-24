@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IdentityModel.Tokens;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
+#if NETFULL
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
@@ -100,7 +104,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             var xmlDocument = envelope.ToXmlDocument();
             if(MetadataSigningCertificate != null)
             {
-                xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, CertificateIncludeOption, Id.Value);
+                xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, CertificateIncludeOption, IdAsString);
             }
             return xmlDocument;
         }
@@ -112,7 +116,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 throw new ArgumentNullException("EntityId property");
             }
             yield return new XAttribute(Saml2MetadataConstants.Message.EntityId, EntityId.OriginalString);
-            yield return new XAttribute(Saml2MetadataConstants.Message.Id, Id);
+            yield return new XAttribute(Saml2MetadataConstants.Message.Id, IdAsString);
             if (ValidUntil.HasValue)
             {
                 yield return new XAttribute(Saml2MetadataConstants.Message.ValidUntil, DateTimeOffset.UtcNow.AddDays(ValidUntil.Value).UtcDateTime.ToString("o", CultureInfo.InvariantCulture));

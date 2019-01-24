@@ -1,8 +1,12 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas;
+﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Globalization;
-using System.IdentityModel.Tokens;
 using System.Xml;
+#if NETFULL
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2.Util
 {
@@ -30,7 +34,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             }
             if(genericType == typeof(Saml2NameIdentifier))
             {
-                return GenericConvertValue<T, Saml2NameIdentifier>(new Saml2NameIdentifier(value, ConvertValue<Uri>(xmlNode.Attributes[Saml2Constants.Message.Format]?.Value, xmlNode)));
+                return GenericConvertValue<T, Saml2NameIdentifier>(new Saml2NameIdentifier(value, ConvertValue<Uri>(xmlNode.Attributes[Schemas.Saml2Constants.Message.Format]?.Value, xmlNode)));
             }
             else
             {

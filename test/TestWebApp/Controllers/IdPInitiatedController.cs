@@ -25,8 +25,8 @@ namespace TestWebApp.Controllers
 
             config.Issuer = new Uri("http://some-domain.com/this-application");
             config.SingleSignOnDestination = new Uri("https://test-adfs.itfoxtec.com/adfs/ls/");
-            config.SigningCertificate = CertificateUtil.Load(HttpContext.Server.MapPath("~/App_Data/itfoxtec.identity.saml2.testwebapp_Certificate.pfx"));
-            config.SignatureAlgorithm = SecurityAlgorithms.RsaSha256Signature;
+            config.SigningCertificate = CertificateUtil.Load(HttpContext.Server.MapPath("~/App_Data/itfoxtec.identity.saml2.testwebapp_Certificate.pfx"), "!QAZ2wsx");
+            config.SignatureAlgorithm = Saml2SecurityAlgorithms.RsaSha256Signature;
 
             var appliesToAddress = new Uri("https://test-adfs.itfoxtec.com/adfs/services/trust");
 

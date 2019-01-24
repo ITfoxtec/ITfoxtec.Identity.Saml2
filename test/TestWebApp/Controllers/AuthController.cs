@@ -18,8 +18,6 @@ namespace TestWebApp.Controllers
         const string relayStateReturnUrl = "ReturnUrl";
         private readonly Saml2Configuration config;
 
-        public object SecurityAlgorithms { get; private set; }
-
         public AuthController()
         {
             config = IdentityConfig.Saml2Configuration;

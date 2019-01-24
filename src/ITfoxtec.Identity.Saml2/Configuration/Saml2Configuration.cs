@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ITfoxtec.Identity.Saml2.Schemas;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
 using System.ServiceModel.Security;
 
 namespace ITfoxtec.Identity.Saml2
@@ -17,7 +17,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public Uri SingleLogoutDestination { get; set; }
 
-        public string SignatureAlgorithm { get; set; } = SignedXml.XmlDsigRSASHA256Url;
+        public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
         
         public X509Certificate2 SigningCertificate { get; set; }
         public X509Certificate2 DecryptionCertificate { get; set; }
@@ -27,6 +27,8 @@ namespace ITfoxtec.Identity.Saml2
         public X509RevocationMode RevocationMode { get; set; } = X509RevocationMode.Online;
 
         public bool SaveBootstrapContext { get; set; } = false;
+
+        public bool DetectReplayedTokens { get; set; } = false;
 
         public bool AudienceRestricted { get; set; } = true;
         public List<Uri> AllowedAudienceUris { get; protected set; } = new List<Uri>();

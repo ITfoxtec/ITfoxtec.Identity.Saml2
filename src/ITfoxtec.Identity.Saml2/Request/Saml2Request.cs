@@ -1,15 +1,19 @@
 ﻿using ITfoxtec.Identity.Saml2.Configuration;
 using ITfoxtec.Identity.Saml2.Cryptography;
-using ITfoxtec.Identity.Saml2.Schemas;
+using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IdentityModel.Configuration;
-using System.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
+using System.Security.Cryptography.Xml;
+#if NETFULL
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -107,7 +111,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public string SignatureAlgorithm { get; set; }     
 
-        internal IdentityConfiguration IdentityConfiguration { get; private set; }
+        internal Saml2IdentityConfiguration IdentityConfiguration { get; private set; }
 
         public Saml2Request(Saml2Configuration config)
         {
@@ -118,34 +122,34 @@ namespace ITfoxtec.Identity.Saml2
             IdentityConfiguration = Saml2IdentityConfiguration.GetIdentityConfiguration(config);
 
             Id = new Saml2Id();
-            Version = Saml2Constants.VersionNumber;
+            Version = Schemas.Saml2Constants.VersionNumber;
             IssueInstant = DateTimeOffset.UtcNow;
 #if DEBUG
-            Debug.WriteLine("Message ID: " + Id);
+            Debug.WriteLine("Message ID: " + IdAsString);
 #endif
         }
 
         protected virtual IEnumerable<XObject> GetXContent()
         {
-            yield return new XAttribute(Saml2Constants.ProtocolNamespaceNameX, Saml2Constants.ProtocolNamespace.OriginalString);
-            yield return new XAttribute(Saml2Constants.AssertionNamespaceNameX, Saml2Constants.AssertionNamespace.OriginalString);
-            yield return new XAttribute(Saml2Constants.Message.Id, Id);
-            yield return new XAttribute(Saml2Constants.Message.Version, Version);
-            yield return new XAttribute(Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
+            yield return new XAttribute(Schemas.Saml2Constants.ProtocolNamespaceNameX, Schemas.Saml2Constants.ProtocolNamespace.OriginalString);
+            yield return new XAttribute(Schemas.Saml2Constants.AssertionNamespaceNameX, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
+            yield return new XAttribute(Schemas.Saml2Constants.Message.Id, IdAsString);
+            yield return new XAttribute(Schemas.Saml2Constants.Message.Version, Version);
+            yield return new XAttribute(Schemas.Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
 
             if (!string.IsNullOrWhiteSpace(Consent))
             {
-                yield return new XAttribute(Saml2Constants.Message.Consent, Consent);
+                yield return new XAttribute(Schemas.Saml2Constants.Message.Consent, Consent);
             }
 
             if (Destination != null)
             {
-                yield return new XAttribute(Saml2Constants.Message.Destination, Destination);
+                yield return new XAttribute(Schemas.Saml2Constants.Message.Destination, Destination);
             }
 
             if (Issuer != null)
             {
-                yield return new XElement(Saml2Constants.AssertionNamespaceX + Saml2Constants.Message.Issuer, Issuer.OriginalString);
+                yield return new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.Issuer, Issuer.OriginalString);
             }
 
             if (Extensions != null)
@@ -164,28 +168,28 @@ namespace ITfoxtec.Identity.Saml2
 
             XmlDocument = xml.ToXmlDocument();
 
-            if (XmlDocument.DocumentElement.NamespaceURI != Saml2Constants.ProtocolNamespace.OriginalString)
+            if (XmlDocument.DocumentElement.NamespaceURI != Schemas.Saml2Constants.ProtocolNamespace.OriginalString)
             {
                 throw new Saml2RequestException("Not SAML2 Protocol.");
             }
 
             ValidateElementName();
 
-            Id = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.Id].GetValueOrNull<Saml2Id>();
+            Id = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.Id].GetValueOrNull<Saml2Id>();
 
-            Version = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.Version].GetValueOrNull<string>();
-            if (Version != Saml2Constants.VersionNumber)
+            Version = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.Version].GetValueOrNull<string>();
+            if (Version != Schemas.Saml2Constants.VersionNumber)
             {
                 throw new Saml2RequestException("Invalid SAML2 version.");
             }
 
-            IssueInstant = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTimeOffset>();
+            IssueInstant = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTimeOffset>();
 
-            Issuer = XmlDocument.DocumentElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Uri>();
+            Issuer = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Issuer, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Uri>();
 
-            Destination = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.Destination].GetValueOrNull<Uri>();
+            Destination = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.Destination].GetValueOrNull<Uri>();
 
-            var extensionsData = XmlDocument.DocumentElement[Saml2Constants.Message.Extensions, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
+            var extensionsData = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Extensions, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
             if (extensionsData != null)
             {
                 Extensions = new Schemas.Extensions { Data = extensionsData };
@@ -235,7 +239,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected SignatureValidation ValidateXmlSignature(XmlElement xmlElement)
         {
-            var xmlSignatures = xmlElement.SelectNodes($"*[local-name()='{Saml2Constants.Message.Signature}' and namespace-uri()='{Saml2SignedXml.XmlDsigNamespaceUrl}']");
+            var xmlSignatures = xmlElement.SelectNodes($"*[local-name()='{Schemas.Saml2Constants.Message.Signature}' and namespace-uri()='{SignedXml.XmlDsigNamespaceUrl}']");
             if(xmlSignatures.Count == 0)
             {
                 return SignatureValidation.NotPresent;

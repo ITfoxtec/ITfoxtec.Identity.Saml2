@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
@@ -8,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
-using System.ServiceModel.Security;
-using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Util;
 
 namespace TestIdPCore
@@ -52,7 +48,6 @@ namespace TestIdPCore
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {

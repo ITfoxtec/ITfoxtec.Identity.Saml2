@@ -1,27 +1,63 @@
-﻿using ITfoxtec.Identity.Saml2.Tokens;
+﻿using System.Security.Cryptography.X509Certificates;
+using ITfoxtec.Identity.Saml2.Util;
+#if NETFULL
+using ITfoxtec.Identity.Saml2.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
+#else
+using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.IdentityModel.Selectors;
+#endif
 
 namespace ITfoxtec.Identity.Saml2.Configuration
 {
-    internal static class Saml2IdentityConfiguration
+    public class Saml2IdentityConfiguration :
+#if NETFULL
+        IdentityConfiguration
+#else
+        TokenValidationParameters
+#endif
     {
-        internal static IdentityConfiguration GetIdentityConfiguration(Saml2Configuration config)
+
+#if !NETFULL
+        public X509CertificateValidator CertificateValidator { get; set; }
+#endif
+
+        public static Saml2IdentityConfiguration GetIdentityConfiguration(Saml2Configuration config)
         {
-            var identityConfiguration = new IdentityConfiguration
+            var configuration = new Saml2IdentityConfiguration();
+
+#if NETFULL
+            configuration.SaveBootstrapContext = config.SaveBootstrapContext;
+            configuration.AudienceRestriction = GetAudienceRestriction(config.AudienceRestricted, config.AllowedAudienceUris);
+            configuration.IssuerNameRegistry = new Saml2ResponseIssuerNameRegistry();
+            configuration.CertificateValidationMode = config.CertificateValidationMode;
+            configuration.RevocationMode = config.RevocationMode;
+            configuration.DetectReplayedTokens = config.DetectReplayedTokens;
+            configuration.Initialize();
+#else
+            configuration.SaveSigninToken = config.SaveBootstrapContext;
+            configuration.ValidateAudience = config.AudienceRestricted;
+            configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a.OriginalString);
+            configuration.ValidIssuer = config.Issuer?.OriginalString;
+            configuration.ValidateTokenReplay = config.DetectReplayedTokens;
+
+            configuration.NameClaimType = ClaimTypes.NameIdentifier;
+
+            configuration.CertificateValidator = new Saml2CertificateValidator
             {
-                SaveBootstrapContext = config.SaveBootstrapContext,
-                AudienceRestriction = GetAudienceRestriction(config.AudienceRestricted, config.AllowedAudienceUris),
-                IssuerNameRegistry = new Saml2ResponseIssuerNameRegistry(),
                 CertificateValidationMode = config.CertificateValidationMode,
                 RevocationMode = config.RevocationMode,
             };
-            identityConfiguration.Initialize();
-            return identityConfiguration;
+#endif
+            return configuration;
         }
 
+#if NETFULL
         private static AudienceRestriction GetAudienceRestriction(bool audienceRestricted, IEnumerable<Uri> allowedAudienceUris)
         {
             var audienceRestriction = new AudienceRestriction(audienceRestricted ? System.IdentityModel.Selectors.AudienceUriMode.Always : System.IdentityModel.Selectors.AudienceUriMode.Never);
@@ -34,5 +70,6 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             }
             return audienceRestriction;
         }
+#endif
     }
 }

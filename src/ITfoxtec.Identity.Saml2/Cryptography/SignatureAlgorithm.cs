@@ -1,5 +1,5 @@
-﻿using System;
-using System.Security.Cryptography.Xml;
+﻿using ITfoxtec.Identity.Saml2.Schemas;
+using System;
 
 namespace ITfoxtec.Identity.Saml2.Cryptography
 {
@@ -7,43 +7,43 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     {
         public static void ValidateAlgorithm(string signatureAlgorithm)
         {            
-            if (SignedXml.XmlDsigRSASHA1Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            if (Saml2SecurityAlgorithms.RsaSha1Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
                 return;
             }
-            else if (SignedXml.XmlDsigRSASHA256Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            else if (Saml2SecurityAlgorithms.RsaSha256Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
                 return;
             }
-            else if (SignedXml.XmlDsigRSASHA384Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            else if (Saml2SecurityAlgorithms.RsaSha384Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
                 return;
             }
-            else if (SignedXml.XmlDsigRSASHA512Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            else if (Saml2SecurityAlgorithms.RsaSha512Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
                 return;
             }
 
-            throw new NotSupportedException($"Only SHA1 ({SignedXml.XmlDsigRSASHA1Url}), SHA256 ({SignedXml.XmlDsigRSASHA256Url}), SHA384 ({SignedXml.XmlDsigRSASHA384Url}) and SHA512 ({SignedXml.XmlDsigRSASHA512Url}) is supported.");
+            throw new NotSupportedException($"Only SHA1 ({Saml2SecurityAlgorithms.RsaSha1Signature}), SHA256 ({Saml2SecurityAlgorithms.RsaSha256Signature}), SHA384 ({Saml2SecurityAlgorithms.RsaSha384Signature}) and SHA512 ({Saml2SecurityAlgorithms.RsaSha512Signature}) is supported.");
         }
 
         public static string DigestMethod(string signatureAlgorithm)
         {
-            if (SignedXml.XmlDsigRSASHA1Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            if (Saml2SecurityAlgorithms.RsaSha1Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
-                return SignedXml.XmlDsigSHA1Url;
+                return Saml2SecurityAlgorithms.Sha1Digest;
             }
-            else if (SignedXml.XmlDsigRSASHA256Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            else if (Saml2SecurityAlgorithms.RsaSha256Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
-                return SignedXml.XmlDsigSHA256Url;
+                return Saml2SecurityAlgorithms.Sha256Digest;
             }
-            else if (SignedXml.XmlDsigRSASHA384Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            else if (Saml2SecurityAlgorithms.RsaSha384Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
-                return SignedXml.XmlDsigSHA384Url;
+                return Saml2SecurityAlgorithms.Sha384Digest;
             }
-            else if (SignedXml.XmlDsigRSASHA512Url.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            else if (Saml2SecurityAlgorithms.RsaSha512Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
             {
-                return SignedXml.XmlDsigSHA512Url;
+                return Saml2SecurityAlgorithms.Sha512Digest;
             }
             else
             {

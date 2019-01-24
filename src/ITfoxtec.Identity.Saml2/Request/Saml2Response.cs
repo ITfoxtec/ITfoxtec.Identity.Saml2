@@ -2,9 +2,12 @@
 using System.Xml;
 using System.Xml.Linq;
 using ITfoxtec.Identity.Saml2.Util;
-using ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Cryptography;
+using Schemas = ITfoxtec.Identity.Saml2.Schemas;
+#if NETFULL
 using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -17,7 +20,7 @@ namespace ITfoxtec.Identity.Saml2
         /// [Required]
         /// A code representing the status of the corresponding request.
         /// </summary>
-        public Saml2StatusCodes Status { get; set; }
+        public Schemas.Saml2StatusCodes Status { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -27,6 +30,16 @@ namespace ITfoxtec.Identity.Saml2
         /// Otherwise, it MUST
         /// </summary>
         public Saml2Id InResponseTo { get; set; }
+
+        /// <summary>
+        /// The InResponseTo as string.
+        /// </summary>
+        /// <value>The InResponseTo string.</value>
+        public string InResponseToAsString
+        {
+            get { return InResponseTo.Value; }
+            set { InResponseTo = new Saml2Id(value); }
+        }
 
         public Saml2Response(Saml2Configuration config) : base(config)
         { }
@@ -38,13 +51,13 @@ namespace ITfoxtec.Identity.Saml2
                 yield return item;
             }
 
-            yield return new XElement(Saml2Constants.ProtocolNamespaceX + Saml2Constants.Message.Status, 
-                new XElement(Saml2Constants.ProtocolNamespaceX + Saml2Constants.Message.StatusCode, 
-                    new XAttribute(Saml2Constants.Message.Value, Saml2StatusCodeUtil.ToString(Status))));
+            yield return new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.Status, 
+                new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.StatusCode, 
+                    new XAttribute(Schemas.Saml2Constants.Message.Value, Saml2StatusCodeUtil.ToString(Status))));
 
             if (InResponseTo != null)
             {
-                yield return new XAttribute(Saml2Constants.Message.InResponseTo, InResponseTo);
+                yield return new XAttribute(Schemas.Saml2Constants.Message.InResponseTo, InResponseToAsString);
             }
         }
 
@@ -52,11 +65,9 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validateXmlSignature);
 
-            InResponseTo = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.InResponseTo].GetValueOrNull<Saml2Id>();
+            InResponseTo = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.InResponseTo].GetValueOrNull<Saml2Id>();
 
-            Status = Saml2StatusCodeUtil.ToEnum(XmlDocument.DocumentElement[Saml2Constants.Message.Status, Saml2Constants.ProtocolNamespace.OriginalString][Saml2Constants.Message.StatusCode, Saml2Constants.ProtocolNamespace.OriginalString].Attributes[Saml2Constants.Message.Value].GetValueOrNull<string>());
-
-
+            Status = Saml2StatusCodeUtil.ToEnum(XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString][Schemas.Saml2Constants.Message.StatusCode, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].Attributes[Schemas.Saml2Constants.Message.Value].GetValueOrNull<string>());
         }      
     }
 }
