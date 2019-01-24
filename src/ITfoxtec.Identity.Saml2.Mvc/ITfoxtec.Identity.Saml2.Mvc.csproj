@@ -5,20 +5,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
-    <Copyright>© 2018 ITfoxtec</Copyright>
     <PackageLicenseUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/blob/master/LICENSE</PackageLicenseUrl>
     <AssemblyName>ITfoxtec.Identity.Saml2.Mvc</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2.Mvc</PackageId>
     <PackageTitle>ITfoxtec Identity SAML 2.0 MVC</PackageTitle>
-    <Description>
-      ASP.NET MVC is supportet by the ITfoxtec Identity SAML2 MVC package which helps to integrate the ITfoxtec SAML 2.0 package and add support for SAML-P and SAML 2.0 tokens.
-    </Description>
+    <Description>ASP.NET MVC is supportet by the ITfoxtec Identity SAML2 MVC package which helps to integrate the ITfoxtec SAML 2.0 package and add support for SAML-P and SAML 2.0 tokens.
+</Description>
     <PackageTags>SAML SAML2.0 SAML2 SAML-P SAMLP SSO Identity Provider (IdP) and Relying Party (RP) Authentication Metadata OIOSAML NemLog-in ASP.NET MVC</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
-    <Copyright>Copyright © 2018</Copyright>
+    <Copyright>Copyright © 2019</Copyright>
     <Version>3.0.0.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
