@@ -15,4 +15,4 @@ Furthermore, the Danish OIOSAML 2.0 profile is supported and the Danish  NemLog-
 You can read more on <a href="https://itfoxtec.com/identitysaml2">ITfoxtec Identity Saml2 Project Home Page</a>.
 
 ### Support
-If you have questions please ask them on <a href="https://stackoverflow.com/">Stack Overflow</a>. Tag your questions with 'itfoxtec-identity-saml2' and I will answer as soon as possible.
+If you have questions please ask them on <a href="https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2">Stack Overflow</a>. Tag your questions with 'itfoxtec-identity-saml2' and I will answer as soon as possible.
