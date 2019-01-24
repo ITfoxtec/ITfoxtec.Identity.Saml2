@@ -6,10 +6,10 @@
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>© 2018 ITfoxtec</Copyright>
-    <PackageLicenseUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <AssemblyName>ITfoxtec.Identity.Saml2</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2</PackageId>
-    <PackageTitle>ITfoxtec Identity SAML 2.0</PackageTitle>
+    <Title>ITfoxtec Identity SAML 2.0</Title>
     <Description>The ITfoxtec.Identity.Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) on top of the SAML 2.0 functionality implemented in .NET.
 
       Support message signing and validation (SHA1/SHA256/SHA384/SHA512) as well as encryption and decryption. Login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on. The Danish OIOSAML 2.0 profile and NemLog-in.
@@ -19,11 +19,13 @@
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
-    <Copyright>Copyright © 2018</Copyright>
+    <Copyright>Copyright © 2019</Copyright>
     <Version>3.0.0.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <PackageProjectUrl>https://itfoxtec.com/IdentitySaml2</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
