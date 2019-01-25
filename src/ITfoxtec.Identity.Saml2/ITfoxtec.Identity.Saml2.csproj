@@ -5,7 +5,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
-    <Copyright>© 2018 ITfoxtec</Copyright>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <AssemblyName>ITfoxtec.Identity.Saml2</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2</PackageId>
