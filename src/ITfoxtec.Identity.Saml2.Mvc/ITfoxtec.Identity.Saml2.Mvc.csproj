@@ -47,4 +47,15 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <DefineConstants>NET472;NETFULL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>bin\Release\net472\ITfoxtec.Identity.Saml2.Mvc.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+    <DocumentationFile>bin\Debug\net472\ITfoxtec.Identity.Saml2.Mvc.xml</DocumentationFile>
+  </PropertyGroup>
 </Project>
