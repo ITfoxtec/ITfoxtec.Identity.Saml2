@@ -12,7 +12,7 @@
       ASP.NET MVC Core is supportet by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec SAML 2.0 package and add support for SAML-P and SAML 2.0 tokens.
 
       Support .NET Core 2.1 and 2.2
-      Support .NET Framework 4.7.2 and 4.6.2
+      Support .NET Framework 4.6.2 and 4.7.2
     </Description>
     <PackageTags>SAML SAML2.0 SAML2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
