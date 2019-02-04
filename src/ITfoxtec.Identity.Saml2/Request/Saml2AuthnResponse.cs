@@ -43,7 +43,7 @@ namespace ITfoxtec.Identity.Saml2
         /// <summary>
         /// Gets the first instant in time at which this security token is valid.
         /// </summary>
-        public DateTimeOffset SecurityTokenValidFrom { get { return Saml2SecurityToken.ValidFrom; } }
+        public DateTimeOffset SecurityTokenValidFrom { get { return Saml2SecurityToken.ValidFrom > DateTime.MinValue ? Saml2SecurityToken.ValidFrom : DateTime.UtcNow; } }
 
         /// <summary>
         /// Gets the last instant in time at which this security token is valid.
