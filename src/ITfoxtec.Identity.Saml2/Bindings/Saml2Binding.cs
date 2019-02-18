@@ -44,7 +44,7 @@ namespace ITfoxtec.Identity.Saml2
 
             if (saml2RequestResponse.Config.SigningCertificate != null)
             {
-                if (saml2RequestResponse.Config.SigningCertificate.GetRSAPrivateKey() == null)
+                if (saml2RequestResponse.Config.SigningCertificate.GetSamlRSAPrivateKey() == null)
                 {
                     throw new ArgumentException("No RSA Private Key present in Signing Certificate or missing private key read credentials.");
                 }

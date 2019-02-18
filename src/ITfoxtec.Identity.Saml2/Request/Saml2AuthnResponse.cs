@@ -64,7 +64,7 @@ namespace ITfoxtec.Identity.Saml2
             if (config.DecryptionCertificate != null)
             {
                 DecryptionCertificate = config.DecryptionCertificate;
-                if (config.DecryptionCertificate.GetRSAPrivateKey() == null)
+                if (config.DecryptionCertificate.GetSamlRSAPrivateKey() == null)
                 {
                     throw new ArgumentException("No RSA Private Key present in Decryption Certificate or missing private key read credentials.");
                 }
@@ -300,7 +300,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (DecryptionCertificate != null)
             {
-                new Saml2EncryptedXml(XmlDocument, DecryptionCertificate.GetRSAPrivateKey()).DecryptDocument();
+                new Saml2EncryptedXml(XmlDocument, DecryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
 #if DEBUG
                 Debug.WriteLine("Saml2P (Decrypted): " + XmlDocument.OuterXml);
 #endif
