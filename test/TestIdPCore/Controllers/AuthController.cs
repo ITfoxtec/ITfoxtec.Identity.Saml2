@@ -42,7 +42,7 @@ namespace TestIdPCore.Controllers
                 // ****  Handle user login e.g. in GUI ****
                 // Test user with session index and claims
                 var sessionIndex = Guid.NewGuid().ToString();
-                var claims = CreateTestUserClaims();
+                var claims = CreateTestUserClaims(saml2AuthnRequest.Subject?.NameID?.ID);
 
                 return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Success, requestBinding.RelayState, relyingParty, sessionIndex, claims);
             }
@@ -170,11 +170,12 @@ namespace TestIdPCore.Controllers
             public X509Certificate2 SignatureValidationCertificate { get; set; }
         }
 
-        private IEnumerable<Claim> CreateTestUserClaims()
+        private IEnumerable<Claim> CreateTestUserClaims(string selectedNameID)
         {
-            yield return new Claim(ClaimTypes.NameIdentifier, "12345");
-            yield return new Claim(ClaimTypes.Upn, "12345@email.test");
-            yield return new Claim(ClaimTypes.Email, "some@email.test");
+            var userId = selectedNameID ?? "12345";
+            yield return new Claim(ClaimTypes.NameIdentifier, userId);
+            yield return new Claim(ClaimTypes.Upn, $"{userId}@email.test");
+            yield return new Claim(ClaimTypes.Email, $"{userId}@someemail.test");
         }
     }
 }        
