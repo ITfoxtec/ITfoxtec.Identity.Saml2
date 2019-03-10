@@ -19,10 +19,10 @@
     <PackageTags>SAML SAML2.0 SAML2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>3.1.0.1</AssemblyVersion>
-    <FileVersion>3.1.0.1</FileVersion>
+    <AssemblyVersion>3.1.0.3</AssemblyVersion>
+    <FileVersion>3.1.0.3</FileVersion>
     <Copyright>Copyright © 2019</Copyright>
-    <Version>3.1.0.0-beta2</Version>
+    <Version>3.1.0.3-beta3</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>

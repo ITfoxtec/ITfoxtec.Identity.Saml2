@@ -88,7 +88,7 @@ namespace ITfoxtec.Identity.Saml2
         /// <param name="subjectConfirmationLifetime">The Subject Confirmation Lifetime in minutes.</param>
         /// <param name="issuedTokenLifetime">The Issued Token Lifetime in minutes.</param>
         /// <returns>The SAML 2.0 Security Token.</returns>
-        public Saml2SecurityToken CreateSecurityToken(Uri appliesToAddress, Uri authnContext = null, int subjectConfirmationLifetime = 5, int issuedTokenLifetime = 60)
+        public Saml2SecurityToken CreateSecurityToken(string appliesToAddress, Uri authnContext = null, int subjectConfirmationLifetime = 5, int issuedTokenLifetime = 60)
         {
             if (appliesToAddress == null) throw new ArgumentNullException(nameof(appliesToAddress));
             if (ClaimsIdentity == null) throw new ArgumentNullException("ClaimsIdentity property");
@@ -125,7 +125,7 @@ namespace ITfoxtec.Identity.Saml2
             return Saml2SecurityToken;
         }
 
-        protected virtual SecurityTokenDescriptor CreateTokenDescriptor(IEnumerable<Claim> claims, Uri appliesToAddress, int issuedTokenLifetime)
+        protected virtual SecurityTokenDescriptor CreateTokenDescriptor(IEnumerable<Claim> claims, string appliesToAddress, int issuedTokenLifetime)
         {
             if (Issuer == null) throw new ArgumentNullException("Issuer property");
 
@@ -135,12 +135,12 @@ namespace ITfoxtec.Identity.Saml2
 #if NETFULL
             tokenDescriptor.TokenType = Schemas.SamlTokenTypes.Saml2TokenProfile11.OriginalString;
             tokenDescriptor.Lifetime = new Lifetime(now.UtcDateTime, now.AddMinutes(issuedTokenLifetime).UtcDateTime);
-            tokenDescriptor.AppliesToAddress = appliesToAddress.OriginalString;
-            tokenDescriptor.TokenIssuerName = Issuer.OriginalString;
+            tokenDescriptor.AppliesToAddress = appliesToAddress;
+            tokenDescriptor.TokenIssuerName = Issuer;
 #else
             tokenDescriptor.Expires = now.AddMinutes(issuedTokenLifetime).UtcDateTime;
-            tokenDescriptor.Audience = appliesToAddress.OriginalString;
-            tokenDescriptor.Issuer = Issuer.OriginalString;
+            tokenDescriptor.Audience = appliesToAddress;
+            tokenDescriptor.Issuer = Issuer;
 #endif
             return tokenDescriptor;
         }

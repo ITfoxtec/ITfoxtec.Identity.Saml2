@@ -26,7 +26,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// Specifies the unique identifier of the SAML entity whose metadata is described by the element's contents.
         /// </summary>
-        public Uri EntityId { get; protected set; }
+        public string EntityId { get; protected set; }
 
         /// <summary>
         /// A document-unique identifier for the element, typically used as a reference point when signing.
@@ -115,7 +115,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             {
                 throw new ArgumentNullException("EntityId property");
             }
-            yield return new XAttribute(Saml2MetadataConstants.Message.EntityId, EntityId.OriginalString);
+            yield return new XAttribute(Saml2MetadataConstants.Message.EntityId, EntityId);
             yield return new XAttribute(Saml2MetadataConstants.Message.Id, IdAsString);
             if (ValidUntil.HasValue)
             {
@@ -148,7 +148,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 throw new Saml2RequestException("Not Metadata.");
             }
 
-            EntityId = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<Uri>();
+            EntityId = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
 
             Id = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
 

@@ -80,12 +80,12 @@ namespace TestIdPCore.Controllers
             }
         }
 
-        private Uri ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(config))?.Issuer;
         }
 
-        private Uri ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(config))?.Issuer;
         }
@@ -131,37 +131,37 @@ namespace TestIdPCore.Controllers
             return responsebinding.Bind(saml2LogoutResponse).ToActionResult();
         }
 
-        private RelyingParty ValidateRelyingParty(Uri issuer)
+        private RelyingParty ValidateRelyingParty(string issuer)
         {
             var validRelyingPartys = new List<RelyingParty>();
             validRelyingPartys.Add(new RelyingParty
             {
-                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebapp"),
+                Issuer = "urn:itfoxtec:identity:saml2:testwebapp",
                 SingleSignOnDestination = new Uri("http://localhost:3112/Auth/AssertionConsumerService"),
                 SingleLogoutResponseDestination = new Uri("http://localhost:3112/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebapp_Certificate.crt"))
             });
             validRelyingPartys.Add(new RelyingParty
             {
-                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebappcore"),
+                Issuer = "itfoxtec-testwebappcore",
                 SingleSignOnDestination = new Uri("https://localhost:44306/Auth/AssertionConsumerService"),
                 SingleLogoutResponseDestination = new Uri("https://localhost:44306/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
             });
             validRelyingPartys.Add(new RelyingParty
             {
-                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebappcoreframework"),
+                Issuer = "urn:itfoxtec:identity:saml2:testwebappcoreframework",
                 SingleSignOnDestination = new Uri("https://localhost:44307/Auth/AssertionConsumerService"),
                 SingleLogoutResponseDestination = new Uri("https://localhost:44307/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
             });
 
-            return validRelyingPartys.Where(rp => rp.Issuer.OriginalString.Equals(issuer.OriginalString, StringComparison.InvariantCultureIgnoreCase)).Single();
+            return validRelyingPartys.Where(rp => rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
 
         class RelyingParty
         {
-            public Uri Issuer { get; set; }
+            public string Issuer { get; set; }
 
             public Uri SingleSignOnDestination { get; set; }
 

@@ -42,8 +42,8 @@ namespace ITfoxtec.Identity.Saml2.Configuration
 #else
             configuration.SaveSigninToken = config.SaveBootstrapContext;
             configuration.ValidateAudience = config.AudienceRestricted;
-            configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a.OriginalString);
-            configuration.ValidIssuer = config.Issuer?.OriginalString;
+            configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a);
+            configuration.ValidIssuer = config.Issuer;
             configuration.ValidateTokenReplay = config.DetectReplayedTokens;
 
             configuration.NameClaimType = ClaimTypes.NameIdentifier;
@@ -58,14 +58,14 @@ namespace ITfoxtec.Identity.Saml2.Configuration
         }
 
 #if NETFULL
-        private static AudienceRestriction GetAudienceRestriction(bool audienceRestricted, IEnumerable<Uri> allowedAudienceUris)
+        private static AudienceRestriction GetAudienceRestriction(bool audienceRestricted, IEnumerable<string> allowedAudienceUris)
         {
             var audienceRestriction = new AudienceRestriction(audienceRestricted ? System.IdentityModel.Selectors.AudienceUriMode.Always : System.IdentityModel.Selectors.AudienceUriMode.Never);
             if (audienceRestricted)
             {
                 foreach (var audienceUri in allowedAudienceUris)
                 {
-                    audienceRestriction.AllowedAudienceUris.Add(audienceUri);
+                    audienceRestriction.AllowedAudienceUris.Add(new Uri(audienceUri));
                 }
             }
             return audienceRestriction;
