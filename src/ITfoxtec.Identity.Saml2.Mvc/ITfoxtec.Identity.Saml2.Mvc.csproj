@@ -19,7 +19,7 @@
     <AssemblyVersion>3.1.0.3</AssemblyVersion>
     <FileVersion>3.1.0.3</FileVersion>
     <Copyright>Copyright © 2019</Copyright>
-    <Version>3.1.0.3-beta3</Version>
+    <Version>3.1.0-beta3</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
