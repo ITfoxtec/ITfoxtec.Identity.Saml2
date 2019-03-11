@@ -127,7 +127,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected virtual SecurityTokenDescriptor CreateTokenDescriptor(IEnumerable<Claim> claims, string appliesToAddress, int issuedTokenLifetime)
         {
-            if (Issuer == null) throw new ArgumentNullException("Issuer property");
+            if (string.IsNullOrEmpty(Issuer)) throw new ArgumentNullException("Issuer property");
 
             var now = DateTimeOffset.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor();
