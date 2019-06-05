@@ -27,20 +27,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public Uri Location { get; set; }
 
-        public XElement ToXElement()
+        public XElement ToXElement(int index)
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
 
-            envelope.Add(GetXContent());
+            envelope.Add(GetXContent(index));
 
             return envelope;
         }
 
-        protected IEnumerable<XObject> GetXContent()
+        protected IEnumerable<XObject> GetXContent(int index)
         {
             yield return new XAttribute(Saml2MetadataConstants.Message.Binding, Binding.OriginalString);
             yield return new XAttribute(Saml2MetadataConstants.Message.Location, Location.OriginalString);
-            yield return new XAttribute(Saml2MetadataConstants.Message.Index, 0);
+            yield return new XAttribute(Saml2MetadataConstants.Message.Index, index);
             yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, true);
         }
     }

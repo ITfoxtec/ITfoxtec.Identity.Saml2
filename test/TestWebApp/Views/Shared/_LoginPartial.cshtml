@@ -1,20 +1,16 @@
 ﻿@if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("Logout", "Auth", FormMethod.Post, new { id = "logoutForm", @class = "nav navbar-form navbar-right" }))
+    <span class="navbar-text">Hello, @User.Identity.Name!</span>
+
+    using (Html.BeginForm("Logout", "Auth", FormMethod.Post, new { id = "logoutForm", @class = "form-inline" }))
     {
         @Html.AntiForgeryToken()
-
-        <ul class="nav navbar-nav">
-            <li class="navbar-text">
-                Hello, @User.Identity.Name!
-            </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-        </ul>
+        <a class="nav-link text-dark" href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
     }
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Log In", "Login", "Auth", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    <ul class="navbar-nav">
+        <li>@Html.ActionLink("Login", "Login", "Auth", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link text-dark" })</li>
     </ul>
 }

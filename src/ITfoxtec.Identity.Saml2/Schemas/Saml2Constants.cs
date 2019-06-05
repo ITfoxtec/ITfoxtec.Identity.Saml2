@@ -110,7 +110,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string NotOnOrAfter = "NotOnOrAfter";
 
             internal const string Reason = "Reason";
-
+            
             internal const string NameIdPolicy = "NameIDPolicy";
 
             internal const string AllowCreate = "AllowCreate";

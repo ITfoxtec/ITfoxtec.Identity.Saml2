@@ -11,7 +11,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2Configuration
     {
-        public Uri Issuer { get; set; }
+        public string Issuer { get; set; }
 
         public Uri SingleSignOnDestination { get; set; }
 
@@ -31,7 +31,7 @@ namespace ITfoxtec.Identity.Saml2
         public bool DetectReplayedTokens { get; set; } = false;
 
         public bool AudienceRestricted { get; set; } = true;
-        public List<Uri> AllowedAudienceUris { get; protected set; } = new List<Uri>();
+        public List<string> AllowedAudienceUris { get; protected set; } = new List<string>();
 
         public bool SignAuthnRequest { get; set; } = false;
     }

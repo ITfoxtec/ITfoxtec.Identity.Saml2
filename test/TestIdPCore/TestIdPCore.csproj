@@ -9,6 +9,9 @@
     <Company>ITfoxtec</Company>
     <Copyright>Copyright © 2018</Copyright>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="package-lock.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="TestIdPCore.csproj.vspscc" />
@@ -20,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="2.9.406" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
   </ItemGroup>
 </Project>

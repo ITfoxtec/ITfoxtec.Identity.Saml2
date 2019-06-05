@@ -35,7 +35,7 @@ namespace ITfoxtec.Identity.Saml2
                 requestQueryString = SigneQueryString(requestQueryString, saml2RequestResponse.Config.SigningCertificate);
             }
 
-            RedirectLocation = new Uri(string.Join("?", saml2RequestResponse.Destination.OriginalString, requestQueryString));
+            RedirectLocation = new Uri(string.Join(saml2RequestResponse.Destination.OriginalString.Contains('?') ? "&" : "?", saml2RequestResponse.Destination.OriginalString, requestQueryString));
 
             return this;
         }

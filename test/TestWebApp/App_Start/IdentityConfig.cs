@@ -20,7 +20,7 @@ namespace TestWebApp
         {
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
-            Saml2Configuration.Issuer = new Uri(ConfigurationManager.AppSettings["Saml2:Issuer"]);
+            Saml2Configuration.Issuer = ConfigurationManager.AppSettings["Saml2:Issuer"];
             //Saml2Configuration.SingleSignOnDestination = new Uri(ConfigurationManager.AppSettings["Saml2:SingleSignOnDestination"]);
             //Saml2Configuration.SingleLogoutDestination = new Uri(ConfigurationManager.AppSettings["Saml2:SingleLogoutDestination"]);
 
