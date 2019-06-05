@@ -137,8 +137,8 @@ namespace TestIdPCore.Controllers
             validRelyingPartys.Add(new RelyingParty
             {
                 Issuer = "urn:itfoxtec:identity:saml2:testwebapp",
-                SingleSignOnDestination = new Uri("http://localhost:3112/Auth/AssertionConsumerService"),
-                SingleLogoutResponseDestination = new Uri("http://localhost:3112/Auth/LoggedOut"),
+                SingleSignOnDestination = new Uri("https://localhost:44327/Auth/AssertionConsumerService"),
+                SingleLogoutResponseDestination = new Uri("https://localhost:44327/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebapp_Certificate.crt"))
             });
             validRelyingPartys.Add(new RelyingParty
