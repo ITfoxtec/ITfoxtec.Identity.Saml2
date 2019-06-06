@@ -82,7 +82,7 @@ namespace ITfoxtec.Identity.Saml2
         /// Identifies the entity that generated the response message. (For more information on this element, see
         /// Section 2.2.5.)
         /// </summary>
-        public Uri Issuer { get; set; }
+        public string Issuer { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -149,7 +149,7 @@ namespace ITfoxtec.Identity.Saml2
 
             if (Issuer != null)
             {
-                yield return new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.Issuer, Issuer.OriginalString);
+                yield return new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.Issuer, Issuer);
             }
 
             if (Extensions != null)
@@ -185,7 +185,7 @@ namespace ITfoxtec.Identity.Saml2
 
             IssueInstant = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTimeOffset>();
 
-            Issuer = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Issuer, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Uri>();
+            Issuer = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Issuer, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<string>();
 
             Destination = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.Destination].GetValueOrNull<Uri>();
 

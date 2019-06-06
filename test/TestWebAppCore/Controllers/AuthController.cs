@@ -34,6 +34,7 @@ namespace TestWebAppCore.Controllers
             return binding.Bind(new Saml2AuthnRequest(config)
             {
                 //ForceAuthn = true,
+                Subject = new Subject { NameID = new NameID { ID = "abcd" } },
                 //NameIdPolicy = new NameIdPolicy { AllowCreate = true, Format = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" },
                 //RequestedAuthnContext = new RequestedAuthnContext
                 //{

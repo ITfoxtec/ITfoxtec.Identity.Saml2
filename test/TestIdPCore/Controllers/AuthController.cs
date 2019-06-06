@@ -42,7 +42,7 @@ namespace TestIdPCore.Controllers
                 // ****  Handle user login e.g. in GUI ****
                 // Test user with session index and claims
                 var sessionIndex = Guid.NewGuid().ToString();
-                var claims = CreateTestUserClaims();
+                var claims = CreateTestUserClaims(saml2AuthnRequest.Subject?.NameID?.ID);
 
                 return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Success, requestBinding.RelayState, relyingParty, sessionIndex, claims);
             }
@@ -80,12 +80,12 @@ namespace TestIdPCore.Controllers
             }
         }
 
-        private Uri ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(config))?.Issuer;
         }
 
-        private Uri ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(config))?.Issuer;
         }
@@ -131,37 +131,37 @@ namespace TestIdPCore.Controllers
             return responsebinding.Bind(saml2LogoutResponse).ToActionResult();
         }
 
-        private RelyingParty ValidateRelyingParty(Uri issuer)
+        private RelyingParty ValidateRelyingParty(string issuer)
         {
             var validRelyingPartys = new List<RelyingParty>();
             validRelyingPartys.Add(new RelyingParty
             {
-                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebapp"),
-                SingleSignOnDestination = new Uri("http://localhost:3112/Auth/AssertionConsumerService"),
-                SingleLogoutResponseDestination = new Uri("http://localhost:3112/Auth/LoggedOut"),
+                Issuer = "urn:itfoxtec:identity:saml2:testwebapp",
+                SingleSignOnDestination = new Uri("https://localhost:44327/Auth/AssertionConsumerService"),
+                SingleLogoutResponseDestination = new Uri("https://localhost:44327/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebapp_Certificate.crt"))
             });
             validRelyingPartys.Add(new RelyingParty
             {
-                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebappcore"),
+                Issuer = "itfoxtec-testwebappcore",
                 SingleSignOnDestination = new Uri("https://localhost:44306/Auth/AssertionConsumerService"),
                 SingleLogoutResponseDestination = new Uri("https://localhost:44306/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
             });
             validRelyingPartys.Add(new RelyingParty
             {
-                Issuer = new Uri("urn:itfoxtec:identity:saml2:testwebappcoreframework"),
+                Issuer = "urn:itfoxtec:identity:saml2:testwebappcoreframework",
                 SingleSignOnDestination = new Uri("https://localhost:44307/Auth/AssertionConsumerService"),
                 SingleLogoutResponseDestination = new Uri("https://localhost:44307/Auth/LoggedOut"),
                 SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
             });
 
-            return validRelyingPartys.Where(rp => rp.Issuer.OriginalString.Equals(issuer.OriginalString, StringComparison.InvariantCultureIgnoreCase)).Single();
+            return validRelyingPartys.Where(rp => rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
 
         class RelyingParty
         {
-            public Uri Issuer { get; set; }
+            public string Issuer { get; set; }
 
             public Uri SingleSignOnDestination { get; set; }
 
@@ -170,11 +170,12 @@ namespace TestIdPCore.Controllers
             public X509Certificate2 SignatureValidationCertificate { get; set; }
         }
 
-        private IEnumerable<Claim> CreateTestUserClaims()
+        private IEnumerable<Claim> CreateTestUserClaims(string selectedNameID)
         {
-            yield return new Claim(ClaimTypes.NameIdentifier, "12345");
-            yield return new Claim(ClaimTypes.Upn, "12345@email.test");
-            yield return new Claim(ClaimTypes.Email, "some@email.test");
+            var userId = selectedNameID ?? "12345";
+            yield return new Claim(ClaimTypes.NameIdentifier, userId);
+            yield return new Claim(ClaimTypes.Upn, $"{userId}@email.test");
+            yield return new Claim(ClaimTypes.Email, $"{userId}@someemail.test");
         }
     }
 }        

@@ -32,7 +32,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.3.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.3.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
@@ -51,7 +51,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.2'">
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.3.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.3.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />

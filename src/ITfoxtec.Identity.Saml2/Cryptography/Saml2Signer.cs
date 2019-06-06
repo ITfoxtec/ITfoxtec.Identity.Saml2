@@ -34,7 +34,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         public (AsymmetricSignatureFormatter, HashAlgorithm) CreateFormatter()
         {
             (var signatureDescription, var hashAlgorithm) = GetSignatureDescription();
-            var formatter = signatureDescription.CreateFormatter(Certificate.GetRSAPrivateKey());
+            var formatter = signatureDescription.CreateFormatter(Certificate.GetSamlRSAPrivateKey());
             return (formatter, hashAlgorithm);
         }
 
