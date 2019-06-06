@@ -4,7 +4,7 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <AssemblyName>TestIdPCore</AssemblyName>
     <PackageId>TestIdPCore</PackageId>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>Copyright © 2018</Copyright>
