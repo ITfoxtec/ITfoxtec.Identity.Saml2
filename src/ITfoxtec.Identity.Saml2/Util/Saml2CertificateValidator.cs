@@ -48,7 +48,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             store.Open(OpenFlags.ReadOnly);
             try
             {
-                if (store.Certificates.Find(X509FindType.FindByThumbprint, certificate.GetCertHash(), false)?.Count > 0)
+                if (store.Certificates.Find(X509FindType.FindByThumbprint, certificate.GetCertHashString(), false)?.Count > 0)
                 {
                     return;
                 }
