@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
@@ -79,24 +78,16 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected internal IdPSsoDescriptor Read(XmlElement xmlElement)
         {
-            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}')]");
-            if(signingKeyDescriptorElements != null)
+            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}') or not(@use)]");
+            if (signingKeyDescriptorElements != null)
             {
                 SigningCertificates = ReadKeyDescriptorElements(signingKeyDescriptorElements);
             }
 
-            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}')]");
+            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}') or not(@use)]");
             if (encryptionKeyDescriptorElements != null)
             {
                 EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
-            }
-
-            var commonKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][not(@use)]");
-            if (commonKeyDescriptorElements != null)
-            {
-                var commonCertificates = ReadKeyDescriptorElements(commonKeyDescriptorElements);
-                SigningCertificates = (SigningCertificates != null) ? SigningCertificates.Concat(commonCertificates) : commonCertificates;
-                EncryptionCertificates = (EncryptionCertificates != null) ? EncryptionCertificates.Concat(commonCertificates) : commonCertificates;
             }
 
             var singleSignOnServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleSignOnService}']");
@@ -128,7 +119,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 if (keyInfoElement != null)
                 {
                     var keyInfo = new KeyInfo();
-                    keyInfo.LoadXml(keyInfoElement);   
+                    keyInfo.LoadXml(keyInfoElement);
                     var keyInfoEnumerator = keyInfo.GetEnumerator();
                     while (keyInfoEnumerator.MoveNext())
                     {
