@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
@@ -88,6 +89,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             if (encryptionKeyDescriptorElements != null)
             {
                 EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
+            }
+
+            var commonKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][not(@use)]");
+            if (commonKeyDescriptorElements != null)
+            {
+                var commonCertificates = ReadKeyDescriptorElements(commonKeyDescriptorElements);
+                SigningCertificates = (SigningCertificates != null) ? SigningCertificates.Concat(commonCertificates) : commonCertificates;
+                EncryptionCertificates = (EncryptionCertificates != null) ? EncryptionCertificates.Concat(commonCertificates) : commonCertificates;
             }
 
             var singleSignOnServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleSignOnService}']");
