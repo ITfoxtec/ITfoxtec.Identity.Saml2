@@ -78,13 +78,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected internal IdPSsoDescriptor Read(XmlElement xmlElement)
         {
-            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}')]");
-            if(signingKeyDescriptorElements != null)
+            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}') or not(@use)]");
+            if (signingKeyDescriptorElements != null)
             {
                 SigningCertificates = ReadKeyDescriptorElements(signingKeyDescriptorElements);
             }
 
-            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}')]");
+            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}') or not(@use)]");
             if (encryptionKeyDescriptorElements != null)
             {
                 EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
@@ -119,7 +119,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 if (keyInfoElement != null)
                 {
                     var keyInfo = new KeyInfo();
-                    keyInfo.LoadXml(keyInfoElement);   
+                    keyInfo.LoadXml(keyInfoElement);
                     var keyInfoEnumerator = keyInfo.GetEnumerator();
                     while (keyInfoEnumerator.MoveNext())
                     {
