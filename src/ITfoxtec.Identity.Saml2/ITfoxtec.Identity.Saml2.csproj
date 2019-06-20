@@ -16,7 +16,7 @@
       Support .NET Core 2.1 and 2.2
       Support .NET Framework 4.6.2 and 4.7.2
     </Description>
-    <PackageTags>SAML SAML2.0 SAML2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in</PackageTags>
+    <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
