@@ -2,20 +2,21 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <AssemblyName>TestIdPCore</AssemblyName>
-    <PackageId>TestIdPCore</PackageId>
+    <AssemblyName>TestWebAppCoreAzureKeyVault</AssemblyName>
+    <PackageId>TestWebAppCoreAzureKeyVault</PackageId>
     <Version>4.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>Copyright © 2019</Copyright>
+    <Product>TestWebAppCoreAzureKeyVault</Product>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="package-lock.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="TestIdPCore.csproj.vspscc" />
-    <None Remove="TestIdPCore.xproj.vspscc" />
+    <None Remove="TestWebAppCore.csproj.vspscc" />
+    <None Remove="TestWebAppCore.xproj.vspscc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +25,10 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.9.406" />
+    <PackageReference Include="ITfoxtec.Identity" Version="1.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
+    <PackageReference Include="RSAKeyVaultProvider" Version="1.1.22" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
   </ItemGroup>
 </Project>

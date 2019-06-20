@@ -6,7 +6,7 @@
     <Version>4.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
-    <Copyright>Copyright © 2018</Copyright>
+    <Copyright>Copyright © 2019</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="package-lock.json" />
