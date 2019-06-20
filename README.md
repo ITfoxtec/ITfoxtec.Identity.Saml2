@@ -10,7 +10,7 @@ The ITfoxtec Identity Saml2 package implements the most important parts of the S
 Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single 
 logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
 
-The ITfoxtec Identity Saml2 package support signing/encryption certificates in Azure Key Vault. Please see the [TestWebAppCoreAzureKeyVault](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test) sample. 
+The ITfoxtec Identity Saml2 package support signing/encryption certificates in Azure Key Vault. Please see the [TestWebAppCoreAzureKeyVault](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreAzureKeyVault) sample in the [test](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test) folder. 
 
 The ITfoxtec Identity Saml2 package is tested for compliance with AD FS, Azure AD and Azure AD B2C. 
 Furthermore, the Danish OIOSAML 2.0 profile is supported and the Danish  NemLog-in is tested for compliance. 
