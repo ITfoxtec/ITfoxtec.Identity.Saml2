@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Web;
 
 namespace ITfoxtec.Identity.Saml2.Util
 {
