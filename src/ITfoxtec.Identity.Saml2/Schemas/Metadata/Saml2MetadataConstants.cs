@@ -66,7 +66,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             public const string ResponseLocation = "ResponseLocation";
 
             public const string ProtocolSupportEnumeration = "protocolSupportEnumeration";
-            
+
+            public const string WantAuthnRequestsSigned = "WantAuthnRequestsSigned";
+
             public const string AuthnRequestsSigned = "AuthnRequestsSigned";
 
             public const string WantAssertionsSigned = "WantAssertionsSigned";

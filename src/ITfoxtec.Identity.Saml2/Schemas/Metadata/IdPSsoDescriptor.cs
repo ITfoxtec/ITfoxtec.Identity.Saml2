@@ -16,6 +16,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         const string elementName = Saml2MetadataConstants.Message.IdPSsoDescriptor;
 
         /// <summary>
+        /// [Optional]
+        /// Optional attribute that indicates to service providers whether or not they can expect an 
+        /// unsigned &lt;AuthnRequest&gt; message to be accepted by the identity provider. 
+        /// If omitted, the value is assumed to be false.
+        /// </summary>
+        public bool? WantAuthnRequestsSigned { get; set; }
+
+        /// <summary>
         /// One or more elements of type EndpointType that describe endpoints that support the profiles of the 
         /// Authentication Request protocol defined in [SAMLProf]. All identity providers support at least one 
         /// such endpoint, by definition. The ResponseLocation attribute MUST be omitted. 
@@ -34,6 +42,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         protected IEnumerable<XObject> GetXContent()
         {
             yield return new XAttribute(Saml2MetadataConstants.Message.ProtocolSupportEnumeration, protocolSupportEnumeration);
+
+            if (WantAuthnRequestsSigned.HasValue)
+            {
+                yield return new XAttribute(Saml2MetadataConstants.Message.WantAuthnRequestsSigned, WantAuthnRequestsSigned.Value);
+            }
 
             if (EncryptionCertificates != null)
             {
@@ -78,6 +91,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected internal IdPSsoDescriptor Read(XmlElement xmlElement)
         {
+            WantAuthnRequestsSigned = xmlElement.Attributes[Saml2MetadataConstants.Message.WantAuthnRequestsSigned]?.Value.Equals(true.ToString(), StringComparison.InvariantCultureIgnoreCase);
+
             var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}') or not(@use)]");
             if (signingKeyDescriptorElements != null)
             {
