@@ -18,7 +18,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// [Optional]
         /// Optional attribute that indicates to service providers whether or not they can expect an 
-        /// unsigned&lt;AuthnRequest&gt; message to be accepted by the identity provider. 
+        /// unsigned &lt;AuthnRequest&gt; message to be accepted by the identity provider. 
         /// If omitted, the value is assumed to be false.
         /// </summary>
         public bool? WantAuthnRequestsSigned { get; set; }
