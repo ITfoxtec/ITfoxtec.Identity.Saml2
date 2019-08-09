@@ -1,7 +1,6 @@
-﻿using System;
-using System.ServiceModel.Security;
-#if NETFULL
+﻿#if NETFULL
 using ITfoxtec.Identity.Saml2.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
@@ -10,6 +9,7 @@ using System.Linq;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.ServiceModel.Security;
 using System.IdentityModel.Selectors;
 #endif
 
@@ -48,30 +48,34 @@ namespace ITfoxtec.Identity.Saml2.Configuration
 
             configuration.NameClaimType = ClaimTypes.NameIdentifier;
 
-            configuration.CertificateValidator = new Saml2CertificateValidator
-            {
-                CertificateValidationMode = config.CertificateValidationMode,
-                RevocationMode = config.RevocationMode,
-            };
+            configuration.CertificateValidator = GetCertificateValidator(config);
 #endif
-
-            SetCustomCertificateValidator(configuration, config);
 
             return configuration;
         }
 
-        private static void SetCustomCertificateValidator(Saml2IdentityConfiguration configuration, Saml2Configuration config)
+#if !NETFULL
+        private static X509CertificateValidator GetCertificateValidator(Saml2Configuration config)
         {
             if (config.CertificateValidationMode == X509CertificateValidationMode.Custom)
             {
                 if (config.CustomCertificateValidator is null)
                 {
-                    throw new NotImplementedException("A CustomCertificateValidator is required when setting CertificateValidationMode = X509CertificateValidationMode.Custom");
+                    throw new Saml2ConfigurationException("A CustomCertificateValidator is required when setting CertificateValidationMode = X509CertificateValidationMode.Custom");
                 }
 
-                configuration.CertificateValidator = config.CustomCertificateValidator;
+                return config.CustomCertificateValidator;
+            }
+            else
+            {
+                return new Saml2CertificateValidator
+                {
+                    CertificateValidationMode = config.CertificateValidationMode,
+                    RevocationMode = config.RevocationMode,
+                };
             }
         }
+#endif
 
 #if NETFULL
         private static AudienceRestriction GetAudienceRestriction(bool audienceRestricted, IEnumerable<string> allowedAudienceUris)
