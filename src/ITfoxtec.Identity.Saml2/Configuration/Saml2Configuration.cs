@@ -1,6 +1,7 @@
 ﻿using ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Selectors;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel.Security;
 
@@ -25,6 +26,7 @@ namespace ITfoxtec.Identity.Saml2
         public List<X509Certificate2> SignatureValidationCertificates { get; protected set; } = new List<X509Certificate2>();
         public X509CertificateValidationMode CertificateValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
         public X509RevocationMode RevocationMode { get; set; } = X509RevocationMode.Online;
+        public X509CertificateValidator CustomCertificateValidator { get; set; }
 
         public bool SaveBootstrapContext { get; set; } = false;
 
