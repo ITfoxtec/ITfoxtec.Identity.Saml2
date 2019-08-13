@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using ITfoxtec.Identity.Saml2.Util;
+﻿using System.ServiceModel.Security;
 #if NETFULL
 using ITfoxtec.Identity.Saml2.Tokens;
 using System;
@@ -8,6 +7,7 @@ using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
 #else
 using System.Linq;
+using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Selectors;
@@ -54,7 +54,23 @@ namespace ITfoxtec.Identity.Saml2.Configuration
                 RevocationMode = config.RevocationMode,
             };
 #endif
+
+            SetCustomCertificateValidator(configuration, config);
+
             return configuration;
+        }
+
+        private static void SetCustomCertificateValidator(Saml2IdentityConfiguration configuration, Saml2Configuration config)
+        {
+            if (config.CertificateValidationMode == X509CertificateValidationMode.Custom)
+            {
+                if (config.CustomCertificateValidator is null)
+                {
+                    throw new Saml2ConfigurationException("A CustomCertificateValidator is required when setting CertificateValidationMode = X509CertificateValidationMode.Custom");
+                }
+
+                configuration.CertificateValidator = config.CustomCertificateValidator;
+            }
         }
 
 #if NETFULL
