@@ -15,7 +15,7 @@ namespace TestWebApp.Controllers
     [Route("Metadata")]
     public class MetadataController : Controller
     {
-        private const string defaultSite = "https://localhost:44307";
+        private readonly Uri defaultSite = new Uri("https://localhost:44307");
         private readonly Saml2Configuration config;
 
         public MetadataController(IOptions<Saml2Configuration> configAccessor)
@@ -40,12 +40,12 @@ namespace TestWebApp.Controllers
                 //},
                 SingleLogoutServices = new SingleLogoutService[]
                 {
-                    new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = new Uri($"{defaultSite}/Auth/SingleLogout"), ResponseLocation = new Uri($"{defaultSite}/Auth/LoggedOut") }
+                    new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/SingleLogout"), ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut") }
                 },
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
                 AssertionConsumerServices = new AssertionConsumerService[]
                 {
-                    new AssertionConsumerService {  Binding = ProtocolBindings.HttpPost, Location = new Uri($"{defaultSite}/Auth/AssertionConsumerService") }
+                    new AssertionConsumerService {  Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") }
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
