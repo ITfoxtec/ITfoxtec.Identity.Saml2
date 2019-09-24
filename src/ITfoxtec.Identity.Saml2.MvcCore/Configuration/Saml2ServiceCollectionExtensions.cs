@@ -9,12 +9,12 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         /// <summary>
         /// Add SAML 2.0 configuration.
         /// </summary>
-        public static IServiceCollection AddSaml2(this IServiceCollection services)
+        public static IServiceCollection AddSaml2(this IServiceCollection services, string loginPath = "/Auth/Login")
         {
             services.AddAuthentication(Saml2Constants.AuthenticationScheme)
                 .AddCookie(Saml2Constants.AuthenticationScheme, o =>
                 {
-                    o.LoginPath = new PathString("/Auth/Login");
+                    o.LoginPath = new PathString(loginPath);
                 });
 
             return services;
