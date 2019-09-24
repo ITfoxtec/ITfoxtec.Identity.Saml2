@@ -31,10 +31,10 @@ namespace TestWebAppCore
             services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2"));
             services.Configure<Saml2Configuration>(saml2Configuration =>
             {
-                //c.SignAuthnRequest = true;
+                //saml2Configuration.SignAuthnRequest = true;
                 saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
 
-                //c.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
+                //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
                 var entityDescriptor = new EntityDescriptor();
