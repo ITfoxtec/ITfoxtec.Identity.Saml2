@@ -12,7 +12,6 @@ namespace TestWebApp.Controllers
     [AllowAnonymous]
     public class MetadataController : Controller
     {
-        private readonly Uri defaultSite = new Uri("http://localhost:3112/");
         private readonly Saml2Configuration config;
 
         public MetadataController()
@@ -22,6 +21,8 @@ namespace TestWebApp.Controllers
 
         public ActionResult Index()
         {
+            var defaultSite = new Uri($"{Request.Url.Scheme}://{Request.Url.Authority}");
+
             var entityDescriptor = new EntityDescriptor(config);
             entityDescriptor.ValidUntil = 365;
             entityDescriptor.SPSsoDescriptor = new SPSsoDescriptor

@@ -15,7 +15,6 @@ namespace TestWebApp.Controllers
     [Route("Metadata")]
     public class MetadataController : Controller
     {
-        private readonly Uri defaultSite = new Uri("https://localhost:44306");
         private readonly Saml2Configuration config;
 
         public MetadataController(IOptions<Saml2Configuration> configAccessor)
@@ -25,6 +24,8 @@ namespace TestWebApp.Controllers
 
         public IActionResult Index()
         {
+            var defaultSite = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/");
+
             var entityDescriptor = new EntityDescriptor(config);
             entityDescriptor.ValidUntil = 365;
             entityDescriptor.SPSsoDescriptor = new SPSsoDescriptor
