@@ -16,7 +16,7 @@ namespace ITfoxtec.Identity.Saml2
         /// Signs an XmlDocument with an xml signature using the signing certificate given as argument to the method.
         /// </summary>
         /// <param name="certificate">The certificate used to sign the document</param>
-        /// <param name="certificate">The Signature Algorithm used to sign the document</param>
+        /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the document</param>
         /// <param name="includeOption">Certificate include option</param>
         /// <param name="id">The is of the topmost element in the xmldocument</param>
         internal static XmlDocument SignDocument(this XmlDocument xmlDocument, X509Certificate2 certificate, string signatureAlgorithm, X509IncludeOption includeOption, string id)

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas
 {
     /// <summary>
-    /// The <NameID> is used when an element serves to represent an entity by a string-valued name.
+    /// The &lt;NameID&gt; is used when an element serves to represent an entity by a string-valued name.
     /// </summary>
     public class NameID
     {

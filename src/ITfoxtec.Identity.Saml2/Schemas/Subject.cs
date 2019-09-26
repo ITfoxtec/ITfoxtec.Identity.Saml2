@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace ITfoxtec.Identity.Saml2.Schemas
 {
     /// <summary>
-    /// The <Subject> element specifies the principal that is the subject of all of the (zero or more) statements in the assertion.
+    /// The &lt;Subject&gt; element specifies the principal that is the subject of all of the (zero or more) statements in the assertion.
     /// </summary>
     public class Subject
     {

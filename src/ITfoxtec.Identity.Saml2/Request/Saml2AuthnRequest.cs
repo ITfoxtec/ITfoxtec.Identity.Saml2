@@ -46,10 +46,10 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
-        /// Specifies by value the location to which the <Response> message MUST be returned to the
+        /// Specifies by value the location to which the &lt;Response&gt; message MUST be returned to the
         /// requester. The responder MUST ensure by some means that the value specified is in fact associated
         /// with the requester. [SAMLMeta] provides one possible mechanism; signing the enclosing
-        /// <AuthnRequest> message is another. This attribute is mutually exclusive with the
+        /// &lt;AuthnRequest&gt; message is another. This attribute is mutually exclusive with the
         /// AssertionConsumerServiceIndex attribute and is typically accompanied by the
         /// ProtocolBinding attribute.
         /// </summary>
@@ -62,15 +62,15 @@ namespace ITfoxtec.Identity.Saml2
         /// context requirements in this element?"
         /// In response to an authentication query, a SAML authority returns assertions with authentication
         /// statements as follows:
-        /// • Rules given in Section 3.3.4 for matching against the <Subject> element of the query identify the
+        /// • Rules given in Section 3.3.4 for matching against the &lt;Subject&gt; element of the query identify the
         ///   assertions that may be returned.
-        /// • If the SessionIndex attribute is present in the query, at least one <AuthnStatement> element in
+        /// • If the SessionIndex attribute is present in the query, at least one &lt;AuthnStatement&gt; element in
         ///   the set of returned assertions MUST contain a SessionIndex attribute that matches the
         ///   SessionIndex attribute in the query. It is OPTIONAL for the complete set of all such matching
         ///   assertions to be returned in the response.
-        /// • If the <RequestedAuthnContext> element is present in the query, at least one
-        ///   <AuthnStatement> element in the set of returned assertions MUST contain an
-        ///   <AuthnContext> element that satisfies the element in the query (see Section 3.3.2.2.1). It is
+        /// • If the &lt;RequestedAuthnContext&gt; element is present in the query, at least one
+        ///   &lt;AuthnStatement&gt; element in the set of returned assertions MUST contain an
+        ///   &lt;AuthnContext&gt; element that satisfies the element in the query (see Section 3.3.2.2.1). It is
         ///   OPTIONAL for the complete set of all such matching assertions to be returned in the response.
         /// </summary>
         public RequestedAuthnContext RequestedAuthnContext { get; set; }

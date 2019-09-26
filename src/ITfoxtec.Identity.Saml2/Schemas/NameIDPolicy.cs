@@ -4,7 +4,7 @@ using System.Xml.Linq;
 namespace ITfoxtec.Identity.Saml2.Schemas
 {
     /// <summary>
-    /// The <NameIDPolicy> element tailors the name identifier in the subjects of assertions resulting from an <AuthnRequest>.
+    /// The &lt;NameIDPolicy&gt; element tailors the name identifier in the subjects of assertions resulting from an &lt;AuthnRequest&gt;.
     /// </summary>
     public class NameIdPolicy
     {

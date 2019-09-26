@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity.Saml2.Schemas
 {
     /// <summary>
     /// The message sender MAY use the Reason attribute to indicate the reason for sending the
-    /// <LogoutRequest>. The following values are defined by this specification for use by all message
+    /// &lt;LogoutRequest&gt;. The following values are defined by this specification for use by all message
     /// senders; other values MAY be agreed on between participants.
     /// </summary>
     public static class ProcessingRules
