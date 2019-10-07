@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.Extensions.Options;
-//using System.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Saml2;
+using TestIdPCore.Models;
+using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 
 namespace TestIdPCore.Controllers
 {
@@ -21,10 +21,12 @@ namespace TestIdPCore.Controllers
     public class AuthController : Controller
     {
         const string relayStateReturnUrl = "ReturnUrl";
+        private readonly Settings settings;
         private readonly Saml2Configuration config;
 
-        public AuthController(IOptions<Saml2Configuration> configAccessor)
+        public AuthController(IOptions<Settings> settingsAccessor, IOptions<Saml2Configuration> configAccessor)
         {
+            settings = settingsAccessor.Value;
             config = configAccessor.Value;
         }
 
@@ -133,48 +135,37 @@ namespace TestIdPCore.Controllers
 
         private RelyingParty ValidateRelyingParty(string issuer)
         {
-            var validRelyingPartys = new List<RelyingParty>();
-            validRelyingPartys.Add(new RelyingParty
+            foreach (var rp in settings.RelyingParties)
             {
-                Issuer = "urn:itfoxtec:identity:saml2:testwebapp",
-                SingleSignOnDestination = new Uri("https://localhost:44327/Auth/AssertionConsumerService"),
-                SingleLogoutResponseDestination = new Uri("https://localhost:44327/Auth/LoggedOut"),
-                SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebapp_Certificate.crt"))
-            });
-            validRelyingPartys.Add(new RelyingParty
-            {
-                Issuer = "itfoxtec-testwebappcore",
-                SingleSignOnDestination = new Uri("https://localhost:44306/Auth/AssertionConsumerService"),
-                SingleLogoutResponseDestination = new Uri("https://localhost:44306/Auth/LoggedOut"),
-                SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
-            });
-            validRelyingPartys.Add(new RelyingParty
-            {
-                Issuer = "urn:itfoxtec:identity:saml2:testwebappcoreframework",
-                SingleSignOnDestination = new Uri("https://localhost:44307/Auth/AssertionConsumerService"),
-                SingleLogoutResponseDestination = new Uri("https://localhost:44307/Auth/LoggedOut"),
-                SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
-            });
-            validRelyingPartys.Add(new RelyingParty
-            {
-                Issuer = "urn:itfoxtec:identity:saml2:testwebappcoreAzureKeyVault",
-                SingleSignOnDestination = new Uri("https://localhost:44308/Auth/AssertionConsumerService"),
-                SingleLogoutResponseDestination = new Uri("https://localhost:44308/Auth/LoggedOut"),
-                SignatureValidationCertificate = CertificateUtil.Load(Startup.AppEnvironment.MapToPhysicalFilePath("itfoxtec.identity.saml2.testwebappcore_Certificate.crt"))
-            });
+                try
+                {
+                    if (string.IsNullOrEmpty(rp.Issuer))
+                    {
+                        var entityDescriptor = new EntityDescriptor();
+                        entityDescriptor.ReadSPSsoDescriptorFromUrl(new Uri(rp.Metadata));
+                        if (entityDescriptor.SPSsoDescriptor != null)
+                        {
+                            rp.Issuer = entityDescriptor.EntityId;
+                            rp.SingleSignOnDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.First().Location;
+                            rp.SingleLogoutResponseDestination = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First().ResponseLocation;
+                            rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
+                        }
+                        else
+                        {
+                            throw new Exception($"SPSsoDescriptor not loaded from metadata '{rp.Metadata}'.");
+                        }
+                    }
+                }
+                catch (Exception exc)
+                {
+                    //log error
+#if DEBUG
+                    Debug.WriteLine($"SPSsoDescriptor error: {exc.ToString()}");
+#endif
+                }
+            }
 
-            return validRelyingPartys.Where(rp => rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
-        }
-
-        class RelyingParty
-        {
-            public string Issuer { get; set; }
-
-            public Uri SingleSignOnDestination { get; set; }
-
-            public Uri SingleLogoutResponseDestination { get; set; }
-
-            public X509Certificate2 SignatureValidationCertificate { get; set; }
+            return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
 
         private IEnumerable<Claim> CreateTestUserClaims(string selectedNameID)

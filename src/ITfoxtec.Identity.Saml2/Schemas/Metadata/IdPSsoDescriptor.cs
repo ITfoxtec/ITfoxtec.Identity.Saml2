@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -93,17 +91,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             WantAuthnRequestsSigned = xmlElement.Attributes[Saml2MetadataConstants.Message.WantAuthnRequestsSigned]?.Value.Equals(true.ToString(), StringComparison.InvariantCultureIgnoreCase);
 
-            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}') or not(@use)]");
-            if (signingKeyDescriptorElements != null)
-            {
-                SigningCertificates = ReadKeyDescriptorElements(signingKeyDescriptorElements);
-            }
-
-            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}') or not(@use)]");
-            if (encryptionKeyDescriptorElements != null)
-            {
-                EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
-            }
+            ReadKeyDescriptors(xmlElement);
 
             var singleSignOnServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleSignOnService}']");
             if (singleSignOnServiceElements != null)
@@ -111,68 +99,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 SingleSignOnServices = ReadServices<SingleSignOnService>(singleSignOnServiceElements);
             }
 
-            var singleLogoutServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleLogoutService}']");
-            if (singleLogoutServiceElements != null)
-            {
-                SingleLogoutServices = ReadServices<SingleLogoutService>(singleLogoutServiceElements);
-            }
+            ReadSingleLogoutService(xmlElement);
 
-            var nameIDFormatElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.NameIDFormat}']");
-            if (nameIDFormatElements != null)
-            {
-                NameIDFormats = ReadNameIDFormatElements(nameIDFormatElements);
-            }
+            ReadNameIDFormat(xmlElement);
 
             return this;
-        }
-
-        private IEnumerable<X509Certificate2> ReadKeyDescriptorElements(XmlNodeList keyDescriptorElements)
-        {
-            foreach (XmlElement keyDescriptorElement in keyDescriptorElements)
-            {
-                var keyInfoElement = keyDescriptorElement.SelectSingleNode($"*[local-name()='{Saml2MetadataConstants.Message.KeyInfo}']") as XmlElement;
-                if (keyInfoElement != null)
-                {
-                    var keyInfo = new KeyInfo();
-                    keyInfo.LoadXml(keyInfoElement);
-                    var keyInfoEnumerator = keyInfo.GetEnumerator();
-                    while (keyInfoEnumerator.MoveNext())
-                    {
-                        var keyInfoX509Data = keyInfoEnumerator.Current as KeyInfoX509Data;
-                        if (keyInfoX509Data != null)
-                        {
-                            foreach (var certificate in keyInfoX509Data.Certificates)
-                            {
-                                if (certificate is X509Certificate2)
-                                {
-                                    yield return certificate as X509Certificate2;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private IEnumerable<Uri> ReadNameIDFormatElements(XmlNodeList nameIDFormatElements)
-        {
-            foreach (XmlNode nameIDFormatElement in nameIDFormatElements)
-            {
-                yield return new Uri(nameIDFormatElement.InnerText);
-            }
-        }
-
-        private IEnumerable<T> ReadServices<T>(XmlNodeList singleLogoutServiceElements) where T : EndpointType, new()
-        {
-            foreach (XmlNode singleLogoutServiceElement in singleLogoutServiceElements)
-            {
-                yield return new T
-                {
-                    Binding = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Binding].GetValueOrNull<Uri>(),
-                    Location = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Location].GetValueOrNull<Uri>(),
-                    ResponseLocation = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.ResponseLocation].GetValueOrNull<Uri>()
-                };
-            }
-        }
+        }      
     }
 }

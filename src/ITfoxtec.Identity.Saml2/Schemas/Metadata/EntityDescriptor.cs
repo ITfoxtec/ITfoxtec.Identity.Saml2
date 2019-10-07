@@ -161,6 +161,28 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             return this;
         }
 
+        public virtual EntityDescriptor ReadSPSsoDescriptor(string spMetadataXml)
+        {
+            var metadataXmlDocument = spMetadataXml.ToXmlDocument();
+
+            if (metadataXmlDocument.DocumentElement.NamespaceURI != Saml2MetadataConstants.MetadataNamespace.OriginalString)
+            {
+                throw new Saml2RequestException("Not Metadata.");
+            }
+
+            EntityId = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
+
+            Id = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
+
+            var spSsoDescriptorElement = metadataXmlDocument.DocumentElement[Saml2MetadataConstants.Message.SPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
+            if (spSsoDescriptorElement != null)
+            {
+                SPSsoDescriptor = new SPSsoDescriptor().Read(spSsoDescriptorElement);
+            }
+
+            return this;
+        }
+
         public virtual EntityDescriptor ReadIdPSsoDescriptorFromFile(string idPMetadataFile)
         {
             return ReadIdPSsoDescriptor(File.ReadAllText(idPMetadataFile));
@@ -171,6 +193,19 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             using (var webClient = new WebClient())
             {
                 return ReadIdPSsoDescriptor(webClient.DownloadString(idPMetadataUrl));
+            }
+        }
+
+        public virtual EntityDescriptor ReadSPSsoDescriptorFromFile(string spMetadataFile)
+        {
+            return ReadSPSsoDescriptor(File.ReadAllText(spMetadataFile));
+        }
+
+        public virtual EntityDescriptor ReadSPSsoDescriptorFromUrl(Uri spMetadataUrl)
+        {
+            using (var webClient = new WebClient())
+            {
+                return ReadSPSsoDescriptor(webClient.DownloadString(spMetadataUrl));
             }
         }
     }

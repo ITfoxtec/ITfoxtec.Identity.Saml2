@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
@@ -62,6 +63,88 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             return new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.KeyDescriptor,
                 new XAttribute(Saml2MetadataConstants.Message.Use, keyType),
                 XElement.Parse(keyinfo.GetXml().OuterXml));
+        }
+
+        protected void ReadKeyDescriptors(XmlElement xmlElement)
+        {
+            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}') or not(@use)]");
+            if (signingKeyDescriptorElements != null)
+            {
+                SigningCertificates = ReadKeyDescriptorElements(signingKeyDescriptorElements);
+            }
+
+            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}') or not(@use)]");
+            if (encryptionKeyDescriptorElements != null)
+            {
+                EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
+            }
+        }
+
+        protected void ReadSingleLogoutService(XmlElement xmlElement)
+        {
+            var singleLogoutServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleLogoutService}']");
+            if (singleLogoutServiceElements != null)
+            {
+                SingleLogoutServices = ReadServices<SingleLogoutService>(singleLogoutServiceElements);
+            }
+        }
+
+        protected void ReadNameIDFormat(XmlElement xmlElement)
+        {
+            var nameIDFormatElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.NameIDFormat}']");
+            if (nameIDFormatElements != null)
+            {
+                NameIDFormats = ReadNameIDFormatElements(nameIDFormatElements);
+            }
+        }
+
+        protected IEnumerable<Uri> ReadNameIDFormatElements(XmlNodeList nameIDFormatElements)
+        {
+            foreach (XmlNode nameIDFormatElement in nameIDFormatElements)
+            {
+                yield return new Uri(nameIDFormatElement.InnerText);
+            }
+        }
+
+        protected IEnumerable<X509Certificate2> ReadKeyDescriptorElements(XmlNodeList keyDescriptorElements)
+        {
+            foreach (XmlElement keyDescriptorElement in keyDescriptorElements)
+            {
+                var keyInfoElement = keyDescriptorElement.SelectSingleNode($"*[local-name()='{Saml2MetadataConstants.Message.KeyInfo}']") as XmlElement;
+                if (keyInfoElement != null)
+                {
+                    var keyInfo = new KeyInfo();
+                    keyInfo.LoadXml(keyInfoElement);
+                    var keyInfoEnumerator = keyInfo.GetEnumerator();
+                    while (keyInfoEnumerator.MoveNext())
+                    {
+                        var keyInfoX509Data = keyInfoEnumerator.Current as KeyInfoX509Data;
+                        if (keyInfoX509Data != null)
+                        {
+                            foreach (var certificate in keyInfoX509Data.Certificates)
+                            {
+                                if (certificate is X509Certificate2)
+                                {
+                                    yield return certificate as X509Certificate2;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        protected IEnumerable<T> ReadServices<T>(XmlNodeList serviceElements) where T : EndpointType, new()
+        {
+            foreach (XmlNode serviceElement in serviceElements)
+            {
+                yield return new T
+                {
+                    Binding = serviceElement.Attributes[Saml2MetadataConstants.Message.Binding].GetValueOrNull<Uri>(),
+                    Location = serviceElement.Attributes[Saml2MetadataConstants.Message.Location].GetValueOrNull<Uri>(),
+                    ResponseLocation = serviceElement.Attributes[Saml2MetadataConstants.Message.ResponseLocation].GetValueOrNull<Uri>()
+                };
+            }
         }
     }
 }

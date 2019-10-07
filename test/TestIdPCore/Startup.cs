@@ -7,6 +7,7 @@ using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.AspNetCore.Mvc;
+using TestIdPCore.Models;
 
 namespace TestIdPCore
 {
@@ -25,6 +26,7 @@ namespace TestIdPCore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Settings>(Configuration.GetSection("Settings"));
             services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2"));
             services.Configure<Saml2Configuration>(saml2Configuration =>
             {

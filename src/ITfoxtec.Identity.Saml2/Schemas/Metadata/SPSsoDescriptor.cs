@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
@@ -116,6 +115,40 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 {
                     yield return attributeConsumingService.ToXElement();
                 }                
+            }
+        }
+
+
+        protected internal SPSsoDescriptor Read(XmlElement xmlElement)
+        {
+            AuthnRequestsSigned = xmlElement.Attributes[Saml2MetadataConstants.Message.AuthnRequestsSigned]?.Value.Equals(true.ToString(), StringComparison.InvariantCultureIgnoreCase);
+
+            WantAssertionsSigned = xmlElement.Attributes[Saml2MetadataConstants.Message.WantAssertionsSigned]?.Value.Equals(true.ToString(), StringComparison.InvariantCultureIgnoreCase);
+
+            ReadKeyDescriptors(xmlElement);
+
+            var assertionConsumerServicesElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.AssertionConsumerService}']");
+            if (assertionConsumerServicesElements != null)
+            {
+                AssertionConsumerServices = ReadAcsService(assertionConsumerServicesElements);
+            }
+
+            ReadSingleLogoutService(xmlElement); 
+
+            ReadNameIDFormat(xmlElement);
+
+            return this;
+        }
+
+        protected IEnumerable<AssertionConsumerService> ReadAcsService(XmlNodeList acsElements) 
+        {
+            foreach (XmlNode singleLogoutServiceElement in acsElements)
+            {
+                yield return new AssertionConsumerService
+                {
+                    Binding = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Binding].GetValueOrNull<Uri>(),
+                    Location = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Location].GetValueOrNull<Uri>(),
+                };
             }
         }
     }
