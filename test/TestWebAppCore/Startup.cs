@@ -70,11 +70,10 @@ namespace TestWebAppCore
 
             app.UseStaticFiles();
 
-            app.UseSaml2();
-
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSaml2();
 
             app.UseEndpoints(endpoints =>
             {
