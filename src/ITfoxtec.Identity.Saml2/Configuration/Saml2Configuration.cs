@@ -36,13 +36,18 @@ namespace ITfoxtec.Identity.Saml2
         public List<string> AllowedAudienceUris { get; protected set; } = new List<string>();
 
         /// <summary>
-        /// To sign the Authn request created by the library.
+        /// To sign the Authn requests created by the library.
         /// </summary>
         public bool SignAuthnRequest { get; set; } = false;
 
         /// <summary>
-        /// Sign type for the Authn response created by the library.
+        /// Sign type for the Authn responses created by the library.
         /// </summary>
         public Saml2AuthnResponseSignTypes AuthnResponseSignType { get; set; } = Saml2AuthnResponseSignTypes.SignResponse;
+
+        /// <summary>
+        /// To encrypt the Authn responses created by the library.
+        /// </summary>
+        public bool EncryptAuthnResponse { get; set; } = false;
     }
 }

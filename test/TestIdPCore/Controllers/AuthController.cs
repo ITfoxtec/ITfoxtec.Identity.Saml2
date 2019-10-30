@@ -147,7 +147,8 @@ namespace TestIdPCore.Controllers
                         {
                             rp.Issuer = entityDescriptor.EntityId;
                             rp.SingleSignOnDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.First().Location;
-                            rp.SingleLogoutResponseDestination = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First().ResponseLocation;
+                            var singleLogoutService = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First();
+                            rp.SingleLogoutResponseDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
                             rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
                         }
                         else
