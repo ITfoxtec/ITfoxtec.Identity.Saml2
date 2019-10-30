@@ -33,11 +33,11 @@ Tested for compliance with AD FS, Azure AD and Azure AD B2C. Furthermore, the Da
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.4.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.6.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.6.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.6.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
     <DefineConstants>NETCORE21;NETCORE;</DefineConstants>

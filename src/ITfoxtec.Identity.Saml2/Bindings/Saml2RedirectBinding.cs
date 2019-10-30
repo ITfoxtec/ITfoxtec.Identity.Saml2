@@ -23,6 +23,11 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.BindInternal(saml2RequestResponse);
 
+            if(saml2RequestResponse is Saml2AuthnResponse && saml2RequestResponse.Config.AuthnResponseSignType != Saml2AuthnResponseSignTypes.SignResponse)
+            {
+                throw new InvalidSaml2BindingException($"Redirect binding do not support {saml2RequestResponse.Config.AuthnResponseSignType}, only {nameof(Saml2AuthnResponseSignTypes.SignResponse)} is supported.");
+            }
+
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);

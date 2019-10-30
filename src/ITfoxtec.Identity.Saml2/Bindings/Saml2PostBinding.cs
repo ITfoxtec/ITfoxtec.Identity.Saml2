@@ -32,10 +32,18 @@ namespace ITfoxtec.Identity.Saml2
         {
             BindInternal(saml2RequestResponse);
 
+            if (saml2RequestResponse is Saml2AuthnResponse && saml2RequestResponse.Config.AuthnResponseSignType != Saml2AuthnResponseSignTypes.SignResponse)
+            {
+                (saml2RequestResponse as Saml2AuthnResponse).SignAuthnResponse(CertificateIncludeOption);
+            }
+
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
-                Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
-                XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, CertificateIncludeOption, saml2RequestResponse.IdAsString);
+                if (!(saml2RequestResponse is Saml2AuthnResponse && saml2RequestResponse.Config.AuthnResponseSignType == Saml2AuthnResponseSignTypes.SignAssertion))
+                {
+                    Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
+                    XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, CertificateIncludeOption, saml2RequestResponse.IdAsString);
+                }
             }
 
             PostContent = string.Concat(HtmlPostPage(saml2RequestResponse.Destination, messageName));

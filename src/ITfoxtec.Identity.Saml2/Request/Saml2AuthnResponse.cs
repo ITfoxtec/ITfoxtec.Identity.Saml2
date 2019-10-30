@@ -209,6 +209,12 @@ namespace ITfoxtec.Identity.Saml2
             return XmlDocument;
         }
 
+        protected internal void SignAuthnResponse(X509IncludeOption certificateIncludeOption)
+        {
+            Cryptography.SignatureAlgorithm.ValidateAlgorithm(Config.SignatureAlgorithm);
+            XmlDocument = XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, certificateIncludeOption);
+        }
+
         protected internal override void Read(string xml, bool validateXmlSignature = false)
         {
             base.Read(xml, validateXmlSignature);
@@ -234,14 +240,19 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (assertionElement == null)
             {
-                var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
-                if (assertionElements.Count != 1)
-                {
-                    throw new Saml2RequestException("There is not exactly one Assertion element.");
-                }
-                assertionElement = (assertionElements[0] as XmlElement).ToXmlDocument().DocumentElement;
+                assertionElement = GetAssertionElementReference().ToXmlDocument().DocumentElement;
             }            
             return assertionElement;            
+        }
+
+        private XmlElement GetAssertionElementReference()
+        {
+            var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
+            if (assertionElements.Count != 1)
+            {
+                throw new Saml2RequestException("There is not exactly one Assertion element.");
+            }
+            return assertionElements[0] as XmlElement;
         }
 
         private void ValidateAssertionExpiration(XmlNode assertionElement)
