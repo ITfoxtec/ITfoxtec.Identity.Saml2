@@ -31,7 +31,7 @@ namespace ITfoxtec.Identity.Saml2
         public bool? IsPassive { get; set; }
 
         /// <summary>
-            /// [Optional]
+        /// [Optional]
         /// Specifies the requested subject of the resulting assertion(s). 
         /// </summary>
         public Subject Subject { get; set; }
@@ -134,7 +134,13 @@ namespace ITfoxtec.Identity.Saml2
 
             IsPassive = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.IsPassive].GetValueOrNull<bool>();
 
-            Subject = XmlDocument.DocumentElement[Saml2Constants.Message.Subject, Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Subject>();
+            AssertionConsumerServiceUrl = XmlDocument.DocumentElement[Saml2Constants.Message.AssertionConsumerServiceURL, Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Uri>();
+
+            Subject = XmlDocument.DocumentElement[Saml2Constants.Message.Subject, Saml2Constants.AssertionNamespace.OriginalString].GetElementOrNull<Subject>();
+
+            NameIdPolicy = XmlDocument.DocumentElement[Saml2Constants.Message.NameIdPolicy, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<NameIdPolicy>();
+
+            RequestedAuthnContext = XmlDocument.DocumentElement[Saml2Constants.Message.RequestedAuthnContext, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<RequestedAuthnContext>();
         }
 
         protected override void ValidateElementName()
