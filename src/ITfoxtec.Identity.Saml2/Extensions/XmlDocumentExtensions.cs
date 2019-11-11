@@ -40,8 +40,7 @@ namespace ITfoxtec.Identity.Saml2
         /// <param name="certificate">The certificate used to sign the document</param>
         /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the document</param>
         /// <param name="includeOption">Certificate include option</param>
-        /// <param name="id">The is of the topmost element in the xmldocument</param>
-        internal static XmlDocument SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, X509IncludeOption includeOption)
+        internal static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, X509IncludeOption includeOption)
         {
             if (certificate == null)
             {
@@ -55,7 +54,6 @@ namespace ITfoxtec.Identity.Saml2
 
             var issuer = xmlAssertionElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString];
             xmlAssertionElement.InsertAfter(xmlDocument.ImportNode(signedXml.GetXml(), true), issuer);
-            return xmlDocument;
         }
 
         /// <summary>

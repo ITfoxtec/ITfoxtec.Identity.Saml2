@@ -22,6 +22,10 @@ namespace ITfoxtec.Identity.Saml2
         
         public X509Certificate2 SigningCertificate { get; set; }
         public X509Certificate2 DecryptionCertificate { get; set; }
+        /// <summary>
+        /// If set the authn responses created by the library is encrypt.
+        /// </summary>
+        public X509Certificate2 EncryptionCertificate { get; set; }
 
         public List<X509Certificate2> SignatureValidationCertificates { get; protected set; } = new List<X509Certificate2>();
         public X509CertificateValidationMode CertificateValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
@@ -36,18 +40,13 @@ namespace ITfoxtec.Identity.Saml2
         public List<string> AllowedAudienceUris { get; protected set; } = new List<string>();
 
         /// <summary>
-        /// To sign the Authn requests created by the library.
+        /// To sign the authn requests created by the library.
         /// </summary>
         public bool SignAuthnRequest { get; set; } = false;
 
         /// <summary>
-        /// Sign type for the Authn responses created by the library.
+        /// Sign type for the authn responses created by the library.
         /// </summary>
         public Saml2AuthnResponseSignTypes AuthnResponseSignType { get; set; } = Saml2AuthnResponseSignTypes.SignResponse;
-
-        /// <summary>
-        /// To encrypt the Authn responses created by the library.
-        /// </summary>
-        public bool EncryptAuthnResponse { get; set; } = false;
     }
 }

@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Xml;
 using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Cryptography;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml.Linq;
 #if NETFULL
@@ -29,6 +28,7 @@ namespace ITfoxtec.Identity.Saml2
         const string elementName = Schemas.Saml2Constants.Message.AuthnResponse;
 
         internal X509Certificate2 DecryptionCertificate { get; private set; }
+        internal X509Certificate2 EncryptionCertificate { get; private set; }
 
         /// <summary>
         /// Claims Identity.
@@ -67,6 +67,14 @@ namespace ITfoxtec.Identity.Saml2
                 if (config.DecryptionCertificate.GetSamlRSAPrivateKey() == null)
                 {
                     throw new ArgumentException("No RSA Private Key present in Decryption Certificate or missing private key read credentials.");
+                }
+            }
+            if(config.EncryptionCertificate != null)
+            {
+                EncryptionCertificate = config.EncryptionCertificate;
+                if (config.DecryptionCertificate.GetRSAPublicKey() == null)
+                {
+                    throw new ArgumentException("No RSA Public Key present in Encryption Certificate.");
                 }
             }
             Saml2SecurityTokenHandler = Saml2ResponseSecurityTokenHandler.GetSaml2SecurityTokenHandler(IdentityConfiguration);
@@ -212,7 +220,7 @@ namespace ITfoxtec.Identity.Saml2
         protected internal void SignAuthnResponse(X509IncludeOption certificateIncludeOption)
         {
             Cryptography.SignatureAlgorithm.ValidateAlgorithm(Config.SignatureAlgorithm);
-            XmlDocument = XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, certificateIncludeOption);
+            XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, certificateIncludeOption);
         }
 
         protected internal override void Read(string xml, bool validateXmlSignature = false)
@@ -235,14 +243,14 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        XmlElement assertionElement = null;
+        XmlElement assertionElementCache = null;
         protected override XmlElement GetAssertionElement()
         {
-            if (assertionElement == null)
+            if (assertionElementCache == null)
             {
-                assertionElement = GetAssertionElementReference().ToXmlDocument().DocumentElement;
+                assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
             }            
-            return assertionElement;            
+            return assertionElementCache;
         }
 
         private XmlElement GetAssertionElementReference()
@@ -316,6 +324,26 @@ namespace ITfoxtec.Identity.Saml2
                 Debug.WriteLine("Saml2P (Decrypted): " + XmlDocument.OuterXml);
 #endif
             }
+        }
+
+        protected internal void EncryptMessage()
+        {
+            var envelope = new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.EncryptedAssertion);
+            var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
+            XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(envelope.ToXmlDocument().DocumentElement, true), status);
+
+            var assertionElement = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Assertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
+            assertionElement.ParentNode.RemoveChild(assertionElement);
+
+            var encryptedDataElement = new Saml2EncryptedXml(EncryptionCertificate.GetRSAPublicKey()).EncryptAassertion(assertionElement);
+
+            var encryptedAssertionElement = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.EncryptedAssertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
+            encryptedAssertionElement.AppendChild(XmlDocument.ImportNode(encryptedDataElement, true));
+
+#if DEBUG
+            Debug.WriteLine("Saml2P (Encrypted): " + XmlDocument.OuterXml);
+#endif
+
         }
     }
 }

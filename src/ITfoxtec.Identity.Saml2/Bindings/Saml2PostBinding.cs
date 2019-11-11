@@ -32,9 +32,16 @@ namespace ITfoxtec.Identity.Saml2
         {
             BindInternal(saml2RequestResponse);
 
-            if (saml2RequestResponse is Saml2AuthnResponse && saml2RequestResponse.Config.AuthnResponseSignType != Saml2AuthnResponseSignTypes.SignResponse)
+            if (saml2RequestResponse is Saml2AuthnResponse)
             {
-                (saml2RequestResponse as Saml2AuthnResponse).SignAuthnResponse(CertificateIncludeOption);
+                if (saml2RequestResponse.Config.AuthnResponseSignType != Saml2AuthnResponseSignTypes.SignResponse)
+                {
+                    (saml2RequestResponse as Saml2AuthnResponse).SignAuthnResponse(CertificateIncludeOption);
+                }
+                if (saml2RequestResponse.Config.EncryptionCertificate != null)
+                {
+                    (saml2RequestResponse as Saml2AuthnResponse).EncryptMessage();
+                }
             }
 
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
