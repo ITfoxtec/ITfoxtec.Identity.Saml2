@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Xml;
 using System.Security.Cryptography.X509Certificates;
 using ITfoxtec.Identity.Saml2.Cryptography;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml.Linq;
 #if NETFULL
