@@ -105,5 +105,17 @@ namespace ITfoxtec.Identity.Saml2
         }
 
         protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature);
+
+        public bool IsRequest(HttpRequest request)
+        {
+            return IsRequestResponseInternal(request, Saml2Constants.Message.SamlRequest);
+        }
+
+        public bool IsResponse(HttpRequest request)
+        {
+            return IsRequestResponseInternal(request, Saml2Constants.Message.SamlResponse);
+        }
+
+        protected abstract bool IsRequestResponseInternal(HttpRequest request, string messageName);
     }
 }

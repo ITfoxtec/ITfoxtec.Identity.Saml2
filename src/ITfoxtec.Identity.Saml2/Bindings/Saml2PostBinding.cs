@@ -122,5 +122,10 @@ namespace ITfoxtec.Identity.Saml2
             XmlDocument = saml2RequestResponse.XmlDocument;
             return saml2RequestResponse;
         }
+
+        protected override bool IsRequestResponseInternal(HttpRequest request, string messageName)
+        {
+            return request.Form.AllKeys.Contains(messageName);
+        }
     }
 }
