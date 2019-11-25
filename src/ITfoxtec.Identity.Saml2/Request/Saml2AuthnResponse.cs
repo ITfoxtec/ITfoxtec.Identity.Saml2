@@ -220,6 +220,11 @@ namespace ITfoxtec.Identity.Saml2
 
         protected internal void SignAuthnResponse(X509IncludeOption certificateIncludeOption)
         {
+            if (Status != Schemas.Saml2StatusCodes.Success)
+            {
+                return;
+            }
+
             Cryptography.SignatureAlgorithm.ValidateAlgorithm(Config.SignatureAlgorithm);
             XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, certificateIncludeOption);
         }
@@ -329,6 +334,11 @@ namespace ITfoxtec.Identity.Saml2
 
         protected internal void EncryptMessage()
         {
+            if (Status != Schemas.Saml2StatusCodes.Success)
+            {
+                return;
+            }
+
             var envelope = new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.EncryptedAssertion);
             var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
             XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(envelope.ToXmlDocument().DocumentElement, true), status);

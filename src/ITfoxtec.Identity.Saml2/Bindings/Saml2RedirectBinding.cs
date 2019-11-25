@@ -156,7 +156,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override bool IsRequestResponseInternal(HttpRequest request, string messageName)
         {
-            return request.Query.AllKeys.Contains(messageName);
+            return (request.Query?.AllKeys?.Contains(messageName)).GetValueOrDefault(false);
         }
 
         private void ValidateQueryStringSignature(Saml2Request saml2RequestResponse, string queryString, string messageName, byte[] signatureValue, IEnumerable<X509Certificate2> signatureValidationCertificates)

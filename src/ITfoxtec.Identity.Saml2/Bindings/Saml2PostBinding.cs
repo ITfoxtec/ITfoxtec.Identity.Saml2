@@ -125,7 +125,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override bool IsRequestResponseInternal(HttpRequest request, string messageName)
         {
-            return request.Form.AllKeys.Contains(messageName);
+            return (request.Form?.AllKeys?.Contains(messageName)).GetValueOrDefault(false);
         }
     }
 }
