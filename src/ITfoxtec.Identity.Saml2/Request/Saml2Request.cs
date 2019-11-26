@@ -186,6 +186,10 @@ namespace ITfoxtec.Identity.Saml2
             IssueInstant = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTimeOffset>();
 
             Issuer = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Issuer, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<string>();
+            if(!string.IsNullOrEmpty(Config.AllowedIssuer) && !Config.AllowedIssuer.Equals(Issuer, StringComparison.Ordinal))
+            {
+                throw new Saml2RequestException($"Invalid Issuer. Actually '{Issuer}', allowed '{Config.AllowedIssuer}'");
+            }
 
             Destination = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.Destination].GetValueOrNull<Uri>();
 

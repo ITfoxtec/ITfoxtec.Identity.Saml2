@@ -47,6 +47,7 @@ namespace TestWebAppCoreAzureKeyVault.Identity
             entityDescriptor.ReadIdPSsoDescriptorFromUrl(new Uri(Saml2IdPMetadata));
             if (entityDescriptor.IdPSsoDescriptor != null)
             {
+                saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
                 saml2Configuration.SingleSignOnDestination = entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
                 saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
                 saml2Configuration.SignatureValidationCertificates.AddRange(entityDescriptor.IdPSsoDescriptor.SigningCertificates);

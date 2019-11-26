@@ -27,6 +27,8 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public X509Certificate2 EncryptionCertificate { get; set; }
 
+        public string AllowedIssuer { get; set; }
+
         public List<X509Certificate2> SignatureValidationCertificates { get; protected set; } = new List<X509Certificate2>();
         public X509CertificateValidationMode CertificateValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
         public X509RevocationMode RevocationMode { get; set; } = X509RevocationMode.Online;
