@@ -1,4 +1,4 @@
-﻿#if NETCORE30
+﻿#if NETCORE30 || NETCORE31
 using System;
 #endif
 using System.IO;
@@ -8,7 +8,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
 {
     public static class MapFileExtensions
     {
-#if NETCORE30
+#if NETCORE30 || NETCORE31
         [Obsolete("The IHostingEnvironment type and this method is obsolete and will be removed in a future version. The recommended alternative is Microsoft.AspNetCore.Hosting.IWebHostEnvironment.", false)]
 #endif
         public static string MapToPhysicalFilePath(this IHostingEnvironment appEnvironment, string fileName)
@@ -16,7 +16,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             return Path.Combine(appEnvironment.ContentRootPath, fileName);
         }
 
-#if NETCORE30
+#if NETCORE30 || NETCORE31
         public static string MapToPhysicalFilePath(this IWebHostEnvironment appEnvironment, string fileName)
         {
             return Path.Combine(appEnvironment.ContentRootPath, fileName);
