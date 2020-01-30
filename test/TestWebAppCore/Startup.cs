@@ -53,7 +53,7 @@ namespace TestWebAppCore
                 }
             });
 
-            services.AddSaml2();
+            services.AddSaml2(slidingExpiration: true);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
