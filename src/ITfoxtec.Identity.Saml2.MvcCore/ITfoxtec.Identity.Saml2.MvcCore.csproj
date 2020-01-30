@@ -16,10 +16,10 @@
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.0.3.1</AssemblyVersion>
-    <FileVersion>4.0.3.1</FileVersion>
+    <AssemblyVersion>4.0.4.0</AssemblyVersion>
+    <FileVersion>4.0.4.0</FileVersion>
     <Copyright>Copyright © 2019</Copyright>
-    <Version>4.0.3.1-beta2</Version>
+    <Version>4.0.4</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
