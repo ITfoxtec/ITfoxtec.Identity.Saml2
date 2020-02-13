@@ -42,7 +42,7 @@ namespace ITfoxtec.Identity.Saml2
         public List<string> AllowedAudienceUris { get; protected set; } = new List<string>();
 
         /// <summary>
-        /// To sign the authn requests created by the library.
+        /// Sign and validate signed authn requests.
         /// </summary>
         public bool SignAuthnRequest { get; set; } = false;
 
