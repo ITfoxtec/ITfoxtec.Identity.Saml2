@@ -19,7 +19,7 @@
     <AssemblyVersion>4.0.5.0</AssemblyVersion>
     <FileVersion>4.0.5.0</FileVersion>
     <Copyright>Copyright © 2019</Copyright>
-    <Version>4.0.4</Version>
+    <Version>4.0.5</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
