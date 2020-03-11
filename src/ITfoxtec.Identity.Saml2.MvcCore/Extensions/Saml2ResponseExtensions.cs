@@ -41,7 +41,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             await httpContext.SignInAsync(Saml2Constants.AuthenticationScheme, principal, 
                 new AuthenticationProperties
                 {
-                    AllowRefresh = false,
+                    AllowRefresh = true,
                     IsPersistent = isPersistent,
                     IssuedUtc = saml2AuthnResponse.SecurityTokenValidFrom,
                     ExpiresUtc = lifetime.HasValue ? DateTimeOffset.UtcNow.Add(lifetime.Value) : saml2AuthnResponse.SecurityTokenValidTo,
