@@ -16,6 +16,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 #if !NETFULL
         static Saml2Signer()
         {
+            CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA1SignatureDescription), Saml2SecurityAlgorithms.RsaSha1Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA256SignatureDescription), Saml2SecurityAlgorithms.RsaSha256Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA384SignatureDescription), Saml2SecurityAlgorithms.RsaSha384Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA512SignatureDescription), Saml2SecurityAlgorithms.RsaSha512Signature);
