@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;net472;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;net472;net462</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
@@ -10,6 +10,7 @@
     <Title>ITfoxtec Identity SAML 2.0</Title>
     <Description>The ITfoxtec.Identity.Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) on top of the SAML 2.0 functionality implemented in .NET.
 
+      Support .NET Standard 2.1
       Support .NET Core 2.1, 2.2, 3.0 and 3.1
       Support .NET Framework 4.6.2 and 4.7.2
 
@@ -32,6 +33,27 @@ Tested for compliance with AD FS, Azure AD and Azure AD B2C. Furthermore, the Da
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+    <DefineConstants>NETSTANDARD21;NETSTANDARD;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+    
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.6.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
