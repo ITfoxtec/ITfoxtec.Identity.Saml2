@@ -43,7 +43,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             configuration.SaveSigninToken = config.SaveBootstrapContext;
             configuration.ValidateAudience = config.AudienceRestricted;
             configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a);
-            configuration.ValidIssuer = config.Issuer;
+            configuration.ValidIssuer = config.AllowedIssuer;
             configuration.ValidateTokenReplay = config.DetectReplayedTokens;
 
             configuration.NameClaimType = ClaimTypes.NameIdentifier;
