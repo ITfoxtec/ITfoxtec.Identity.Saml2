@@ -19,15 +19,24 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             Saml2Signer = new Saml2Signer(certificate, signatureAlgorithm);
         }
 
-        public void ComputeSignature(X509IncludeOption includeOption, string id)
+        public void ComputeSignature(X509IncludeOption includeOption, string id, string xmlCanonicalizationMethod = XmlDsigExcC14NTransformUrl)
         {
             var reference = new Reference("#" + id);
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
-            reference.AddTransform(new XmlDsigExcC14NTransform());
             reference.DigestMethod = SignatureAlgorithm.DigestMethod(Saml2Signer.SignatureAlgorithm);
-            AddReference(reference);
 
-            SignedInfo.CanonicalizationMethod = XmlDsigExcC14NTransformUrl;
+            if (xmlCanonicalizationMethod == XmlDsigExcC14NWithCommentsTransformUrl)
+            {
+                reference.AddTransform(new XmlDsigExcC14NWithCommentsTransform());
+                SignedInfo.CanonicalizationMethod = XmlDsigExcC14NWithCommentsTransformUrl;
+            }
+            else
+            {
+                reference.AddTransform(new XmlDsigExcC14NTransform());
+                SignedInfo.CanonicalizationMethod = XmlDsigExcC14NTransformUrl;
+            }
+
+            AddReference(reference);
             SignedInfo.SignatureMethod = Saml2Signer.SignatureAlgorithm;
             SigningKey = Saml2Signer.Certificate.GetSamlRSAPrivateKey();
             ComputeSignature();
@@ -49,7 +58,8 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
                 throw new InvalidSignatureException("XML signature reference do not refer to the root element.");
             }
 
-            var canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == XmlDsigExcC14NTransformUrl;
+            bool canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == XmlDsigExcC14NTransformUrl ||
+                                               SignedInfo.CanonicalizationMethod == XmlDsigExcC14NWithCommentsTransformUrl;
             var signatureMethodValid = SignedInfo.SignatureMethod == Saml2Signer.SignatureAlgorithm;
             if (!(canonicalizationMethodValid && signatureMethodValid))
             {
