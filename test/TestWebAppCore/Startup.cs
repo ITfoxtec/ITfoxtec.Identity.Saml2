@@ -20,7 +20,6 @@ namespace TestWebAppCore
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
             AppEnvironment = env;
-
             Configuration = configuration;
         }
 
