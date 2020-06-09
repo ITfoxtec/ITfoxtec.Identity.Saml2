@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITfoxtec.Identity.Saml2.Mvc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebAppCoreAzureKeyVault", "test\TestWebAppCoreAzureKeyVault\TestWebAppCoreAzureKeyVault.csproj", "{03A37D91-A36B-48C0-90A1-1FCF43621E60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebAppCoreAngularApi", "test\TestWebAppCoreAngularApi\TestWebAppCoreAngularApi.csproj", "{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{03A37D91-A36B-48C0-90A1-1FCF43621E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03A37D91-A36B-48C0-90A1-1FCF43621E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03A37D91-A36B-48C0-90A1-1FCF43621E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{AB921243-70BE-4B10-BDDD-7F62FDA8CF93} = {DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}
 		{1966436F-5CEC-4290-A547-152357C0BD24} = {A05F26DE-17C2-497F-B244-EE6790789066}
 		{03A37D91-A36B-48C0-90A1-1FCF43621E60} = {DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}
+		{66FA6C5B-164C-44F3-9A96-60F0239ABDCE} = {DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64BB7D39-E92F-466D-B601-276E16FF6EB4}
