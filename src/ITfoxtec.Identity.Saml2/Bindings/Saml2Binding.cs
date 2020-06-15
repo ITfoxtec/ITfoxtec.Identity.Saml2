@@ -14,6 +14,8 @@ namespace ITfoxtec.Identity.Saml2
 
         public string SignatureAlgorithm { get; protected set; }
 
+        public string XmlCanonicalizationMethod { get; protected set; }
+
         /// <summary>
         /// <para>Sets the relaystate of the message.</para>
         /// <para>If the message being built is a response message, the relaystate will be included unmodified.</para>
@@ -85,6 +87,8 @@ namespace ITfoxtec.Identity.Saml2
                 saml2RequestResponse.SignatureValidationCertificates = saml2RequestResponse.Config.SignatureValidationCertificates;
             if (saml2RequestResponse.SignatureAlgorithm == null)
                 saml2RequestResponse.SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;
+            if (saml2RequestResponse.XmlCanonicalizationMethod == null)
+                saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;          
 
             if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => c.GetRSAPublicKey() == null) > 0)
                 throw new ArgumentException("No RSA Public Key present in at least Signature Validation Certificate.");

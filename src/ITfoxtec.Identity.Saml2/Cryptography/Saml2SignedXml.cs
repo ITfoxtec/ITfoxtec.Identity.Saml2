@@ -9,32 +9,26 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     {
         public XmlElement Element { get; protected set; }
         public Saml2Signer Saml2Signer { get; protected set; }
+        public string CanonicalizationMethod { get; protected set; }
 
-        public Saml2SignedXml(XmlElement element, X509Certificate2 certificate, string signatureAlgorithm) : base(element)
+        public Saml2SignedXml(XmlElement element, X509Certificate2 certificate, string signatureAlgorithm, string canonicalizationMethod) : base(element)
         {
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
             if (signatureAlgorithm == null) throw new ArgumentNullException(nameof(signatureAlgorithm));
+            if (canonicalizationMethod == null) throw new ArgumentNullException(nameof(canonicalizationMethod));
 
             Element = element;
+            CanonicalizationMethod = canonicalizationMethod;
             Saml2Signer = new Saml2Signer(certificate, signatureAlgorithm);
         }
 
-        public void ComputeSignature(X509IncludeOption includeOption, string id, string xmlCanonicalizationMethod = XmlDsigExcC14NTransformUrl)
+        public void ComputeSignature(X509IncludeOption includeOption, string id)
         {
             var reference = new Reference("#" + id);
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
             reference.DigestMethod = SignatureAlgorithm.DigestMethod(Saml2Signer.SignatureAlgorithm);
-
-            if (xmlCanonicalizationMethod == XmlDsigExcC14NWithCommentsTransformUrl)
-            {
-                reference.AddTransform(new XmlDsigExcC14NWithCommentsTransform());
-                SignedInfo.CanonicalizationMethod = XmlDsigExcC14NWithCommentsTransformUrl;
-            }
-            else
-            {
-                reference.AddTransform(new XmlDsigExcC14NTransform());
-                SignedInfo.CanonicalizationMethod = XmlDsigExcC14NTransformUrl;
-            }
+            reference.AddTransform(XmlCanonicalizationMethod.GetTransform(CanonicalizationMethod));
+            SignedInfo.CanonicalizationMethod = CanonicalizationMethod;
 
             AddReference(reference);
             SignedInfo.SignatureMethod = Saml2Signer.SignatureAlgorithm;
@@ -58,8 +52,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
                 throw new InvalidSignatureException("XML signature reference do not refer to the root element.");
             }
 
-            bool canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == XmlDsigExcC14NTransformUrl ||
-                                               SignedInfo.CanonicalizationMethod == XmlDsigExcC14NWithCommentsTransformUrl;
+            var canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == CanonicalizationMethod;
             var signatureMethodValid = SignedInfo.SignatureMethod == Saml2Signer.SignatureAlgorithm;
             if (!(canonicalizationMethodValid && signatureMethodValid))
             {

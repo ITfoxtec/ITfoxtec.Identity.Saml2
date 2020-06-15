@@ -109,7 +109,9 @@ namespace ITfoxtec.Identity.Saml2
 
         public IEnumerable<X509Certificate2> SignatureValidationCertificates { get; set; }
 
-        public string SignatureAlgorithm { get; set; }     
+        public string SignatureAlgorithm { get; set; }
+
+        public string XmlCanonicalizationMethod { get; set; }
 
         internal Saml2IdentityConfiguration IdentityConfiguration { get; private set; }
 
@@ -257,7 +259,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
 
-                var signedXml = new Saml2SignedXml(xmlElement, signatureValidationCertificate, SignatureAlgorithm);
+                var signedXml = new Saml2SignedXml(xmlElement, signatureValidationCertificate, SignatureAlgorithm, XmlCanonicalizationMethod);
                 signedXml.LoadXml(xmlSignatures[0] as XmlElement);
                 if (signedXml.CheckSignature())
                 {
