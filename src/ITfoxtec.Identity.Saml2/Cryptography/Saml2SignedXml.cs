@@ -21,7 +21,6 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public void ComputeSignature(X509IncludeOption includeOption, string id)
         {
-            string idf = Element.GetAttribute("ID");
             var reference = new Reference("#" + id);
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
             reference.AddTransform(new XmlDsigExcC14NTransform());
