@@ -104,7 +104,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             var xmlDocument = envelope.ToXmlDocument();
             if(MetadataSigningCertificate != null)
             {
-                xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, CertificateIncludeOption, IdAsString);
+                xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, CertificateIncludeOption, IdAsString);
             }
             return xmlDocument;
         }

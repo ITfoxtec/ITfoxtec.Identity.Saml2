@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel.Security;
 using System.IdentityModel.Selectors;
+using System.Security.Cryptography.Xml;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -19,7 +20,8 @@ namespace ITfoxtec.Identity.Saml2
         public Uri SingleLogoutDestination { get; set; }
 
         public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
-        
+        public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
+
         public X509Certificate2 SigningCertificate { get; set; }
         public X509Certificate2 DecryptionCertificate { get; set; }
         /// <summary>

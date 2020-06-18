@@ -17,16 +17,17 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         /// <param name="certificate">The certificate used to sign the document</param>
         /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the document</param>
+        /// <param name="xmlCanonicalizationMethod">The Signature XML canonicalization method used to sign the document</param>
         /// <param name="includeOption">Certificate include option</param>
         /// <param name="id">The is of the topmost element in the xmldocument</param>
-        internal static XmlDocument SignDocument(this XmlDocument xmlDocument, X509Certificate2 certificate, string signatureAlgorithm, X509IncludeOption includeOption, string id)
+        internal static XmlDocument SignDocument(this XmlDocument xmlDocument, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption, string id)
         {
             if (certificate == null)
             {
                 throw new ArgumentNullException(nameof(certificate));
             }
 
-            var signedXml = new Saml2SignedXml(xmlDocument.DocumentElement, certificate, signatureAlgorithm);
+            var signedXml = new Saml2SignedXml(xmlDocument.DocumentElement, certificate, signatureAlgorithm, xmlCanonicalizationMethod);
             signedXml.ComputeSignature(includeOption, id);
 
             var issuer = xmlDocument.DocumentElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString];
@@ -35,12 +36,13 @@ namespace ITfoxtec.Identity.Saml2
         }
 
         /// <summary>
-        /// Signs an XmlDocument with an xml signature using the signing certificate given as argument to the method.
+        /// Signs an Xml assertion with an xml signature using the signing certificate given as argument to the method.
         /// </summary>
-        /// <param name="certificate">The certificate used to sign the document</param>
-        /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the document</param>
+        /// <param name="certificate">The certificate used to sign the assertion</param>
+        /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the assertion</param>
+        /// <param name="xmlCanonicalizationMethod">The Signature XML canonicalization method used to sign the assertion</param>
         /// <param name="includeOption">Certificate include option</param>
-        internal static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, X509IncludeOption includeOption)
+        internal static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption)
         {
             if (certificate == null)
             {
@@ -49,7 +51,7 @@ namespace ITfoxtec.Identity.Saml2
 
             var id = xmlAssertionElement.GetAttribute(Saml2Constants.Message.Id);
 
-            var signedXml = new Saml2SignedXml(xmlAssertionElement, certificate, signatureAlgorithm);
+            var signedXml = new Saml2SignedXml(xmlAssertionElement, certificate, signatureAlgorithm, xmlCanonicalizationMethod);
             signedXml.ComputeSignature(includeOption, id);
 
             var issuer = xmlAssertionElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString];

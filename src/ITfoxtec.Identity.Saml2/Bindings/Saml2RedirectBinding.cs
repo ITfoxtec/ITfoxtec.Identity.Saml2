@@ -38,7 +38,9 @@ namespace ITfoxtec.Identity.Saml2
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
             {
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
+                Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(saml2RequestResponse.Config.XmlCanonicalizationMethod);
                 SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;
+                XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
             }
 
             var requestQueryString = string.Join("&", RequestQueryString(saml2RequestResponse, messageName));
@@ -126,8 +128,14 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualAignatureAlgorithm}");
                 }
+                if (saml2RequestResponse.XmlCanonicalizationMethod == null)
+                {
+                    saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
+                }
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.SignatureAlgorithm);
+                Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(saml2RequestResponse.XmlCanonicalizationMethod);
                 SignatureAlgorithm = saml2RequestResponse.SignatureAlgorithm;
+                XmlCanonicalizationMethod = saml2RequestResponse.XmlCanonicalizationMethod;
 
                 Signature = request.Query[Saml2Constants.Message.Signature];
                 ValidateQueryStringSignature(saml2RequestResponse, request.QueryString, messageName, Convert.FromBase64String(Signature), saml2RequestResponse.SignatureValidationCertificates);
