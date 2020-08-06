@@ -75,7 +75,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             {
                 return GenericConvertValue<T, NameIdPolicy>(new NameIdPolicy
                 {
-                    AllowCreate = GenericConvertValue<bool, string>(xmlNode.Attributes[Schemas.Saml2Constants.Message.AllowCreate]?.Value),
+                    AllowCreate = GenericConvertValue<bool?, string>(xmlNode.Attributes[Schemas.Saml2Constants.Message.AllowCreate]?.Value),
                     Format = xmlNode.Attributes[Schemas.Saml2Constants.Message.Format]?.Value,
                     SPNameQualifier = xmlNode.Attributes[Schemas.Saml2Constants.Message.SpNameQualifier]?.Value
                 });
