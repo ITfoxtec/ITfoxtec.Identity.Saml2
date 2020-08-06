@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using ITfoxtec.Identity.Saml2.Util;
@@ -61,7 +62,7 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false)
+        protected internal override void Read(string xml, bool validateXmlSignature = false, TimeSpan? clockTolerance = null)
         {
             base.Read(xml, validateXmlSignature);
 

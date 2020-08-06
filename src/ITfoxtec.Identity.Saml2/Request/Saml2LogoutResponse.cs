@@ -43,7 +43,7 @@ namespace ITfoxtec.Identity.Saml2
             return XmlDocument;
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false)
+        protected internal override void Read(string xml, bool validateXmlSignature = false, TimeSpan? clockTolerance = null)
         {
             base.Read(xml, validateXmlSignature);
 

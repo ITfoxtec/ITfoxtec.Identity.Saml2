@@ -230,14 +230,14 @@ namespace ITfoxtec.Identity.Saml2
             XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, certificateIncludeOption);
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false)
+        protected internal override void Read(string xml, bool validateXmlSignature = false, TimeSpan? clockTolerance = null)
         {
             base.Read(xml, validateXmlSignature);
 
             if (Status == Schemas.Saml2StatusCodes.Success)
             {
                 var assertionElement = GetAssertionElement();
-                ValidateAssertionExpiration(assertionElement);
+                ValidateAssertionExpiration(assertionElement, clockTolerance);
 
 #if NETFULL
                 Saml2SecurityToken = ReadSecurityToken(assertionElement);
@@ -270,7 +270,12 @@ namespace ITfoxtec.Identity.Saml2
             return assertionElements[0] as XmlElement;
         }
 
-        private void ValidateAssertionExpiration(XmlNode assertionElement)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assertionElement"></param>
+        /// <param name="clockTolerance">Allow for clock slip of this amount (on top of what the IDP already includes in the NotOnOrAfter assertion)</param>
+        private void ValidateAssertionExpiration(XmlNode assertionElement, TimeSpan? clockTolerance)
         {
             var subjectElement = assertionElement[Schemas.Saml2Constants.Message.Subject, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             if (subjectElement == null)
@@ -291,6 +296,13 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
+
+            if (clockTolerance.HasValue)
+            {
+                // 'Add' the tolerance to the assertion date
+                notOnOrAfter += clockTolerance.Value;
+            }
+
             if (notOnOrAfter < DateTimeOffset.UtcNow)
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");

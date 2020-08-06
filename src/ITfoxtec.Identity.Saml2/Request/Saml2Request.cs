@@ -162,7 +162,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public abstract XmlDocument ToXml();
 
-        protected internal virtual void Read(string xml, bool validateXmlSignature)
+        protected internal virtual void Read(string xml, bool validateXmlSignature = false, TimeSpan? clockTolerance = null)
         {
 #if DEBUG
             Debug.WriteLine("Saml2P: " + xml);
