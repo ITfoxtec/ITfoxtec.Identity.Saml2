@@ -73,7 +73,7 @@ namespace ITfoxtec.Identity.Saml2
             if(config.EncryptionCertificate != null)
             {
                 EncryptionCertificate = config.EncryptionCertificate;
-                if (config.DecryptionCertificate.GetRSAPublicKey() == null)
+                if (config.EncryptionCertificate.GetRSAPublicKey() == null)
                 {
                     throw new ArgumentException("No RSA Public Key present in Encryption Certificate.");
                 }
