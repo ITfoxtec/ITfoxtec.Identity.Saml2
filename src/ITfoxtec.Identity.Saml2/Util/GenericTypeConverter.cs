@@ -75,7 +75,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             {
                 return GenericConvertValue<T, NameIdPolicy>(new NameIdPolicy
                 {
-                    AllowCreate = GenericConvertValue<bool?, string>(xmlNode.Attributes[Schemas.Saml2Constants.Message.AllowCreate]?.Value),
+                    AllowCreate = GenericConvertValueToNullable<bool>(xmlNode.Attributes[Schemas.Saml2Constants.Message.AllowCreate]?.Value),
                     Format = xmlNode.Attributes[Schemas.Saml2Constants.Message.Format]?.Value,
                     SPNameQualifier = xmlNode.Attributes[Schemas.Saml2Constants.Message.SpNameQualifier]?.Value
                 });
@@ -108,6 +108,18 @@ namespace ITfoxtec.Identity.Saml2.Util
         static T GenericConvertValue<T, U>(U value)
         {
             return (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        static T? GenericConvertValueToNullable<T>(string value) where T : struct
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+            else
+            {
+                return (T)Convert.ChangeType(value, typeof(T));
+            }
         }
     }
 }
