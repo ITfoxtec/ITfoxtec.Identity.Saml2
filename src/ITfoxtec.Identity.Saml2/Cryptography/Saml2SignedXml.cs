@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
@@ -59,8 +60,8 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
                 return false;
             }
             else
-            {
-                return CheckSignature(Saml2Signer.Certificate, true);
+            {                        
+                return CheckSignature(Saml2Signer.Certificate.GetRSAPublicKey());
             }
         }
     }

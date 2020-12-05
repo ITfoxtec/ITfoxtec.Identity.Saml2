@@ -8,10 +8,10 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     {
         public RSAPKCS1SHA384SignatureDescription()
         {
-            base.KeyAlgorithm = typeof(RSACryptoServiceProvider).FullName;
-            base.DigestAlgorithm = typeof(SHA384Managed).FullName;
-            base.FormatterAlgorithm = typeof(RSAPKCS1SignatureFormatter).FullName;
-            base.DeformatterAlgorithm = typeof(RSAPKCS1SignatureDeformatter).FullName;
+            KeyAlgorithm = typeof(RSACryptoServiceProvider).AssemblyQualifiedName;
+            DigestAlgorithm = typeof(SHA384Managed).AssemblyQualifiedName;
+            FormatterAlgorithm = typeof(RSAPKCS1SignatureFormatter).AssemblyQualifiedName;
+            DeformatterAlgorithm = typeof(RSAPKCS1SignatureDeformatter).AssemblyQualifiedName;
         }
 
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
