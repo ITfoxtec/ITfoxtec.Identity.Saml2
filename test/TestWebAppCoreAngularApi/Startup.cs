@@ -13,6 +13,8 @@ using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using Microsoft.AspNetCore.Authentication;
 using ITfoxtec.Identity.Saml2.Schemas;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace TestWebAppCoreAngularApi
 {
@@ -86,6 +88,22 @@ namespace TestWebAppCoreAngularApi
             app.UseRouting();
 
             app.UseSaml2();
+
+            app.MapWhen(
+                context =>
+                {
+                    return !context.User.Identity.IsAuthenticated && context.Request.Path.Value.StartsWith("/api/", StringComparison.OrdinalIgnoreCase);
+                },
+                config =>
+                {
+                    config.Run(async context =>
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        await Task.FromResult(string.Empty);
+                    });
+                }
+            );
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
