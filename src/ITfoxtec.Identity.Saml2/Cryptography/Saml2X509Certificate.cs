@@ -4,7 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 namespace ITfoxtec.Identity.Saml2.Cryptography
 {
     /// <summary>
-    /// X509Certificate2 supporting dynimic privare RSA key. 
+    /// X509Certificate2 supporting dynamic private RSA key. 
     /// Supporting Azure Key Vault.
     /// </summary>
     public class Saml2X509Certificate : X509Certificate2

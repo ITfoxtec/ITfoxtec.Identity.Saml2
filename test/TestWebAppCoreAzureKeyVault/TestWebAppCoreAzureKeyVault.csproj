@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>TestWebAppCoreAzureKeyVault</AssemblyName>
     <PackageId>TestWebAppCoreAzureKeyVault</PackageId>
-    <Version>4.0.0</Version>
+    <Version>5.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>Copyright © 2019</Copyright>
@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BuildBundlerMinifier" Version="3.2.447" />
-    <PackageReference Include="ITfoxtec.Identity" Version="1.1.7" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="ITfoxtec.Identity" Version="2.0.2" />
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.5" />
     <PackageReference Include="RSAKeyVaultProvider" Version="1.1.57" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
   </ItemGroup>
 </Project>
