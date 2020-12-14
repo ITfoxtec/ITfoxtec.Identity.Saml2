@@ -8,17 +8,18 @@
     <AssemblyName>ITfoxtec.Identity.Saml2.MvcCore</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2.MvcCore</PackageId>
     <Title>ITfoxtec Identity SAML 2.0 MVC Core</Title>
-    <Description>ASP.NET MVC Core is supportet by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec SAML 2.0 package and add support for SAML-P and SAML 2.0 tokens.
+    <Description>ASP.NET MVC Core is supported by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec SAML 2.0 package and add support for SAML-P and SAML 2.0 tokens.
 
-      Support .NET 5.0 and .NET Core 3.1 and .NET Framework 4.6.2, 4.7.2
-</Description>
+      Support .NET 5.0 
+      Support .NET Core 3.1 
+      Support .NET Framework 4.6.1 and 4.7.2</Description>
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.1.0.0</AssemblyVersion>
-    <FileVersion>4.1.0.0</FileVersion>
+    <AssemblyVersion>4.1.1.0</AssemblyVersion>
+    <FileVersion>4.1.1.0</FileVersion>
     <Copyright>Copyright © 2020</Copyright>
-    <Version>4.1.0</Version>
+    <Version>4.1.1</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
