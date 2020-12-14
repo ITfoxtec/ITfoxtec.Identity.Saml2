@@ -6,6 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A05F26DE-17C2-497F-B244-EE6790789066}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80F86A4F-9009-4FB4-9E92-33B6513CF2D7}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DE5976C5-83CD-4518-A05E-0DEC2EA5D17C}"
 EndProject
@@ -25,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITfoxtec.Identity.Saml2.Mvc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebAppCoreAzureKeyVault", "test\TestWebAppCoreAzureKeyVault\TestWebAppCoreAzureKeyVault.csproj", "{03A37D91-A36B-48C0-90A1-1FCF43621E60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWebAppCoreAngularApi", "test\TestWebAppCoreAngularApi\TestWebAppCoreAngularApi.csproj", "{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebAppCoreAngularApi", "test\TestWebAppCoreAngularApi\TestWebAppCoreAngularApi.csproj", "{66FA6C5B-164C-44F3-9A96-60F0239ABDCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

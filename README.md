@@ -2,9 +2,10 @@
 
 The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP).
 
-* **Support .NET Core 2.1, 2.2, 3.0 and 3.1**
-
-* **Support .NET Framework 4.6.2 and 4.7.2**
+* **Support .NET 5.0**
+* **Support .NET Core 3.1**
+* **Support .NET Standard 2.1**
+* **Support .NET Framework 4.6.1 and 4.7.2**
 
 The ITfoxtec Identity Saml2 package implements the most important parts of the SAML-P standard and some optional features. 
 Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single 
