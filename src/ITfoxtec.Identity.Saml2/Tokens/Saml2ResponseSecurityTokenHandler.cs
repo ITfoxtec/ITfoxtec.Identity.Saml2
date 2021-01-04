@@ -120,5 +120,15 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             }
             return builder.ToString();
         }
+
+        protected override void ProcessAuthenticationStatement(Saml2AuthenticationStatement statement, ClaimsIdentity identity, string issuer)
+        {
+            if (statement?.AuthenticationContext?.DeclarationReference != null)
+            {
+                // Remove AuthnContextDeclRef from assertion.
+                statement.AuthenticationContext.DeclarationReference = null;
+            }
+            base.ProcessAuthenticationStatement(statement, identity, issuer);
+        }
     }
 }
