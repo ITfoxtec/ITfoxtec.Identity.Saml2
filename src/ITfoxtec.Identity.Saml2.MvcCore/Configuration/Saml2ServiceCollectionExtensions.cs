@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
 
@@ -12,7 +13,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         /// <param name="loginPath">Redirection target used by the handler.</param>
         /// <param name="slidingExpiration">If set to true the handler re-issue a new cookie with a new expiration time any time it processes a request which is more than halfway through the expiration window.</param>
         /// <param name="accessDeniedPath">If configured, access denied redirection target used by the handler.</param>
-        public static IServiceCollection AddSaml2(this IServiceCollection services, string loginPath = "/Auth/Login", bool slidingExpiration = false, string accessDeniedPath = null)
+        public static IServiceCollection AddSaml2(this IServiceCollection services, string loginPath = "/Auth/Login", bool slidingExpiration = false, string accessDeniedPath = null, ITicketStore sessionStore = null)
         {
             services.AddAuthentication(Saml2Constants.AuthenticationScheme)
                 .AddCookie(Saml2Constants.AuthenticationScheme, o =>
@@ -22,6 +23,10 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
                     if(!string.IsNullOrEmpty(accessDeniedPath))
                     {
                         o.AccessDeniedPath = new PathString(accessDeniedPath);
+                    }
+                    if (sessionStore != null)
+                    {
+                        o.SessionStore = sessionStore;
                     }
                 });
 
