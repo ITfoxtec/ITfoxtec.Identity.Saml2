@@ -184,10 +184,6 @@ namespace ITfoxtec.Identity.Saml2
             if (NameId == null) throw new ArgumentNullException("NameId property");
 
             Saml2SecurityToken.Assertion.Subject.NameId = NameId;
-            if (Saml2SecurityToken.Assertion.Subject.NameId.Format == null)
-            {
-                Saml2SecurityToken.Assertion.Subject.NameId.Format = Schemas.NameIdentifierFormats.Persistent;
-            }
         }
 
         private void AddSubjectConfirmation(Saml2SubjectConfirmation subjectConfirmation)

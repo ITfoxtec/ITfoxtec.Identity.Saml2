@@ -48,7 +48,16 @@ namespace ITfoxtec.Identity.Saml2
             var identity = currentPrincipal.Identities.First();
             if (identity.IsAuthenticated)
             {
-                NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId), new Uri(ReadClaimValue(identity, Saml2ClaimTypes.NameIdFormat, false)));
+                var nameIdFormat = ReadClaimValue(identity, Saml2ClaimTypes.NameIdFormat, false);
+                if (string.IsNullOrEmpty(nameIdFormat)) 
+                {
+                    NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId));
+                }
+                else
+                {
+                    NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId), new Uri(nameIdFormat));
+
+                }
                 SessionIndex = ReadClaimValue(identity, Saml2ClaimTypes.SessionIndex, false);
             }           
         }
