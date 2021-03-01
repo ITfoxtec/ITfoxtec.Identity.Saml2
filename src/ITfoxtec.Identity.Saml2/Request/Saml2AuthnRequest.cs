@@ -57,6 +57,15 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
+        ///A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt; 
+        ///message.See[SAMLBind] for more information about protocol bindings and URI references defined 
+        ///for them.This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
+        ///and is typically accompanied by the AssertionConsumerServiceURL attribute.
+        /// </summary>
+        public Uri ProtocolBinding { get; set; }
+
+        /// <summary>
+        /// [Optional]
         /// If present, specifies a filter for possible responses. Such a query asks the question "What assertions
         /// containing authentication statements do you have for this subject that satisfy the authentication
         /// context requirements in this element?"
@@ -110,6 +119,11 @@ namespace ITfoxtec.Identity.Saml2
                 yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceURL, AssertionConsumerServiceUrl);
             }
 
+            if (ProtocolBinding != null)
+            {
+                yield return new XAttribute(Saml2Constants.Message.ProtocolBinding, ProtocolBinding);
+            }
+
             if (Subject != null)
             {
                 yield return Subject.ToXElement();
@@ -134,7 +148,9 @@ namespace ITfoxtec.Identity.Saml2
 
             IsPassive = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.IsPassive].GetValueOrNull<bool>();
 
-            AssertionConsumerServiceUrl = XmlDocument.DocumentElement[Saml2Constants.Message.AssertionConsumerServiceURL, Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Uri>();
+            AssertionConsumerServiceUrl = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AssertionConsumerServiceURL].GetValueOrNull<Uri>();
+
+            ProtocolBinding = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.ProtocolBinding].GetValueOrNull<Uri>();
 
             Subject = XmlDocument.DocumentElement[Saml2Constants.Message.Subject, Saml2Constants.AssertionNamespace.OriginalString].GetElementOrNull<Subject>();
 
