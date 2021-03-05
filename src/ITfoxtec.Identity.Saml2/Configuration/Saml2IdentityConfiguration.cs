@@ -37,11 +37,16 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             configuration.IssuerNameRegistry = new Saml2ResponseIssuerNameRegistry();
             configuration.CertificateValidationMode = config.CertificateValidationMode;
             configuration.RevocationMode = config.RevocationMode;
-            configuration.DetectReplayedTokens = config.DetectReplayedTokens;
             SetCustomCertificateValidator(configuration, config);
-            if (config.CustomIssuerTokenResolver != null)
+
+            configuration.DetectReplayedTokens = config.DetectReplayedTokens;
+            if (config.TokenReplayCache != null)
             {
-                configuration.IssuerTokenResolver = config.CustomIssuerTokenResolver;
+                configuration.Caches = config.TokenReplayCache;
+            }
+            if (config.TokenReplayCacheExpirationPeriod.HasValue)
+            {
+                configuration.TokenReplayCacheExpirationPeriod = config.TokenReplayCacheExpirationPeriod.Value;
             }
             configuration.Initialize();
 #else
@@ -49,7 +54,12 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             configuration.ValidateAudience = config.AudienceRestricted;
             configuration.ValidAudiences = config.AllowedAudienceUris.Select(a => a);
             configuration.ValidIssuer = config.AllowedIssuer;
+
             configuration.ValidateTokenReplay = config.DetectReplayedTokens;
+            if (config.TokenReplayCache != null)
+            {
+                configuration.TokenReplayCache = config.TokenReplayCache;
+            }
 
             configuration.NameClaimType = ClaimTypes.NameIdentifier;
 

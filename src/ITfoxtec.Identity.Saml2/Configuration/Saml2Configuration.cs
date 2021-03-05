@@ -5,6 +5,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel.Security;
 using System.IdentityModel.Selectors;
 using System.Security.Cryptography.Xml;
+#if NETFULL
+using System.IdentityModel.Configuration;
+#else
+using Microsoft.IdentityModel.Tokens;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -36,10 +41,19 @@ namespace ITfoxtec.Identity.Saml2
         public X509RevocationMode RevocationMode { get; set; } = X509RevocationMode.Online;
         public X509CertificateValidator CustomCertificateValidator { get; set; }
 #if NETFULL
-        public SecurityTokenResolver CustomIssuerTokenResolver { get; set; }
+        public IdentityModelCaches TokenReplayCache { get; set; }
+        public TimeSpan? TokenReplayCacheExpirationPeriod { get; set; }
+#else
+        public ITokenReplayCache TokenReplayCache { get; set; }
 #endif
         public bool SaveBootstrapContext { get; set; } = false;
 
+#if NETFULL
+#else
+        /// <summary>
+        /// By default no replayed validation is performed. Validation requires that TokenReplayCache has been set.
+        /// </summary>
+#endif
         public bool DetectReplayedTokens { get; set; } = false;
 
         public bool AudienceRestricted { get; set; } = true;
