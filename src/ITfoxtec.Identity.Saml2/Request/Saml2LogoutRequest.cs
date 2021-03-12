@@ -94,7 +94,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (NotOnOrAfter.HasValue)
             {
-                yield return new XAttribute(Schemas.Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
+                yield return new XAttribute(Schemas.Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString(Config.DateFormat, CultureInfo.InvariantCulture));
             }
 
             if (Reason != null)

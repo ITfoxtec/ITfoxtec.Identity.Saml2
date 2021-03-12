@@ -68,5 +68,10 @@ namespace ITfoxtec.Identity.Saml2
         /// Sign type for the authn responses created by the library.
         /// </summary>
         public Saml2AuthnResponseSignTypes AuthnResponseSignType { get; set; } = Saml2AuthnResponseSignTypes.SignResponse;
+
+        /// <summary>
+        /// Format of the date. For compatibility reasons it is "o" by default
+        /// </summary>
+        public string DateFormat { get; set; } = "o";
     }
 }
