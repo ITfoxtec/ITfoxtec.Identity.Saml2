@@ -41,6 +41,7 @@ namespace ITfoxtec.Identity.Saml2
         public X509RevocationMode RevocationMode { get; set; } = X509RevocationMode.Online;
         public X509CertificateValidator CustomCertificateValidator { get; set; }
 #if NETFULL
+        public SecurityTokenResolver CustomIssuerTokenResolver { get; set; }
         public IdentityModelCaches TokenReplayCache { get; set; }
         public TimeSpan? TokenReplayCacheExpirationPeriod { get; set; }
 #else
