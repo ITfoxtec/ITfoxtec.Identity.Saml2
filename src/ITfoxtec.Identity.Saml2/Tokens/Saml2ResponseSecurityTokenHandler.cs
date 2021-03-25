@@ -39,7 +39,8 @@ namespace ITfoxtec.Identity.Saml2.Tokens
                 CertificateValidator = configuration.CertificateValidator,
                 DetectReplayedTokens = configuration.DetectReplayedTokens,
                 Caches = configuration.Caches,
-                TokenReplayCacheExpirationPeriod = configuration.TokenReplayCacheExpirationPeriod
+                TokenReplayCacheExpirationPeriod = configuration.TokenReplayCacheExpirationPeriod,
+                IssuerTokenResolver = configuration.IssuerTokenResolver
             };
 
             handler.SamlSecurityTokenRequirement.NameClaimType = ClaimTypes.NameIdentifier;
