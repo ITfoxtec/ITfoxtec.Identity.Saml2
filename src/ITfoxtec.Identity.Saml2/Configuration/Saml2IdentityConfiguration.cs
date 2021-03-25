@@ -38,6 +38,10 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             configuration.CertificateValidationMode = config.CertificateValidationMode;
             configuration.RevocationMode = config.RevocationMode;
             SetCustomCertificateValidator(configuration, config);
+            if (config.CustomIssuerTokenResolver != null)
+            {
+                configuration.IssuerTokenResolver = config.CustomIssuerTokenResolver;
+            }
 
             configuration.DetectReplayedTokens = config.DetectReplayedTokens;
             if (config.TokenReplayCache != null)

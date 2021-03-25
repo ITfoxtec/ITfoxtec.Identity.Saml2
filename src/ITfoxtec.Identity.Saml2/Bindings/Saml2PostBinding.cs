@@ -65,7 +65,7 @@ namespace ITfoxtec.Identity.Saml2
 <html lang=""en"">
 <head>
     <meta charset=""utf-8"" />
-    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
+    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
     <title>SAML 2.0</title>
 </head>
 <body onload=""document.forms[0].submit()"">
