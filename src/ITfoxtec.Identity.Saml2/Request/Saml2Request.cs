@@ -1,9 +1,7 @@
 ﻿using ITfoxtec.Identity.Saml2.Configuration;
 using ITfoxtec.Identity.Saml2.Cryptography;
-using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
@@ -137,7 +135,7 @@ namespace ITfoxtec.Identity.Saml2
             yield return new XAttribute(Schemas.Saml2Constants.AssertionNamespaceNameX, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
             yield return new XAttribute(Schemas.Saml2Constants.Message.Id, IdAsString);
             yield return new XAttribute(Schemas.Saml2Constants.Message.Version, Version);
-            yield return new XAttribute(Schemas.Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
+            yield return new XAttribute(Schemas.Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
 
             if (!string.IsNullOrWhiteSpace(Consent))
             {

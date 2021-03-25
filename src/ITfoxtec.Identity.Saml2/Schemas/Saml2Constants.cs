@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IdentityModel.Tokens;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas
@@ -15,6 +14,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// SAML Version Number.
         /// </summary>
         public const string VersionNumber = "2.0";
+
+        /// <summary>
+        /// All SAML time values have the type xs:dateTime, which is built in to the W3C XML Schema Datatypes specification[Schema2], and MUST be expressed in UTC form, 
+        /// with no time zone component.
+        /// SAML system entities SHOULD NOT rely on time resolution finer than milliseconds.Implementations MUST NOT generate time instants that specify leap seconds.
+        /// </summary>
+        public const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
 
         /// <summary>
         /// Saml2 Bearer token.

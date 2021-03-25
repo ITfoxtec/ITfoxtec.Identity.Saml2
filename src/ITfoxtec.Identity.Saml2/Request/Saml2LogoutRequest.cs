@@ -1,5 +1,4 @@
 ﻿using ITfoxtec.Identity.Saml2.Claims;
-using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -94,7 +93,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (NotOnOrAfter.HasValue)
             {
-                yield return new XAttribute(Schemas.Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString("o", CultureInfo.InvariantCulture));
+                yield return new XAttribute(Schemas.Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
             }
 
             if (Reason != null)
