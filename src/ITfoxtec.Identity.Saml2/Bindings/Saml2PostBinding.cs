@@ -103,17 +103,17 @@ namespace ITfoxtec.Identity.Saml2
         {
             UnbindInternal(request, saml2RequestResponse);
 
+            return Read(request, saml2RequestResponse, messageName, true);
+        }
+
+        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature)
+        {
             if (!"POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
                 throw new InvalidSaml2BindingException("Not HTTP POST Method.");
 
             if (!request.Form.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Form does not contain " + messageName);
 
-            return Read(request, saml2RequestResponse, messageName, true);
-        }
-
-        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature)
-        {
             if (request.Form.AllKeys.Contains(Saml2Constants.Message.RelayState))
             {
                 RelayState = request.Form[Saml2Constants.Message.RelayState];
