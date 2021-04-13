@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
 using System.Security.Cryptography.Xml;
+using System.Diagnostics;
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -113,7 +114,7 @@ namespace ITfoxtec.Identity.Saml2
 
         internal Saml2IdentityConfiguration IdentityConfiguration { get; private set; }
 
-        public Saml2Request(Saml2Configuration config)
+        protected Saml2Request(Saml2Configuration config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
