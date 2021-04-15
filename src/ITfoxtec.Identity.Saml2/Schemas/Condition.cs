@@ -20,6 +20,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
         public DateTimeOffset? NotOnOrAfter { get; set; }
 
+        public DateTimeOffset? NotBefore { get; set; }
+
         public XElement ToXElement()
         {
             var envelope = new XElement(Saml2Constants.AssertionNamespaceX + elementName);
@@ -34,7 +36,16 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             yield return new XAttribute(Saml2Constants.AssertionNamespaceNameX, Saml2Constants.AssertionNamespaceX);
             if (NotOnOrAfter.HasValue)
             {
-                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture))
+                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter,
+                    NotOnOrAfter.Value.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat,
+                        CultureInfo.InvariantCulture));
+            }
+
+            if (NotBefore.HasValue)
+            {
+                yield return new XAttribute(Saml2Constants.Message.NotBefore,
+                    NotBefore.Value.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat,
+                        CultureInfo.InvariantCulture));
             }
             if (Items != null)
             {
