@@ -2,8 +2,8 @@
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Conditions
 {
-    public abstract class ConditionAbstract
+    public interface ICondition
     {
-        public abstract XElement ToXElement();
+        XElement ToXElement();
     }
 }

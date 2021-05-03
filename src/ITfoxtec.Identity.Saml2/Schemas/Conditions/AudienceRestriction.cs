@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Conditions
 {
-    public class AudienceRestriction : ConditionAbstract
+    public class AudienceRestriction : ICondition
     {
         /// <summary>
         /// The XML Element name of this class
@@ -12,7 +12,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Conditions
 
         public List<Audience> Audiences { get; set; }
 
-        public override XElement ToXElement()
+        public XElement ToXElement()
         {
             var envelope = new XElement(Saml2Constants.AssertionNamespaceX + elementName);
 

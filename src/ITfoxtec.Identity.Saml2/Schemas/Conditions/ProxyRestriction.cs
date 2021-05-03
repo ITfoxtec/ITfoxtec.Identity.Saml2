@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Conditions
 {
-    public class ProxyRestriction : ConditionAbstract
+    public class ProxyRestriction : ICondition
     {
         /// <summary>
         /// The XML Element name of this class
@@ -14,7 +14,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Conditions
 
         public uint? Count { get; set; }
 
-        public override XElement ToXElement()
+        public XElement ToXElement()
         {
             var envelope = new XElement(Saml2Constants.AssertionNamespaceX + elementName);
 

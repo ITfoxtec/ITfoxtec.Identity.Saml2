@@ -16,7 +16,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// </summary>
         public const string elementName = Saml2Constants.Message.Conditions;
 
-        public List<ConditionAbstract> Items { get; set; }
+        public List<ICondition> Items { get; set; }
 
         public DateTimeOffset? NotOnOrAfter { get; set; }
 
@@ -36,17 +36,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             yield return new XAttribute(Saml2Constants.AssertionNamespaceNameX, Saml2Constants.AssertionNamespaceX);
             if (NotOnOrAfter.HasValue)
             {
-                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter,
-                    NotOnOrAfter.Value.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat,
-                        CultureInfo.InvariantCulture));
+                yield return new XAttribute(Saml2Constants.Message.NotOnOrAfter, NotOnOrAfter.Value.UtcDateTime.ToString(Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
             }
 
             if (NotBefore.HasValue)
             {
-                yield return new XAttribute(Saml2Constants.Message.NotBefore,
-                    NotBefore.Value.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat,
-                        CultureInfo.InvariantCulture));
+                yield return new XAttribute(Saml2Constants.Message.NotBefore, NotBefore.Value.UtcDateTime.ToString(Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
             }
+
             if (Items != null)
             {
                 foreach (var condition in Items)
