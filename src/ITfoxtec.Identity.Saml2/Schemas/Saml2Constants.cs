@@ -119,6 +119,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string NotOnOrAfter = "NotOnOrAfter";
 
+            internal const string NotBefore = "NotBefore";
+
             internal const string Reason = "Reason";
             
             internal const string NameIdPolicy = "NameIDPolicy";
@@ -142,6 +144,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string SubjectConfirmation = "SubjectConfirmation";
 
             internal const string SubjectConfirmationData = "SubjectConfirmationData";
+
+            internal const string OneTimeUse = "OneTimeUse";
+
+            internal const string ProxyRestriction = "ProxyRestriction";
+
+            internal const string Count = "Count";
         }
     }
 }

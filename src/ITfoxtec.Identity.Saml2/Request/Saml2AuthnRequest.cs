@@ -84,6 +84,13 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public RequestedAuthnContext RequestedAuthnContext { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// If present, specifies an Audience
+        /// Part of the OIOSAML standard used for conditions on request.
+        /// </summary>
+        public Condition Conditions { get; set; }
+
         public Saml2AuthnRequest(Saml2Configuration config) : base(config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
@@ -122,6 +129,11 @@ namespace ITfoxtec.Identity.Saml2
             if (ProtocolBinding != null)
             {
                 yield return new XAttribute(Saml2Constants.Message.ProtocolBinding, ProtocolBinding);
+            }
+
+            if (Conditions != null)
+            {
+                yield return Conditions.ToXElement();
             }
 
             if (Subject != null)
