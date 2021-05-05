@@ -39,9 +39,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             yield return ServiceName.ToXElement();
 
-            foreach (var reqAtt in RequestedAttributes)
+            if (RequestedAttributes != null)
             {
-                yield return reqAtt.ToXElement();
+                foreach (var reqAtt in RequestedAttributes)
+                {
+                    yield return reqAtt.ToXElement();
+                } 
             }
         }
     }

@@ -80,7 +80,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// [Optional]
         /// Optional element identifying various kinds of contact personnel.
         /// </summary>
+        [Obsolete("The ContactPerson method is deprecated. Please use ContactPersons which is a list of contact persons.")]
         public ContactPerson ContactPerson { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Optional element identifying various kinds of contact personnel.
+        /// </summary>
+        public IEnumerable<ContactPerson> ContactPersons { get; set; }
 
         public EntityDescriptor()
         { }
@@ -133,7 +140,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 yield return IdPSsoDescriptor.ToXElement();
             }
 
-            if (ContactPerson != null)
+            if (ContactPersons != null)
+            {
+                foreach (var contactPerson in ContactPersons)
+                {
+                    yield return contactPerson.ToXElement();
+                }
+            }
+            else if (ContactPerson != null)
             {
                 yield return ContactPerson.ToXElement();
             }

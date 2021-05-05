@@ -45,13 +45,23 @@ namespace TestWebApp.Controllers
                 },
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
             };
-            entityDescriptor.ContactPerson = new ContactPerson(ContactTypes.Administrative)
-            {
-                Company = "Some Company",
-                GivenName = "Some Given Name",
-                SurName = "Some Sur Name",
-                EmailAddress = "some@some-domain.com",
-                TelephoneNumber = "11111111",
+            entityDescriptor.ContactPersons = new[] {
+                new ContactPerson(ContactTypes.Administrative)
+                {
+                    Company = "Some Company",
+                    GivenName = "Some Given Name",
+                    SurName = "Some Sur Name",
+                    EmailAddress = "some@some-domain.com",
+                    TelephoneNumber = "11111111",
+                },
+                new ContactPerson(ContactTypes.Technical)
+                {
+                    Company = "Some Company",
+                    GivenName = "Some tech Given Name",
+                    SurName = "Some tech Sur Name",
+                    EmailAddress = "sometech@some-domain.com",
+                    TelephoneNumber = "22222222",
+                }
             };
             return new Saml2Metadata(entityDescriptor).CreateMetadata().ToActionResult();
         }
