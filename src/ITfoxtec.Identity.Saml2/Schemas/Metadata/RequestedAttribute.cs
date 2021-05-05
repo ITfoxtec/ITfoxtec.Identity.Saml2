@@ -6,17 +6,19 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     public class RequestedAttribute
     {
         const string elementName = Saml2MetadataConstants.Message.RequestedAttribute;
-        const string nameFormat = Saml2MetadataConstants.AttributeNameFormat;
 
-        public RequestedAttribute(string name, bool isRequired = true)
+        public RequestedAttribute(string name, bool isRequired = true, string nameFormat = Saml2MetadataConstants.AttributeNameFormat)
         {
             Name = name;
             IsRequired = isRequired;
+            NameFormat = nameFormat;
         }
 
         public string Name { get; protected set; }
 
         public bool IsRequired { get; protected set; }
+        
+        public string NameFormat { get; protected set; }
 
         public XElement ToXElement()
         {
@@ -30,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         protected IEnumerable<XObject> GetXContent()
         {
             yield return new XAttribute(Saml2MetadataConstants.Message.Name, Name);
-            yield return new XAttribute(Saml2MetadataConstants.Message.NameFormat, nameFormat);
+            yield return new XAttribute(Saml2MetadataConstants.Message.NameFormat, NameFormat);
             yield return new XAttribute(Saml2MetadataConstants.Message.IsRequired, IsRequired);
         }
     }
