@@ -104,9 +104,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 throw new ArgumentNullException("AssertionConsumerService property");
             }
             var index = 0;
-            foreach (var sssertionConsumerService in AssertionConsumerServices)
+            foreach (var assertionConsumerService in AssertionConsumerServices)
             {
-                yield return sssertionConsumerService.ToXElement(index++);
+                yield return assertionConsumerService.ToXElement(index++);
             }
 
             if (AttributeConsumingServices != null)

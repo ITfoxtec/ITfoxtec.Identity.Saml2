@@ -27,6 +27,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public Uri Location { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// An optional boolean attribute used to designate the default endpoint among an indexed set.
+        /// If set equal to null, the value is omitted and assumed to be false.
+        /// </summary>
+        public bool? IsDefault { get; set; } = true;
+
         public XElement ToXElement(int index)
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
@@ -41,7 +48,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Binding, Binding.OriginalString);
             yield return new XAttribute(Saml2MetadataConstants.Message.Location, Location.OriginalString);
             yield return new XAttribute(Saml2MetadataConstants.Message.Index, index);
-            yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, true);
+            if (IsDefault.HasValue && IsDefault.Value)
+            {
+                yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, IsDefault.Value);
+            }
         }
     }
 }
