@@ -30,9 +30,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// [Optional]
         /// An optional boolean attribute used to designate the default endpoint among an indexed set.
-        /// If set equal to null, the value is omitted and assumed to be false.
+        /// If set equal to false, the value is omitted and assumed to be false.
         /// </summary>
-        public bool? IsDefault { get; set; } = true;
+        public bool IsDefault { get; set; } = true;
 
         public XElement ToXElement(int index)
         {
@@ -48,9 +48,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Binding, Binding.OriginalString);
             yield return new XAttribute(Saml2MetadataConstants.Message.Location, Location.OriginalString);
             yield return new XAttribute(Saml2MetadataConstants.Message.Index, index);
-            if (IsDefault.HasValue && IsDefault.Value)
+            if (IsDefault)
             {
-                yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, IsDefault.Value);
+                yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, IsDefault);
             }
         }
     }
