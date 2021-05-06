@@ -148,6 +148,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 {
                     Binding = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Binding].GetValueOrNull<Uri>(),
                     Location = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Location].GetValueOrNull<Uri>(),
+                    IsDefault = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.IsDefault].GetValueOrNull<bool>(),
+                    Index = singleLogoutServiceElement.Attributes[Saml2MetadataConstants.Message.Index].GetValueOrNull<int>(),
                 };
             }
         }

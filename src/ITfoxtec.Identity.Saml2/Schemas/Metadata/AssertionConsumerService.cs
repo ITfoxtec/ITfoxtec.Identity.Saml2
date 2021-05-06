@@ -34,6 +34,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public bool IsDefault { get; set; } = true;
 
+        /// <summary>
+        /// [Calculated]
+        /// A required attribute that assigns a unique integer value to the endpoint so that it can be
+        /// referenced in a protocol message.
+        /// </summary>
+        public int Index { get; internal set; }
+
         public XElement ToXElement(int index)
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
