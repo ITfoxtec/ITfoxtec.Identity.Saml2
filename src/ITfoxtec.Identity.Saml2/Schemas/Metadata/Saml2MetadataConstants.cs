@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
-    internal class Saml2MetadataConstants
+    public class Saml2MetadataConstants
     {
         /// <summary>
         /// The XML namespace of the Metadata.
@@ -20,6 +20,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public static readonly XName MetadataNamespaceNameX = XNamespace.Xmlns + "m";     
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
+        public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
 
         public class Message
         {
