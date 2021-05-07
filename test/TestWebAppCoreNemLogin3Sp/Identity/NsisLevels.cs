@@ -1,6 +1,6 @@
 ﻿namespace TestWebAppCoreNemLogin3Sp.Identity
 {
-    public static class NsisValues
+    public static class NsisLevels
     {
         public const string Low = "Low";
         public const string Substantial = "Substantial";

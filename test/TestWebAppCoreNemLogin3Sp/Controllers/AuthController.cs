@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using TestWebAppCoreNemLogin3Sp.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Authentication;
+using System.Security.Claims;
+using System.Linq;
 
 namespace TestWebAppCoreNemLogin3Sp.Controllers
 {
@@ -68,11 +70,24 @@ namespace TestWebAppCoreNemLogin3Sp.Controllers
                 throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
             }
             binding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnResponse);
-            await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
+            await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(CheckAssurance(claimsPrincipal)));
 
             var relayStateQuery = binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
             return Redirect(returnUrl);
+        }
+
+        private ClaimsPrincipal CheckAssurance(ClaimsPrincipal claimsPrincipal)
+        {
+            var nsisLevelAccepted = claimsPrincipal.Claims.Where(c => c.Type == OioSaml3ClaimTypes.NsisLoa && (c.Value == NsisLevels.Substantial || c.Value == NsisLevels.High)).Any();
+            var oldAssuranceLevelAccepted = claimsPrincipal.Claims.Where(c => c.Type == OioSaml2ClaimTypes.AssuranceLevel && Convert.ToInt32(c.Value) >= 3).Any();
+            
+            if (!nsisLevelAccepted && !oldAssuranceLevelAccepted)
+            {
+                throw new Exception("Assurance level not accepted.");
+            }
+
+            return claimsPrincipal;
         }
 
         [HttpPost("Logout")]
