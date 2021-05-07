@@ -50,7 +50,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             {
                 foreach (var encryptionCertificate in EncryptionCertificates)
                 {
-                    yield return KeyDescriptor(encryptionCertificate, Saml2MetadataConstants.KeyTypes.Encryption);
+                    yield return KeyDescriptor(encryptionCertificate, Saml2MetadataConstants.KeyTypes.Encryption, EncryptionMethods);
                 }
             }
 

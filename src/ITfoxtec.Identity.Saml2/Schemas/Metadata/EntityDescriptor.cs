@@ -92,15 +92,18 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public EntityDescriptor()
         { }
 
-        public EntityDescriptor(Saml2Configuration config)
+        public EntityDescriptor(Saml2Configuration config, bool signMetadata = true)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
             Config = config;
             EntityId = config.Issuer;
             Id = new Saml2Id();
-            MetadataSigningCertificate = config.SigningCertificate;
-            CertificateIncludeOption = X509IncludeOption.EndCertOnly;
+            if (signMetadata)
+            {
+                MetadataSigningCertificate = config.SigningCertificate;
+                CertificateIncludeOption = X509IncludeOption.EndCertOnly;
+            }
         }
 
         public XmlDocument ToXmlDocument()

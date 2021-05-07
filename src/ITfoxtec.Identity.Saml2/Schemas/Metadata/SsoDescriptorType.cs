@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
 using System.Xml;
@@ -42,6 +43,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Optional]
+        /// Specifying algorithms and algorithm-specific settings supported by the entity.
+        /// </summary>
+        public IEnumerable<EncryptionMethodType> EncryptionMethods { get; set; }        
+
+        /// <summary>
+        /// [Optional]
         /// Zero or one element of type EndpointType that describe endpoints that support the Single
         /// Logout profiles defined in [SAMLProf].
         /// </summary>
@@ -55,14 +62,33 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public IEnumerable<Uri> NameIDFormats { get; set; }
 
-        protected XObject KeyDescriptor(X509Certificate2 certificate, string keyType)
+        /// <summary>
+        /// Configure default encryption methods used by .NET.
+        /// </summary>
+        public void SetDefaultEncryptionMethods()
+        {
+            EncryptionMethods = new[] { new EncryptionMethodType { Algorithm = EncryptedXml.XmlEncAES256Url }, new EncryptionMethodType { Algorithm = EncryptedXml.XmlEncRSAOAEPUrl } };
+        }
+
+        protected XObject KeyDescriptor(X509Certificate2 certificate, string keyType, IEnumerable<EncryptionMethodType> encryptionMethods = null)
         {
             var keyinfo = new KeyInfo();
             keyinfo.AddClause(new KeyInfoX509Data(certificate, CertificateIncludeOption));
 
-            return new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.KeyDescriptor,
+            var keyDescriptorElement = new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.KeyDescriptor,
                 new XAttribute(Saml2MetadataConstants.Message.Use, keyType),
                 XElement.Parse(keyinfo.GetXml().OuterXml));
+
+            if (keyType == Saml2MetadataConstants.KeyTypes.Encryption && encryptionMethods?.Count() > 0)
+            {
+                foreach(var encryptionMethod in encryptionMethods)
+                {
+                    keyDescriptorElement.Add(new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.EncryptionMethod,
+                        new XAttribute(Saml2MetadataConstants.Message.Algorithm, encryptionMethod.Algorithm)));
+                }
+            }
+
+            return keyDescriptorElement;
         }
 
         protected void ReadKeyDescriptors(XmlElement xmlElement)
