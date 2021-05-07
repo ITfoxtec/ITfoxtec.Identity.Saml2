@@ -53,6 +53,7 @@ namespace TestWebApp.Controllers
                     new AttributeConsumingService { ServiceName = new ServiceName("ITfoxtecIdentitySaml2-dev", "en"), RequestedAttributes = CreateRequestedAttributes() }
                 },
             };
+            entityDescriptor.SPSsoDescriptor.SetDefaultEncryptionMethods();
             entityDescriptor.ContactPersons = new[] { 
                 new ContactPerson(ContactTypes.Administrative)
                 {

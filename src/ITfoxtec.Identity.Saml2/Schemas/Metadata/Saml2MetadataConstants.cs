@@ -52,6 +52,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             public const string KeyDescriptor = "KeyDescriptor";
 
+            public const string EncryptionMethod = "EncryptionMethod";
+
+            public const string Algorithm = "Algorithm";
+
             public const string Use = "use";
 
             public const string KeyInfo = "KeyInfo";
