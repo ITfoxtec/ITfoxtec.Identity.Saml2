@@ -15,7 +15,7 @@ The ITfoxtec Identity Saml2 package support signing/encryption certificates in A
 
 The ITfoxtec Identity Saml2 package is tested for compliance with AD FS, Azure AD and Azure AD B2C. 
 
-The ITfoxtec Identity Saml2 package support Danish NemLog-in 2 - OIOSAML 2 and NemLog-in 3 - OIOSAML 3 from version 4.6.1.  
+The ITfoxtec Identity Saml2 package support Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3 from version 4.6.1.  
 The [TestWebAppCoreNemLogin3Sp](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreNemLogin3Sp) sample application is configured with NemLog-in 3 and show how to implement a NemLog-in 3 Service Provider (SP).
 
 ### More information
