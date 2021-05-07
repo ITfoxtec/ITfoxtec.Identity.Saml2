@@ -34,13 +34,25 @@ namespace TestWebAppCoreNemLogin3Sp.Controllers
             return binding.Bind(new Saml2AuthnRequest(config)
             {
                 //ForceAuthn = true,
-                Subject = new Subject { NameID = new NameID { ID = "abcd" } },
-                NameIdPolicy = new NameIdPolicy { AllowCreate = true, Format = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" },
-                //RequestedAuthnContext = new RequestedAuthnContext
-                //{
-                //    Comparison = AuthnContextComparisonTypes.Exact,
-                //    AuthnContextClassRef = new string[] { AuthnContextClassTypes.PasswordProtectedTransport.OriginalString },
-                //},
+                RequestedAuthnContext = new RequestedAuthnContext
+                {
+                    Comparison = AuthnContextComparisonTypes.Minimum,
+                    AuthnContextClassRef = new string[] 
+                    {
+                        //"https://data.gov.dk/concept/core/nsis/loa/Low"
+                        "https://data.gov.dk/concept/core/nsis/loa/Substantial",
+                        //"https://data.gov.dk/concept/core/nsis/loa/High"
+
+                        //"https://nemlogin.dk/internal/credential/type/nemidkeycard"
+                        //"https://nemlogin.dk/internal/credential/type/nemidkeyfile"
+                        //"https://nemlogin.dk/internal/credential/type/mitid"
+                        //"https://nemlogin.dk/internal/credential/type/local"
+                        //"https://nemlogin.dk/internal/credential/type/test"
+
+                        //"https://data.gov.dk/eid/Professional"
+                        //"https://data.gov.dk/eid/Person"
+                    },
+                },
             }).ToActionResult();
         }
 

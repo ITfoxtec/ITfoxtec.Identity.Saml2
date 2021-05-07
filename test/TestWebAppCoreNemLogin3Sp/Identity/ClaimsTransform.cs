@@ -21,8 +21,8 @@ namespace TestWebAppCoreNemLogin3Sp.Identity
         {
             var claims = new List<Claim>();
 
-            // All claims
-            claims.AddRange(incomingPrincipal.Claims);
+            // All claims but not bootstrapToken 'https://data.gov.dk/model/core/eid/bootstrapToken', because it is to big for the .AspNetCore cookies.
+            claims.AddRange(incomingPrincipal.Claims.Where(c => c.Type != OioSaml3ClaimTypes.BootstrapToken));
 
             // Or custom claims
             //claims.AddRange(GetSaml2LogoutClaims(incomingPrincipal));

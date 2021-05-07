@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using TestWebAppCoreNemLogin3Sp.Identity;
 
 namespace TestWebApp.Controllers
 {
@@ -77,27 +78,31 @@ namespace TestWebApp.Controllers
 
         private IEnumerable<RequestedAttribute> CreateRequestedAttributes()
         {
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/specVersion", nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/bootstrapToken", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            //yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/privilegesIntermediate", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/concept/core/nsis/loa", nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/concept/core/nsis/ial", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/concept/core/nsis/aal", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/fullName", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/firstName", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/lastName", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/email", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            //yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/cprNumber", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/age", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/cprUuid", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/dateOfBirth", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/person/pid", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/professional/uuid/persistent", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/professional/rid", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/professional/cvr", nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/professional/orgName", nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/professional/productionUnit", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            yield return new RequestedAttribute("https://data.gov.dk/model/core/eid/professional/seNumber", isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.SpecVersion, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.BootstrapToken, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            //yield return new RequestedAttribute(GovDkClaimTypes.PrivilegesIntermediate, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.NsisLoa, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.NsisIal, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.NsisAal, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.FullName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.FirstName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.LastName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.Email, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            //yield return new RequestedAttribute(GovDkClaimTypes.CprNumber, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.Age, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.CprUuid, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.DateOfBirth, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.PersonPid, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.ProfessionalUuidPersistent, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.ProfessionalRid, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.ProfessionalCvr, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.ProfessionalOrgName, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.ProfessionalProductionUnit, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.ProfessionalSeNumber, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
         }
     }
 }
