@@ -8,12 +8,20 @@
     <AssemblyName>ITfoxtec.Identity.Saml2.MvcCore</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2.MvcCore</PackageId>
     <Title>ITfoxtec Identity SAML 2.0 MVC Core</Title>
-    <Description>ASP.NET MVC Core is supported by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec SAML 2.0 package and add support for SAML-P and SAML 2.0 tokens.
+    <Description>ASP.NET MVC Core is supported by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec Identity SAML2 package and add support for SAML-P and SAML 2.0 tokens.
 
       Support .NET 5.0 
       Support .NET Core 3.1 
-      Support .NET Framework 4.6.1 and 4.7.2</Description>
-    <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in ASP.NET MVC Core</PackageTags>
+      Support .NET Framework 4.6.1 and 4.7.2
+
+Support Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
+
+Support signing/encryption certificates in Azure Key Vault.
+
+Tested for compliance with AD FS, Azure AD and Azure AD B2C. 
+
+Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Description>
+    <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3 ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>4.6.1.0</AssemblyVersion>

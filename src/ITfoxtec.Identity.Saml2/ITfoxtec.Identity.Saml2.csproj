@@ -8,19 +8,21 @@
     <AssemblyName>ITfoxtec.Identity.Saml2</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2</PackageId>
     <Title>ITfoxtec Identity SAML 2.0</Title>
-    <Description>The ITfoxtec.Identity.Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) on top of the SAML 2.0 functionality implemented in .NET.
+    <Description>The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) on top of the SAML 2.0 functionality implemented in .NET.
 
       Support .NET 5.0
       Support .NET Core 3.1 
       Support .NET Standard 2.1 
       Support .NET Framework 4.6.1 and 4.7.2 
 
-Support message signing and validation (SHA1/SHA256/SHA384/SHA512) as well as encryption and decryption. Login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on. 
+Support Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
 
 Support signing/encryption certificates in Azure Key Vault.
 
-Tested for compliance with AD FS, Azure AD and Azure AD B2C. Furthermore, the Danish OIOSAML 2.0 profile and NemLog-in is supported.</Description>
-    <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML NemLog-in</PackageTags>
+Tested for compliance with AD FS, Azure AD and Azure AD B2C. 
+
+Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Description>
+    <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>4.6.1.0</AssemblyVersion>
