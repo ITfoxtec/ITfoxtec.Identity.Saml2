@@ -160,16 +160,22 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             var metadataXmlDocument = idPMetadataXml.ToXmlDocument();
 
-            if (metadataXmlDocument.DocumentElement.NamespaceURI != Saml2MetadataConstants.MetadataNamespace.OriginalString)
+            var entityDescriptorElement = metadataXmlDocument.DocumentElement.SelectSingleNode($"//*[local-name()='{Saml2MetadataConstants.Message.EntityDescriptor}']") as XmlElement;
+            if (entityDescriptorElement == null)
+            {
+                throw new Saml2RequestException("EntityDescriptorElement element not found in Metadata.");
+            }
+
+            if (entityDescriptorElement.NamespaceURI != Saml2MetadataConstants.MetadataNamespace.OriginalString)
             {
                 throw new Saml2RequestException("Not Metadata.");
             }
 
-            EntityId = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
+            EntityId = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
 
-            Id = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
+            Id = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
 
-            var idPSsoDescriptorElement = metadataXmlDocument.DocumentElement[Saml2MetadataConstants.Message.IdPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
+            var idPSsoDescriptorElement = entityDescriptorElement[Saml2MetadataConstants.Message.IdPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
             if (idPSsoDescriptorElement != null)
             {
                 IdPSsoDescriptor = new IdPSsoDescriptor().Read(idPSsoDescriptorElement);
@@ -182,16 +188,22 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             var metadataXmlDocument = spMetadataXml.ToXmlDocument();
 
-            if (metadataXmlDocument.DocumentElement.NamespaceURI != Saml2MetadataConstants.MetadataNamespace.OriginalString)
+            var entityDescriptorElement = metadataXmlDocument.DocumentElement.SelectSingleNode($"//*[local-name()='{Saml2MetadataConstants.Message.EntityDescriptor}']") as XmlElement;
+            if (entityDescriptorElement == null)
+            {
+                throw new Saml2RequestException("EntityDescriptorElement element not found in Metadata.");
+            }
+
+            if (entityDescriptorElement.NamespaceURI != Saml2MetadataConstants.MetadataNamespace.OriginalString)
             {
                 throw new Saml2RequestException("Not Metadata.");
             }
 
-            EntityId = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
+            EntityId = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
 
-            Id = metadataXmlDocument.DocumentElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
+            Id = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
 
-            var spSsoDescriptorElement = metadataXmlDocument.DocumentElement[Saml2MetadataConstants.Message.SPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
+            var spSsoDescriptorElement = entityDescriptorElement[Saml2MetadataConstants.Message.SPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
             if (spSsoDescriptorElement != null)
             {
                 SPSsoDescriptor = new SPSsoDescriptor().Read(spSsoDescriptorElement);
