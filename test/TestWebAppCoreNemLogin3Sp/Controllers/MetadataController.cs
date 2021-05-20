@@ -31,7 +31,6 @@ namespace TestWebApp.Controllers
             entityDescriptor.ValidUntil = 365;
             entityDescriptor.SPSsoDescriptor = new SPSsoDescriptor
             {
-                WantAssertionsSigned = true,
                 SigningCertificates = new X509Certificate2[]
                 {
                     config.SigningCertificate
