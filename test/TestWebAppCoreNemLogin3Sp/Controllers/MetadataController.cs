@@ -59,7 +59,7 @@ namespace TestWebApp.Controllers
                 {
                     Company = "Some Company",
                     GivenName = "Some Given Name",
-                    SurName = "Some Sur Name",
+                    SurName = "Some Surname",
                     EmailAddress = "some@some-domain.com",
                     TelephoneNumber = "11111111",
                 },
@@ -67,7 +67,7 @@ namespace TestWebApp.Controllers
                 {
                     Company = "Some Company",
                     GivenName = "Some tech Given Name",
-                    SurName = "Some tech Sur Name",
+                    SurName = "Some tech Surname",
                     EmailAddress = "sometech@some-domain.com",
                     TelephoneNumber = "22222222",
                 }
