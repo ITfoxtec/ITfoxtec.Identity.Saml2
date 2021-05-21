@@ -12,7 +12,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.ContactPerson;
 
-        public ContactPerson(string contactType)
+        public ContactPerson(ContactTypes contactType)
         {
             ContactType = contactType;
         }
@@ -22,7 +22,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// Specifies the type of contact using the ContactTypeType enumeration. The possible values are
         /// technical, support, administrative, billing, and other.
         /// </summary>
-        public string ContactType { get; protected set; }
+        public ContactTypes ContactType { get; protected set; }
 
         /// <summary>
         /// [Optional]
@@ -66,7 +66,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected IEnumerable<XObject> GetXContent()
         {
-            yield return new XAttribute(Saml2MetadataConstants.Message.ContactType, ContactType);
+            yield return new XAttribute(Saml2MetadataConstants.Message.ContactType, ContactType.ToString().ToLowerInvariant());
 
             if (Company != null)
             {
