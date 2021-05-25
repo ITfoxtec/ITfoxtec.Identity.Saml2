@@ -18,7 +18,7 @@ Please see the [TestWebAppCoreAzureKeyVault](https://github.com/ITfoxtec/ITfoxte
 
 The ITfoxtec Identity Saml2 package is tested for compliance with AD FS, Azure AD and Azure AD B2C. 
 
-The ITfoxtec Identity Saml2 package support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.
+The ITfoxtec Identity Saml2 package support the Danish NemLog-in 2 (NemID) / OIOSAML 2 and NemLog-in 3 (MitID and NemID) / OIOSAML 3.
 The [TestWebAppCoreNemLogin3Sp](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreNemLogin3Sp) sample application is configured with NemLog-in 3 and show how to implement a NemLog-in 3 Service Provider (SP).
 
 ### More information
