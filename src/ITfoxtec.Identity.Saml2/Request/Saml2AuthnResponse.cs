@@ -226,7 +226,7 @@ namespace ITfoxtec.Identity.Saml2
             XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, certificateIncludeOption);
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false)
+        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
         {
             base.Read(xml, validateXmlSignature);
 
@@ -237,11 +237,11 @@ namespace ITfoxtec.Identity.Saml2
 
 #if NETFULL
                 Saml2SecurityToken = ReadSecurityToken(assertionElement);
-                ClaimsIdentity = ReadClaimsIdentity();
+                ClaimsIdentity = ReadClaimsIdentity(detectReplayedTokens);
 #else
                 var tokenString = assertionElement.OuterXml;
                 Saml2SecurityToken = ReadSecurityToken(tokenString);
-                ClaimsIdentity = ReadClaimsIdentity(tokenString);
+                ClaimsIdentity = ReadClaimsIdentity(tokenString, detectReplayedTokens);
 #endif
             }
         }
@@ -302,9 +302,9 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        private ClaimsIdentity ReadClaimsIdentity()
+        private ClaimsIdentity ReadClaimsIdentity(bool detectReplayedTokens)
         {
-            return Saml2SecurityTokenHandler.ValidateToken(Saml2SecurityToken, this).First();
+            return Saml2SecurityTokenHandler.ValidateToken(Saml2SecurityToken, this, detectReplayedTokens).First();
         }
 #else
         private Saml2SecurityToken ReadSecurityToken(string tokenString)
@@ -312,9 +312,9 @@ namespace ITfoxtec.Identity.Saml2
             return Saml2SecurityTokenHandler.ReadSaml2Token(tokenString);
         }
 
-        private ClaimsIdentity ReadClaimsIdentity(string tokenString)
+        private ClaimsIdentity ReadClaimsIdentity(string tokenString, bool detectReplayedTokens)
         {
-            return Saml2SecurityTokenHandler.ValidateToken(Saml2SecurityToken, tokenString, this).First();
+            return Saml2SecurityTokenHandler.ValidateToken(Saml2SecurityToken, tokenString, this, detectReplayedTokens).First();
         }
 #endif
 

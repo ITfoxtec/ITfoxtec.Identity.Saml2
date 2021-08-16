@@ -141,10 +141,10 @@ namespace ITfoxtec.Identity.Saml2
                 ValidateQueryStringSignature(saml2RequestResponse, request.QueryString, messageName, Convert.FromBase64String(Signature), saml2RequestResponse.SignatureValidationCertificates);
             }
 
-            return Read(request, saml2RequestResponse, messageName, false);
+            return Read(request, saml2RequestResponse, messageName, false, true);
         }
 
-        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature)
+        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature, bool detectReplayedTokens)
         {
             if (!"GET".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
                 throw new InvalidSaml2BindingException("Not HTTP GET Method.");
@@ -157,7 +157,7 @@ namespace ITfoxtec.Identity.Saml2
                 RelayState = request.Query[Saml2Constants.Message.RelayState];
             }
 
-            saml2RequestResponse.Read(DecompressResponse(request.Query[messageName]), validateXmlSignature);
+            saml2RequestResponse.Read(DecompressResponse(request.Query[messageName]), validateXmlSignature, detectReplayedTokens);
             XmlDocument = saml2RequestResponse.XmlDocument;
             return saml2RequestResponse;
         }

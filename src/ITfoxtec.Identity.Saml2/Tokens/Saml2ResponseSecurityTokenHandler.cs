@@ -51,9 +51,9 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         }
 
 #if NETFULL
-        public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, Saml2Response saml2Response)
+        public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, Saml2Response saml2Response, bool detectReplayedTokens)
 #else
-        public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, string tokenString, Saml2Response saml2Response)
+        public ReadOnlyCollection<ClaimsIdentity> ValidateToken(SecurityToken token, string tokenString, Saml2Response saml2Response, bool detectReplayedTokens)
 #endif
         {
             var saml2SecurityToken = token as Saml2SecurityToken;
@@ -64,17 +64,20 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             ValidateConditions(saml2SecurityToken, TokenValidationParameters);
 #endif
 
+            if (detectReplayedTokens)
+            {
 #if NETFULL
-            if (Configuration.DetectReplayedTokens)
-            {
-                DetectReplayedToken(saml2SecurityToken);
-            }
+                if (Configuration.DetectReplayedTokens)
+                {
+                    DetectReplayedToken(saml2SecurityToken);
+                }
 #else
-            if (TokenValidationParameters.ValidateTokenReplay)
-            {
-                ValidateTokenReplay(saml2SecurityToken.Assertion.Conditions.NotBefore, tokenString, TokenValidationParameters);
-            }
+                if (TokenValidationParameters.ValidateTokenReplay)
+                {
+                    ValidateTokenReplay(saml2SecurityToken.Assertion.Conditions.NotBefore, tokenString, TokenValidationParameters);
+                }
 #endif
+            }
 
 #if NETFULL
             var identity = CreateClaims(saml2SecurityToken);

@@ -100,15 +100,15 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2Request ReadSamlRequest(HttpRequest request, Saml2Request saml2Request)
         {
-            return Read(request, saml2Request, Saml2Constants.Message.SamlRequest, false);
+            return Read(request, saml2Request, Saml2Constants.Message.SamlRequest, false, false);
         }
 
         public Saml2Request ReadSamlResponse(HttpRequest request, Saml2Response saml2Response)
         {
-            return Read(request, saml2Response, Saml2Constants.Message.SamlResponse, false);
+            return Read(request, saml2Response, Saml2Constants.Message.SamlResponse, false, false);
         }
 
-        protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature);
+        protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature, bool detectReplayedTokens);
 
         public bool IsRequest(HttpRequest request)
         {

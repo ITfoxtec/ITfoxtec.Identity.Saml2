@@ -61,9 +61,9 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false)
+        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature);
+            base.Read(xml, validateXmlSignature, detectReplayedTokens);
 
             InResponseTo = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.InResponseTo].GetValueOrNull<Saml2Id>();
 
