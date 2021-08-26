@@ -36,7 +36,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 if (saml2RequestResponse.Config.AuthnResponseSignType != Saml2AuthnResponseSignTypes.SignResponse)
                 {
-                    (saml2RequestResponse as Saml2AuthnResponse).SignAuthnResponse(CertificateIncludeOption);
+                    (saml2RequestResponse as Saml2AuthnResponse).SignAuthnResponseAssertion(CertificateIncludeOption);
                 }
                 if (saml2RequestResponse.Config.EncryptionCertificate != null)
                 {

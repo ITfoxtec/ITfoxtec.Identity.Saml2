@@ -214,7 +214,7 @@ namespace ITfoxtec.Identity.Saml2
             return XmlDocument;
         }
 
-        protected internal void SignAuthnResponse(X509IncludeOption certificateIncludeOption)
+        protected internal void SignAuthnResponseAssertion(X509IncludeOption certificateIncludeOption)
         {
             if (Status != Schemas.Saml2StatusCodes.Success)
             {
