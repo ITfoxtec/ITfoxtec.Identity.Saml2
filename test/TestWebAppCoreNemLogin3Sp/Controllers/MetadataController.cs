@@ -79,7 +79,7 @@ namespace TestWebApp.Controllers
         {
             yield return new RequestedAttribute(OioSaml3ClaimTypes.SpecVersion, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.BootstrapToken, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            //yield return new RequestedAttribute(GovDkClaimTypes.PrivilegesIntermediate, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            //yield return new RequestedAttribute(OioSaml3ClaimTypes.PrivilegesIntermediate, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
 
             yield return new RequestedAttribute(OioSaml3ClaimTypes.NsisLoa, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.NsisIal, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
@@ -89,7 +89,7 @@ namespace TestWebApp.Controllers
             yield return new RequestedAttribute(OioSaml3ClaimTypes.FirstName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.LastName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.Email, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            //yield return new RequestedAttribute(GovDkClaimTypes.CprNumber, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            //yield return new RequestedAttribute(OioSaml3ClaimTypes.CprNumber, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.Age, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.CprUuid, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.DateOfBirth, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
