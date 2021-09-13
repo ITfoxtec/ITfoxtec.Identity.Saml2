@@ -49,12 +49,9 @@ namespace ITfoxtec.Identity.Saml2
 #endif
         public bool SaveBootstrapContext { get; set; } = false;
 
-#if NETFULL
-#else
         /// <summary>
         /// By default no replayed validation is performed. Validation requires that TokenReplayCache has been set.
         /// </summary>
-#endif
         public bool DetectReplayedTokens { get; set; } = false;
 
         public bool AudienceRestricted { get; set; } = true;
