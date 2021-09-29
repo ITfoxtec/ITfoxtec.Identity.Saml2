@@ -12,7 +12,7 @@ namespace ITfoxtec.Identity.Saml2.Mvc
         /// <summary>
         /// Create a Claims Principal and a Federated Authentication Session for the authenticated user.
         /// </summary>
-        /// <param name="lifetime">The period from the current time during which the token is valid. The ValidFrom property will be set to UtcNow and the ValidTo property will be set to ValidFrom plus the period specified by this parameter. Default lifetime is 10 Hours.</param>
+        /// <param name="lifetime">The period from the current time during which the token is valid. Default use the security token valid to time.</param>
         /// <param name="isReferenceMode">In reference mode, a simple artifact is produced during serialization and the token material is stored in the token cache that is associated with the token handler. The token cache is an instance of a class that derives from SessionSecurityTokenCache. For Web Farm scenarios, the token cache must operate across all nodes in the farm.</param>
         /// <param name="isPersistent">If the IsPersistent property is true, the cookie is written as a persistent cookie. Persistent cookies remain valid after the browser is closed until they expire.</param>
         /// <param name="claimsAuthenticationManager">Possible to add a custom ClaimsAuthenticationManager for handling claims transformation.</param>

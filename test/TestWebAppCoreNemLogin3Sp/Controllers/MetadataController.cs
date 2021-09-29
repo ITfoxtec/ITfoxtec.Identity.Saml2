@@ -89,7 +89,8 @@ namespace TestWebApp.Controllers
             yield return new RequestedAttribute(OioSaml3ClaimTypes.FirstName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.LastName, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.Email, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
-            //yield return new RequestedAttribute(OioSaml3ClaimTypes.CprNumber, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
+            // CPR number is only applicable in for a Public IT system and not a Private IT system in NemLog-in3
+            yield return new RequestedAttribute(OioSaml3ClaimTypes.CprNumber, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.Age, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.CprUuid, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
             yield return new RequestedAttribute(OioSaml3ClaimTypes.DateOfBirth, isRequired: false, nameFormat: Saml2MetadataConstants.AttributeNameFormatUri);
