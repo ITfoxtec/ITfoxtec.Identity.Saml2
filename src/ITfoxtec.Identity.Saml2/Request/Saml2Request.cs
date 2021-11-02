@@ -85,10 +85,10 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
-        /// This extension point contains optional protocol message extension elements that are agreed on between 
+        /// This extension point contains optional protocol message extension XML elements that are agreed on between 
         /// the communicating parties. No extension schema is required in order to make use of this extension point, 
         /// and even if one is provided, the lax validation setting does not impose a requirement for the extension 
-        /// to be valid.
+        /// to be valid. SAML extension elements MUST be namespace-qualified in a non-SAML-defined namespace.
         /// </summary>
         public Schemas.Extensions Extensions { get; set; }
 
@@ -194,10 +194,10 @@ namespace ITfoxtec.Identity.Saml2
 
             Destination = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.Destination].GetValueOrNull<Uri>();
 
-            var extensionsData = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Extensions, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
-            if (extensionsData != null)
+            var extensionsElement = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Extensions, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
+            if (extensionsElement != null)
             {
-                Extensions = new Schemas.Extensions { Data = extensionsData };
+                Extensions = new Schemas.Extensions { Element = extensionsElement.ToXmlDocument().ToXElement() };
             }
 
             var documentValidationResult = MustValidateXmlSignature(validateXmlSignature) ? ValidateXmlSignature(XmlDocument.DocumentElement) : SignatureValidation.NotPresent;

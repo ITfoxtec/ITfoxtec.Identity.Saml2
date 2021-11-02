@@ -36,6 +36,7 @@ namespace TestWebAppCore.Controllers
                 //ForceAuthn = true,
                 Subject = new Subject { NameID = new NameID { ID = "abcd" } },
                 NameIdPolicy = new NameIdPolicy { AllowCreate = true, Format = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" },
+                //Extensions = new AppExtensions(),
                 //RequestedAuthnContext = new RequestedAuthnContext
                 //{
                 //    Comparison = AuthnContextComparisonTypes.Exact,
