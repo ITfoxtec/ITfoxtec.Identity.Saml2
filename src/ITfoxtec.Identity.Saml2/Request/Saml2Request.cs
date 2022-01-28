@@ -227,7 +227,11 @@ namespace ITfoxtec.Identity.Saml2
 
         private void ValidateXmlSignature(SignatureValidation documentValidationResult)
         {
+            if(documentValidationResult == SignatureValidation.NotPresent)
+                throw new InvalidSignatureException("Signature is missing or not found.");
+
             var assertionElement = GetAssertionElement();
+            
             if(assertionElement == null)
             {
                 if (documentValidationResult != SignatureValidation.Valid)
@@ -244,7 +248,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected SignatureValidation ValidateXmlSignature(XmlElement xmlElement)
         {
-            var xmlSignatures = xmlElement.SelectNodes($"*[local-name()='{Schemas.Saml2Constants.Message.Signature}' and namespace-uri()='{SignedXml.XmlDsigNamespaceUrl}']");
+            var xmlSignatures = xmlElement.SelectNodes($"descendant::*[local-name()='{Schemas.Saml2Constants.Message.Signature}' and namespace-uri()='{SignedXml.XmlDsigNamespaceUrl}']");
             if(xmlSignatures.Count == 0)
             {
                 return SignatureValidation.NotPresent;
