@@ -14,7 +14,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         /// <param name="slidingExpiration">If set to true the handler re-issue a new cookie with a new expiration time any time it processes a request which is more than halfway through the expiration window.</param>
         /// <param name="accessDeniedPath">If configured, access denied redirection target used by the handler.</param>
         /// <param name="sessionStore">Allow configuration of a custom ITicketStore.</param>
-        public static IServiceCollection AddSaml2(this IServiceCollection services, string loginPath = "/Auth/Login", bool slidingExpiration = false, string accessDeniedPath = null, ITicketStore sessionStore = null, SameSiteMode cookieSameSite = SameSiteMode.Lax, string cookieDomain = null)
+        public static IServiceCollection AddSaml2(this IServiceCollection services, string loginPath = "/Auth/Login", bool slidingExpiration = false, string accessDeniedPath = null, ITicketStore sessionStore = null, SameSiteMode cookieSameSite = SameSiteMode.Lax, string cookieDomain = null, CookieSecurePolicy cookieSecurePolicy = CookieSecurePolicy.None)
         {
             services.AddAuthentication(Saml2Constants.AuthenticationScheme)
                 .AddCookie(Saml2Constants.AuthenticationScheme, o =>
@@ -30,6 +30,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
                         o.SessionStore = sessionStore;
                     }
                     o.Cookie.SameSite = cookieSameSite;
+                    o.Cookie.SecurePolicy = cookieSecurePolicy;
                     if (!string.IsNullOrEmpty(cookieDomain))
                     {
                         o.Cookie.Domain = cookieDomain;
