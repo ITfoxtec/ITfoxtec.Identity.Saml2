@@ -26,3 +26,6 @@ You can read more on <a href="https://itfoxtec.com/identitysaml2">ITfoxtec Ident
 
 ### Support
 If you have questions please ask them on <a href="https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2">Stack Overflow</a>. Tag your questions with 'itfoxtec-identity-saml2' and I will answer as soon as possible.
+
+### Open source donations by PayPal 
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=QVQN5ZNP2RK4Y)
