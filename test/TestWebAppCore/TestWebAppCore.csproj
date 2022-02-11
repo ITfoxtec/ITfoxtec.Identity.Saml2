@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>TestWebAppCore</AssemblyName>
     <PackageId>TestWebAppCore</PackageId>
-    <Version>5.0.0</Version>
+    <Version>6.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
-    <Copyright>Copyright © 2019</Copyright>
+    <Copyright>Copyright © 2022</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="package-lock.json" />
@@ -23,6 +23,6 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.447" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.9.0" />
   </ItemGroup>
 </Project>
