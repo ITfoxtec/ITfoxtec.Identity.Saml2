@@ -44,35 +44,35 @@ namespace ITfoxtec.Identity.Saml2.Util
 
         private void ValidatePeerTrust(X509Certificate2 certificate)
         {
-            var store = new X509Store(StoreName.TrustedPeople, StoreLocation.CurrentUser);
-            store.Open(OpenFlags.ReadOnly);
-            try
+            if (certificate == null) throw new ArgumentNullException(nameof(certificate));
+
+            using (var store = new X509Store(StoreName.TrustedPeople, StoreLocation.CurrentUser))
             {
+                store.Open(OpenFlags.ReadOnly);
                 if (store.Certificates.Find(X509FindType.FindByThumbprint, certificate.GetCertHashString(), false)?.Count > 0)
                 {
                     return;
                 }
-            }
-            finally
-            {
-                store.Close();
-            }
 
-            new SecurityTokenValidationException($"Invalid X509 certificate peer trust.{GetCertificateInformation(certificate)}'.");
+                throw new SecurityTokenValidationException($"Invalid X509 certificate peer trust.{GetCertificateInformation(certificate)}'.");
+            }
         }
 
         private void ValidateChainTrust(X509Certificate2 certificate)
         {
             bool useMachineContext = TrustedStoreLocation == StoreLocation.LocalMachine;
-            var chain = new X509Chain(useMachineContext);
-            chain.ChainPolicy = new X509ChainPolicy
+            using (var chain = new X509Chain(useMachineContext))
             {
-                VerificationTime = DateTimeOffset.UtcNow.UtcDateTime,
-                RevocationMode = RevocationMode
-            };
-            if (chain.Build(certificate))
-            {
-                new SecurityTokenValidationException($"Invalid X509 certificate chain.{GetCertificateInformation(certificate)}{GetChainStatusInformation(chain.ChainStatus)}.");
+                chain.ChainPolicy = new X509ChainPolicy
+                {
+                    VerificationTime = DateTimeOffset.UtcNow.UtcDateTime,
+                    RevocationMode = RevocationMode
+                };
+                if (chain.Build(certificate))
+                {
+                    return;
+                }
+                throw new SecurityTokenValidationException($"Invalid X509 certificate chain.{GetCertificateInformation(certificate)}{GetChainStatusInformation(chain.ChainStatus)}.");
             }
         }
 
