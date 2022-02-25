@@ -43,7 +43,17 @@ namespace TestWebAppCore
                     saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
                     saml2Configuration.SingleSignOnDestination = entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
                     saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
-                    saml2Configuration.SignatureValidationCertificates.AddRange(entityDescriptor.IdPSsoDescriptor.SigningCertificates);
+                    foreach (var signingCertificate in entityDescriptor.IdPSsoDescriptor.SigningCertificates)
+                    {
+                        if (signingCertificate.IsValidLocalTime())
+                        {
+                            saml2Configuration.SignatureValidationCertificates.Add(signingCertificate);
+                        }
+                    }
+                    if (saml2Configuration.SignatureValidationCertificates.Count <= 0)
+                    {
+                        throw new Exception("The IdP signing certificates has expired.");
+                    }
                     if (entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.HasValue)
                     {
                         saml2Configuration.SignAuthnRequest = entityDescriptor.IdPSsoDescriptor.WantAuthnRequestsSigned.Value;

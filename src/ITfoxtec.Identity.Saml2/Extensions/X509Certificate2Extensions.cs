@@ -1,4 +1,5 @@
 ﻿using ITfoxtec.Identity.Saml2.Cryptography;
+using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -22,6 +23,22 @@ namespace ITfoxtec.Identity.Saml2
             {
                 return certificate.GetRSAPrivateKey();
             }
+        }
+
+        /// <summary>
+        /// Validates if the certificate is expired in relation to local time.
+        /// </summary>
+        /// <param name="certificate">The certificate.</param>
+        /// <returns>Return true if the certificate is valid / not expired.</returns>
+        public static bool IsValidLocalTime(this X509Certificate2 certificate)
+        {
+            var nowLocal = DateTime.Now;
+            if (certificate.NotBefore <= nowLocal && certificate.NotAfter >= nowLocal)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
