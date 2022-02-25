@@ -57,10 +57,10 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
-        ///A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt; 
-        ///message.See[SAMLBind] for more information about protocol bindings and URI references defined 
-        ///for them.This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
-        ///and is typically accompanied by the AssertionConsumerServiceURL attribute.
+        /// A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt; 
+        /// message. See[SAMLBind] for more information about protocol bindings and URI references defined 
+        /// for them. This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
+        /// and is typically accompanied by the AssertionConsumerServiceURL attribute.
         /// </summary>
         public Uri ProtocolBinding { get; set; }
 
