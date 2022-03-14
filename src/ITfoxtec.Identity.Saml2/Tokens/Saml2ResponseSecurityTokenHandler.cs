@@ -74,7 +74,7 @@ namespace ITfoxtec.Identity.Saml2.Tokens
 #else
                 if (TokenValidationParameters.ValidateTokenReplay)
                 {
-                    ValidateTokenReplay(saml2SecurityToken.Assertion.Conditions.NotBefore, tokenString, TokenValidationParameters);
+                    ValidateTokenReplay(saml2SecurityToken.Assertion.Conditions.NotOnOrAfter, tokenString, TokenValidationParameters);
                 }
 #endif
             }
