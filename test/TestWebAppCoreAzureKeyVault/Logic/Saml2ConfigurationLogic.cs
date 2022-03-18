@@ -1,7 +1,9 @@
-﻿using ITfoxtec.Identity.Saml2;
+﻿using Azure.Core;
+using Azure.Security.KeyVault.Certificates;
+using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.Cryptography;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
-using Microsoft.Azure.KeyVault;
+using RSAKeyVaultProvider;
 using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -11,12 +13,12 @@ namespace TestWebAppCoreAzureKeyVault.Identity
     public class Saml2ConfigurationLogic
     {
         private readonly Saml2Configuration config;
-        private readonly KeyVaultClient keyVaultClient;
+        private readonly TokenCredential tokenCredential;
 
-        public Saml2ConfigurationLogic(Saml2Configuration config, KeyVaultClient keyVaultClient)
+        public Saml2ConfigurationLogic(Saml2Configuration config, TokenCredential tokenCredential)
         {
             this.config = config;
-            this.keyVaultClient = keyVaultClient;
+            this.tokenCredential = tokenCredential;
         }
 
         public string Saml2IdPMetadata{ get; set; }
@@ -33,10 +35,11 @@ namespace TestWebAppCoreAzureKeyVault.Identity
                 RevocationMode = config.RevocationMode
             };
 
-            var certificateBundle = keyVaultClient.GetCertificateAsync(AzureKeyVaultBaseUrl, AzureKeyVaultCertificateName).GetAwaiter().GetResult();
-            var publicCertificate = new X509Certificate2(certificateBundle.Cer);
+            var certificateClient = new CertificateClient(new Uri(AzureKeyVaultBaseUrl), tokenCredential);
+            var certificateWithPolicy = certificateClient.GetCertificate(AzureKeyVaultCertificateName);
 
-            var rsa = keyVaultClient.ToRSA(certificateBundle.KeyIdentifier, publicCertificate);
+            var publicCertificate = new X509Certificate2(certificateWithPolicy.Value.Cer);
+            var rsa = RSAFactory.Create(tokenCredential, certificateWithPolicy.Value.KeyId, new Azure.Security.KeyVault.Keys.JsonWebKey(publicCertificate.GetRSAPublicKey()));
             saml2Configuration.SigningCertificate = new Saml2X509Certificate(publicCertificate, rsa);
 
             //saml2Configuration.SignAuthnRequest = true;

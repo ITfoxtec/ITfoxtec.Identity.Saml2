@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ITfoxtec.Identity.Helpers;
 using ITfoxtec.Identity.Saml2.MvcCore.Configuration;
 using ITfoxtec.Identity.Saml2;
-using TestWebAppCoreAzureKeyVault.AzureKeyVault;
-using Microsoft.Azure.KeyVault;
 using TestWebAppCoreAzureKeyVault.Identity;
+using Azure.Core;
+using Azure.Identity;
 
 namespace TestWebAppCoreAzureKeyVault
 {
@@ -32,9 +31,9 @@ namespace TestWebAppCoreAzureKeyVault
 
             services.AddSingleton(serviceProvider => 
             {
-                var keyVaultClient = serviceProvider.GetService<KeyVaultClient>();
+                var tokenCredential = serviceProvider.GetService<TokenCredential>();
 
-                return new Saml2ConfigurationLogic(saml2Configuration, keyVaultClient)
+                return new Saml2ConfigurationLogic(saml2Configuration, tokenCredential)
                 {
                     Saml2IdPMetadata = Configuration["Saml2:IdPMetadata"],
                     AzureKeyVaultBaseUrl = Configuration["AzureKeyVault:BaseUrl"],
@@ -44,11 +43,10 @@ namespace TestWebAppCoreAzureKeyVault
      
             services.AddSaml2();
 
-            services.AddTransient<TokenHelper>();
-            services.AddSingleton(serviceProvider =>
+            //In production possible use: services.AddSingleton<TokenCredential, DefaultAzureCredential>();
+            services.AddSingleton<TokenCredential>(serviceProvider =>
             {
-                var tokenHelper = serviceProvider.GetService<TokenHelper>();
-                return AppKeyVaultClient.GetClient(Configuration["AzureKeyVault:ClientId"], Configuration["AzureKeyVault:ClientSecret"], tokenHelper);
+                return new ClientSecretCredential(Configuration["AzureKeyVault:TenantId"], Configuration["AzureKeyVault:ClientId"], Configuration["AzureKeyVault:ClientSecret"]);
             });
 
             services.AddHttpClient();
