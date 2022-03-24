@@ -80,14 +80,14 @@ namespace ITfoxtec.Identity.Saml2
         private string CompressRequest()
         {
             using (var compressedStream = new MemoryStream())
-            using (var deflateStream = new DeflateStream(compressedStream, CompressionLevel.Optimal))
+            using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress))
             {
                 using (var originalStream = new StreamWriter(deflateStream))
                 {
                     originalStream.Write(XmlDocument.OuterXml);
                 }
 
-                return Convert.ToBase64String(compressedStream.GetBuffer());
+                return Convert.ToBase64String(compressedStream.ToArray());
             }
         }
 
