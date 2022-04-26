@@ -12,6 +12,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using TestIdPCore.Models;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace TestIdPCore.Controllers
 {
