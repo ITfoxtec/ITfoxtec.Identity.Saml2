@@ -68,7 +68,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 if(required)
                 {
-                    throw new InvalidOperationException("Missing Claim Type: " + claimType);
+                    throw new InvalidOperationException($"Claim Type '{claimType}' is required to do logout.");
                 }
                 else
                 {

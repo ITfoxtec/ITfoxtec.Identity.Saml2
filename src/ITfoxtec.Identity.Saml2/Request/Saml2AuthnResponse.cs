@@ -105,7 +105,7 @@ namespace ITfoxtec.Identity.Saml2
             var tokenDescriptor = CreateTokenDescriptor(ClaimsIdentity.Claims, appliesToAddress, issuedTokenLifetime);
             Saml2SecurityToken = Saml2SecurityTokenHandler.CreateToken(tokenDescriptor) as Saml2SecurityToken;
 
-            AddNameIdFormat();
+            AddNameIdFormat(ClaimsIdentity.Claims);
             AddAuthenticationStatement(CreateAuthenticationStatement(authnContext));
             AddSubjectConfirmation(CreateSubjectConfirmation(subjectConfirmationLifetime));
 
@@ -179,11 +179,20 @@ namespace ITfoxtec.Identity.Saml2
             return authenticationStatement;
         }
 
-        private void AddNameIdFormat()
+        private void AddNameIdFormat(IEnumerable<Claim> claims = null)
         {
-            if (NameId == null) throw new ArgumentNullException("NameId property");
-
-            Saml2SecurityToken.Assertion.Subject.NameId = NameId;
+            if (NameId != null)
+            {
+                Saml2SecurityToken.Assertion.Subject.NameId = NameId;
+            }
+            else if (claims != null)
+            {
+                var nameIdValue = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).FirstOrDefault();
+                if (!string.IsNullOrEmpty(nameIdValue))
+                {
+                    Saml2SecurityToken.Assertion.Subject.NameId = new Saml2NameIdentifier(nameIdValue);
+                }
+            }
         }
 
         private void AddSubjectConfirmation(Saml2SubjectConfirmation subjectConfirmation)
