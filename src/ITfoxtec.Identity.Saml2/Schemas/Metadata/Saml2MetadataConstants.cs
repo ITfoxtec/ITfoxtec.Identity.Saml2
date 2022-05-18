@@ -15,7 +15,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public static readonly XNamespace MetadataNamespaceX = XNamespace.Get(MetadataNamespace.OriginalString);
 
         /// <summary>
-        /// The XML Namespace Name of the Metadata.
+        /// The XML namespace Name of the Metadata.
         /// </summary>
         public static readonly XName MetadataNamespaceNameX = XNamespace.Xmlns + "m";     
 
@@ -62,7 +62,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             public const string SingleLogoutService = "SingleLogoutService";
 
-            public const string SingleSignOnService = "SingleSignOnService";            
+            public const string SingleSignOnService = "SingleSignOnService";        
+
+            public const string ArtifactResolutionService = "ArtifactResolutionService";      
 
             public const string Binding = "Binding";
 

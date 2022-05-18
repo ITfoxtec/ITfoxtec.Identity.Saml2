@@ -32,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public Uri ResponseLocation { get; set; }
 
-        protected IEnumerable<XObject> GetXContent()
+        protected virtual IEnumerable<XObject> GetXContent()
         {
             if (Binding != null)
             {
@@ -48,7 +48,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }            
         }
 
-        protected internal EndpointType Read(XmlElement xmlElement)
+        protected virtual internal EndpointType Read(XmlElement xmlElement)
         {
             Binding = xmlElement.Attributes[Saml2MetadataConstants.Message.Binding].GetValueOrNull<Uri>();
             Location = xmlElement.Attributes[Saml2MetadataConstants.Message.Location].GetValueOrNull<Uri>();

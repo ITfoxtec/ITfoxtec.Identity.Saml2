@@ -19,7 +19,7 @@ namespace ITfoxtec.Identity.Saml2
         public X509IncludeOption CertificateIncludeOption { get; set; }
 
         /// <summary>
-        /// Html post content.
+        /// HTTP post content.
         /// </summary>
         public string PostContent { get; set; }
 

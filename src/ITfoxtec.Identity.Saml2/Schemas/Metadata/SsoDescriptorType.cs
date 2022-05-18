@@ -45,7 +45,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// [Optional]
         /// Specifying algorithms and algorithm-specific settings supported by the entity.
         /// </summary>
-        public IEnumerable<EncryptionMethodType> EncryptionMethods { get; set; }        
+        public IEnumerable<EncryptionMethodType> EncryptionMethods { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Zero or more elements of type IndexedEndpointType that describe indexed endpoints that
+        /// support the Artifact Resolution profile defined in [SAMLProf]. The ResponseLocation attribute
+        ///MUST be omitted.
+        /// </summary>
+        public IEnumerable<ArtifactResolutionService> ArtifactResolutionService { get; set; }
 
         /// <summary>
         /// [Optional]

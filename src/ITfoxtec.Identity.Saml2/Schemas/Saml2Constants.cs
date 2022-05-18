@@ -58,7 +58,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             public const string SamlResponse = "SAMLResponse";
 
             public const string SamlRequest = "SAMLRequest";
-
+           
             public const string RelayState = "RelayState";
 
             public const string Assertion = "Assertion";
@@ -74,6 +74,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             public const string LogoutRequest = "LogoutRequest";
 
             public const string LogoutResponse = "LogoutResponse";
+
+            public const string ArtifactResolve = "ArtifactResolve";
+
+            internal const string Artifact = "Artifact";
 
             internal const string Id = "ID";
 

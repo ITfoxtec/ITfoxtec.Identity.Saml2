@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity.Saml2.Schemas
 {
@@ -20,5 +16,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// HTTP Post protocol binding
         /// </summary>
         public static Uri HttpPost= new Uri("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
+
+        /// <summary>
+        /// HTTP Artifact protocol binding
+        /// </summary>
+        public static Uri HttpArtifact = new Uri("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact");
     }
 }
