@@ -1,5 +1,4 @@
-﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Tokens;
+﻿using ITfoxtec.Identity.Saml2.Tokens;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -237,7 +236,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature);
+            base.Read(xml, validateXmlSignature, detectReplayedTokens);
 
             if (Status == Schemas.Saml2StatusCodes.Success)
             {
@@ -360,7 +359,6 @@ namespace ITfoxtec.Identity.Saml2
 #if DEBUG
             Debug.WriteLine("Saml2P (Encrypted): " + XmlDocument.OuterXml);
 #endif
-
         }
     }
 }

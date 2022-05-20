@@ -67,6 +67,8 @@ namespace TestWebAppCoreArtifact
 
             services.AddSaml2(slidingExpiration: true);
 
+            services.AddHttpClient();
+
             services.AddControllersWithViews();
         }
 

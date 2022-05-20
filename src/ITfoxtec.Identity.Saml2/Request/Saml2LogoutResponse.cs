@@ -1,5 +1,4 @@
-﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
-using System;
+﻿using System;
 using System.Xml;
 using System.Xml.Linq;
 #if NETFULL

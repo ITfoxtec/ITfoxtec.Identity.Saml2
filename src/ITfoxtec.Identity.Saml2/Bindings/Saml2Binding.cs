@@ -33,7 +33,12 @@ namespace ITfoxtec.Identity.Saml2
 
         public T Bind(Saml2Response saml2Response)
         {
-            return BindInternal(saml2Response as Saml2Request, Saml2Constants.Message.SamlResponse);
+            return BindInternal(saml2Response, Saml2Constants.Message.SamlResponse);
+        }
+
+        public T Bind<AT>(Saml2ArtifactResolve<AT> saml2ArtifactResolve) where AT : Saml2Request
+        {
+            return BindInternal(saml2ArtifactResolve, Saml2Constants.Message.SamlResponse);
         }
 
         protected virtual Saml2Binding<T> BindInternal(Saml2Request saml2RequestResponse)
@@ -106,6 +111,11 @@ namespace ITfoxtec.Identity.Saml2
         public Saml2Request ReadSamlResponse(HttpRequest request, Saml2Response saml2Response)
         {
             return Read(request, saml2Response, Saml2Constants.Message.SamlResponse, false, false);
+        }
+
+        public Saml2Request ReadSamlResponse<AT>(HttpRequest request, Saml2ArtifactResolve<AT> saml2ArtifactResolve) where AT : Saml2Request
+        {
+            return Read(request, saml2ArtifactResolve, Saml2Constants.Message.SamlResponse, false, false);
         }
 
         protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature, bool detectReplayedTokens);

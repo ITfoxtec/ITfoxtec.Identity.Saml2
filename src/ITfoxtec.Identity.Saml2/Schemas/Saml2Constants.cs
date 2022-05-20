@@ -53,12 +53,27 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// </summary>
         public static readonly XName ProtocolNamespaceNameX = XNamespace.Xmlns + "saml2p";
 
+        /// <summary>
+        /// The XML namespace of the SAML2 SOAP Envelope.
+        /// </summary>
+        public static readonly Uri SoapEnvironmentNamespace = new Uri("http://schemas.xmlsoap.org/soap/envelope/");
+        /// <summary>
+        /// The XML namespace of the SAML2 SOAP Envelope.
+        /// </summary>
+        public static readonly XNamespace SoapEnvironmentNamespaceX = XNamespace.Get(SoapEnvironmentNamespace.OriginalString);
+        /// <summary>
+        /// The XML namespace Name of the SAML2 SOAP Envelope.
+        /// </summary>
+        public static readonly XName SoapEnvironmentNamespaceNameX = XNamespace.Xmlns + "SOAP-ENV";
+
         public static class Message
         {
             public const string SamlResponse = "SAMLResponse";
 
             public const string SamlRequest = "SAMLRequest";
-           
+
+            public const string SamlArt = "SAMLart";
+
             public const string RelayState = "RelayState";
 
             public const string Assertion = "Assertion";
@@ -76,6 +91,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             public const string LogoutResponse = "LogoutResponse";
 
             public const string ArtifactResolve = "ArtifactResolve";
+
+            public const string ArtifactResponse = "ArtifactResponse";
 
             internal const string Artifact = "Artifact";
 
@@ -154,6 +171,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string ProxyRestriction = "ProxyRestriction";
 
             internal const string Count = "Count";
+
+            internal const string Envelope = "Envelope";
+
+            internal const string Body = "Body";
         }
     }
 }
