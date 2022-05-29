@@ -8,11 +8,14 @@ The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provid
 * **Support .NET Standard 2.1**
 * **Support .NET Framework 4.6.1 and 4.7.2**
 
+> Please see the [test samples](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test).
+
+> You can use the [SAML 2.0 tool](https://www.foxids.com/tools/Saml) to decode tokens and create self-signed certificates with the [certificate tool](https://www.foxids.com/tools/Certificate).
+
 The ITfoxtec Identity Saml2 package implements the most important parts of the SAML-P standard and some optional features. 
 Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single 
 logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
 
-Please see the [test samples](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test).
 
 The ITfoxtec Identity Saml2 package supports signing/encryption certificates in Azure Key Vault. 
 Please see the [TestWebAppCoreAzureKeyVault](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreAzureKeyVault) sample. 
