@@ -40,6 +40,7 @@ namespace TestIdPCore
             });
 
             services.AddSaml2();
+            services.AddHttpClient();
 
             services.AddControllersWithViews();
         }

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 #if NETFULL
@@ -217,6 +220,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             return ReadIdPSsoDescriptor(File.ReadAllText(idPMetadataFile));
         }
 
+        [Obsolete("ReadSPSsoDescriptorFromUrl are obsolete because it use the WebClient which are obsolete. Use ReadIdPSsoDescriptorFromUrlAsync instead.")]
         public virtual EntityDescriptor ReadIdPSsoDescriptorFromUrl(Uri idPMetadataUrl)
         {
             using (var webClient = new WebClient())
@@ -225,16 +229,79 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
         }
 
+        public async virtual Task<EntityDescriptor> ReadIdPSsoDescriptorFromUrlAsync(
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+#endif
+            Uri idPMetadataUrl, CancellationToken? cancellationToken = null)
+        {
+#if NET || NETCORE
+            var httpClient = httpClientFactory.CreateClient();
+#endif
+
+
+            using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(idPMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(idPMetadataUrl))
+            {
+                // Handle the response
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.OK:
+#if NET
+                        return ReadIdPSsoDescriptor(cancellationToken.HasValue ? await response.Content.ReadAsStringAsync(cancellationToken.Value) : await response.Content.ReadAsStringAsync());
+#else
+                        return ReadIdPSsoDescriptor(await response.Content.ReadAsStringAsync());
+#endif
+
+                    default:
+                        throw new Exception($"Error, Status Code OK expected. StatusCode={response.StatusCode}. IdPMetadataUrl='{idPMetadataUrl?.OriginalString}'.");
+                }
+            }
+        }
+
         public virtual EntityDescriptor ReadSPSsoDescriptorFromFile(string spMetadataFile)
         {
             return ReadSPSsoDescriptor(File.ReadAllText(spMetadataFile));
         }
 
+        [Obsolete("ReadSPSsoDescriptorFromUrl are obsolete because it use the WebClient which are obsolete. Use ReadSPSsoDescriptorFromUrlAsync instead.")]
         public virtual EntityDescriptor ReadSPSsoDescriptorFromUrl(Uri spMetadataUrl)
         {
             using (var webClient = new WebClient())
             {
                 return ReadSPSsoDescriptor(webClient.DownloadString(spMetadataUrl));
+            }
+        }
+
+        public async virtual Task<EntityDescriptor> ReadSPSsoDescriptorFromUrlAsync(
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+#endif
+            Uri spMetadataUrl, CancellationToken? cancellationToken = null)
+        {
+#if NET || NETCORE
+            var httpClient = httpClientFactory.CreateClient();
+#endif
+
+
+            using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(spMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(spMetadataUrl))
+            {
+                // Handle the response
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.OK:
+#if NET
+                        return ReadSPSsoDescriptor(cancellationToken.HasValue ? await response.Content.ReadAsStringAsync(cancellationToken.Value) : await response.Content.ReadAsStringAsync());
+#else
+                        return ReadSPSsoDescriptor(await response.Content.ReadAsStringAsync());
+#endif
+
+                    default:
+                        throw new Exception($"Error, Status Code OK expected. StatusCode={response.StatusCode}. SPMetadataUrl='{spMetadataUrl?.OriginalString}'.");
+                }
             }
         }
     }

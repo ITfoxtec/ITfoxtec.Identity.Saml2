@@ -12,6 +12,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using TestIdPCore.Models;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Threading;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -24,18 +27,20 @@ namespace TestIdPCore.Controllers
     {
         private readonly Settings settings;
         private readonly Saml2Configuration config;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthController(IOptions<Settings> settingsAccessor, IOptions<Saml2Configuration> configAccessor)
+        public AuthController(IOptions<Settings> settingsAccessor, IOptions<Saml2Configuration> configAccessor, IHttpClientFactory httpClientFactory)
         {
             settings = settingsAccessor.Value;
             config = configAccessor.Value;
+            this.httpClientFactory = httpClientFactory;
         }
 
         [Route("Login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             var requestBinding = new Saml2RedirectBinding();
-            var relyingParty = ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(requestBinding));
+            var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(requestBinding));
 
             var saml2AuthnRequest = new Saml2AuthnRequest(config);
             try
@@ -59,10 +64,10 @@ namespace TestIdPCore.Controllers
         }
 
         [HttpPost("Logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             var requestBinding = new Saml2PostBinding();
-            var relyingParty = ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest(requestBinding));
+            var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest(requestBinding));
 
             var saml2LogoutRequest = new Saml2LogoutRequest(config);
             saml2LogoutRequest.SignatureValidationCertificates = new X509Certificate2[] { relyingParty.SignatureValidationCertificate };
@@ -135,40 +140,43 @@ namespace TestIdPCore.Controllers
             return responsebinding.Bind(saml2LogoutResponse).ToActionResult();
         }
 
-        private RelyingParty ValidateRelyingParty(string issuer)
+        private async Task<RelyingParty> ValidateRelyingParty(string issuer)
         {
-            foreach (var rp in settings.RelyingParties)
-            {
-                try
-                {
-                    if (string.IsNullOrEmpty(rp.Issuer))
-                    {
-                        var entityDescriptor = new EntityDescriptor();
-                        entityDescriptor.ReadSPSsoDescriptorFromUrl(new Uri(rp.Metadata));
-                        if (entityDescriptor.SPSsoDescriptor != null)
-                        {
-                            rp.Issuer = entityDescriptor.EntityId;
-                            rp.SingleSignOnDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(a => a.IsDefault).OrderBy(a => a.Index).First().Location;
-                            var singleLogoutService = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First();
-                            rp.SingleLogoutResponseDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
-                            rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
-                        }
-                        else
-                        {
-                            throw new Exception($"SPSsoDescriptor not loaded from metadata '{rp.Metadata}'.");
-                        }
-                    }
-                }
-                catch (Exception exc)
-                {
-                    //log error
-#if DEBUG
-                    Debug.WriteLine($"SPSsoDescriptor error: {exc.ToString()}");
-#endif
-                }
-            }
+            using var cancellationTokenSource = new CancellationTokenSource(2 * 1000); // Cancel after 2 seconds.
+            await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingParty(rp, cancellationTokenSource)));
 
             return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
+        }
+
+        private async Task LoadRelyingParty(RelyingParty rp, CancellationTokenSource cancellationTokenSource)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(rp.Issuer))
+                {
+                    var entityDescriptor = new EntityDescriptor();
+                    await entityDescriptor.ReadSPSsoDescriptorFromUrlAsync(httpClientFactory, new Uri(rp.Metadata), cancellationTokenSource.Token);
+                    if (entityDescriptor.SPSsoDescriptor != null)
+                    {
+                        rp.Issuer = entityDescriptor.EntityId;
+                        rp.SingleSignOnDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(a => a.IsDefault).OrderBy(a => a.Index).First().Location;
+                        var singleLogoutService = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First();
+                        rp.SingleLogoutResponseDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
+                        rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
+                    }
+                    else
+                    {
+                        throw new Exception($"SPSsoDescriptor not loaded from metadata '{rp.Metadata}'.");
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                //log error
+#if DEBUG
+                Debug.WriteLine($"SPSsoDescriptor error: {exc.ToString()}");
+#endif
+            }
         }
 
         private IEnumerable<Claim> CreateTestUserClaims(string selectedNameID)
