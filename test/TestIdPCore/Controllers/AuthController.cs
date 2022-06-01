@@ -61,6 +61,16 @@ namespace TestIdPCore.Controllers
                 return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Responder, requestBinding.RelayState, relyingParty);
             }
         }
+        
+        [Route("Artifact")]
+        public async Task<IActionResult> Artifact()
+        {
+
+            throw new NotImplementedException();
+        }
+
+
+
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()

@@ -10,6 +10,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
 using ITfoxtec.Identity.Saml2.Configuration;
+using System.Linq;
+using ITfoxtec.Identity.Saml2.Util;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -56,23 +58,54 @@ namespace ITfoxtec.Identity.Saml2
 #endif  
 
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
-            if (config.ArtifactResolutionService is null)
+            if (config.ArtifactResolutionService is null || config.ArtifactResolutionService.Location is null)
             {
-                throw new Saml2ConfigurationException("A ArtifactResolutionService is required in the config.");
+                throw new Saml2ConfigurationException("The ArtifactResolutionService is required to be configured.");
             }
             Destination = config.ArtifactResolutionService.Location;
         }
 
+        /// <summary>
+        /// Create SAML V2.0 defined artifact type of type code 0x0004.
+        /// </summary>
         internal void CreateArtifact()
         {
-            throw new NotImplementedException();
+            var artifactBytes = new byte[44];
+            artifactBytes[1] = 4; // 0x0004
+
+            artifactBytes[2] = (byte)(Config.ArtifactResolutionService.Index >> 8);
+            artifactBytes[3] = (byte)Config.ArtifactResolutionService.Index;
+
+            if (string.IsNullOrEmpty(Issuer)) throw new ArgumentNullException("Issuer property");
+            Array.Copy(Issuer.ComputeSha1Hash(), 0, artifactBytes, 4, 20);
+
+            Array.Copy(RandomGenerator.GenerateArtifactMessageHandle(), 0, artifactBytes, 24, 20);
+
+            Artifact = Uri.EscapeDataString(Convert.ToBase64String(artifactBytes));
         }
 
         internal void ValidateArtifact()
         {
             if (Config.ValidateArtifact)
             {
-                throw new NotImplementedException();
+                var artifactBytes = Convert.FromBase64String(Artifact);
+
+                if (string.IsNullOrEmpty(Config.AllowedIssuer))
+                {
+                    throw new Saml2ConfigurationException("Unable to validate Artifact SourceId/Issuer. AllowedIssuer not configured.");
+                }
+                var sourceIdBytes = new byte[20];
+                Array.Copy(artifactBytes, 4, sourceIdBytes, 0, 20);
+                if (!sourceIdBytes.SequenceEqual(Config.AllowedIssuer.ComputeSha1Hash()))
+                {
+                    throw new Saml2RequestException($"Invalid SourceId/Issuer. Actually '{Issuer}', allowed '{Config.AllowedIssuer}'");
+                }
+
+                var arsIndex = (artifactBytes[2] << 8) | artifactBytes[3];
+                if (arsIndex != Config.ArtifactResolutionService.Index)
+                {
+                    throw new Saml2RequestException($"Invalid ArtifactResolutionService Index. Actually '{arsIndex}', expected '{Config.ArtifactResolutionService.Index}'");
+                }
             }
         }
 
