@@ -27,8 +27,7 @@ namespace TestWebAppCoreNemLogin3Sp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2"));
-            services.Configure<Saml2Configuration>(saml2Configuration =>
+            services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
                 saml2Configuration.SignAuthnRequest = true;
                 saml2Configuration.SigningCertificate = saml2Configuration.DecryptionCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
@@ -52,9 +51,12 @@ namespace TestWebAppCoreNemLogin3Sp
                 {
                     throw new Exception("IdPSsoDescriptor not loaded from metadata.");
                 }
+
+                return saml2Configuration;
             });
 
             services.AddSaml2(slidingExpiration: true);
+            services.AddHttpClient();
 
             services.AddControllersWithViews();
         }

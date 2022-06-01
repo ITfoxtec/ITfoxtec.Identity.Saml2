@@ -24,6 +24,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.EntityDescriptor;
 
+#if NET || NETCORE
+        private readonly IHttpClientFactory httpClientFactory;
+#else
+        private readonly HttpClient httpClient;
+#endif
+
         public Saml2Configuration Config { get; protected set; }
 
         /// <summary>
@@ -92,10 +98,32 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public IEnumerable<ContactPerson> ContactPersons { get; set; }
 
-        public EntityDescriptor()
-        { }
+        public EntityDescriptor(
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory = null)
+#else
+            HttpClient httpClient = null)
+#endif
+        {
+#if NET || NETCORE
+            this.httpClientFactory = httpClientFactory;
+#else
+            this.httpClient = httpClient;
+#endif  
+        }
 
-        public EntityDescriptor(Saml2Configuration config, bool signMetadata = true)
+        public EntityDescriptor(Saml2Configuration config, bool signMetadata = true,
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory = null)
+#else
+            HttpClient httpClient = null)
+#endif 
+            : this(
+#if NET || NETCORE
+            httpClientFactory)
+#else
+            httpClient)
+#endif 
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
@@ -229,18 +257,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
         }
 
-        public async virtual Task<EntityDescriptor> ReadIdPSsoDescriptorFromUrlAsync(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            Uri idPMetadataUrl, CancellationToken? cancellationToken = null)
+        public async virtual Task<EntityDescriptor> ReadIdPSsoDescriptorFromUrlAsync(Uri idPMetadataUrl, CancellationToken? cancellationToken = null)
         {
 #if NET || NETCORE
+            if (httpClientFactory == null)
+            {
+                throw new ArgumentNullException("The 'httpClientFactory' parameter is required in the constructor.");
+            }
             var httpClient = httpClientFactory.CreateClient();
+#else
+            if (httpClient == null)
+            {
+                throw new ArgumentNullException("The 'httpClient' parameter is required in the constructor.");
+            }
 #endif
-
 
             using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(idPMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(idPMetadataUrl))
             {
@@ -274,18 +304,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
         }
 
-        public async virtual Task<EntityDescriptor> ReadSPSsoDescriptorFromUrlAsync(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            Uri spMetadataUrl, CancellationToken? cancellationToken = null)
+        public async virtual Task<EntityDescriptor> ReadSPSsoDescriptorFromUrlAsync(Uri spMetadataUrl, CancellationToken? cancellationToken = null)
         {
 #if NET || NETCORE
+            if (httpClientFactory == null)
+            {
+                throw new ArgumentNullException("The 'httpClientFactory' parameter is required in the constructor.");
+            }
             var httpClient = httpClientFactory.CreateClient();
+#else
+            if (httpClient == null)
+            {
+                throw new ArgumentNullException("The 'httpClient' parameter is required in the constructor.");
+            }
 #endif
-
 
             using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(spMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(spMetadataUrl))
             {

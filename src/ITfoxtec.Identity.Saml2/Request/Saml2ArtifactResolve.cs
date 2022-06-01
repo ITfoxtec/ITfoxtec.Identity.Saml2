@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
+using ITfoxtec.Identity.Saml2.Configuration;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -18,6 +19,12 @@ namespace ITfoxtec.Identity.Saml2
     public class Saml2ArtifactResolve<T> : Saml2Request where T : Saml2Request
     {
         const string elementName = Saml2Constants.Message.ArtifactResolve;
+
+#if NET || NETCORE
+        private readonly IHttpClientFactory httpClientFactory;
+#else
+        private readonly HttpClient httpClient;
+#endif
 
         /// <summary>
         /// [Optional]
@@ -32,12 +39,28 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public string Artifact { get; set; }
 
-        public Saml2ArtifactResolve(Saml2Configuration config) : base(config)
+        public Saml2ArtifactResolve(
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+#endif
+            Saml2Configuration config) : base(config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
+#if NET || NETCORE
+            this.httpClientFactory = httpClientFactory;
+#else
+            this.httpClient = httpClient;
+#endif  
+
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
-            Destination = config.ArtifactResolutionService;
+            if (config.ArtifactResolutionService is null)
+            {
+                throw new Saml2ConfigurationException("A ArtifactResolutionService is required in the config.");
+            }
+            Destination = config.ArtifactResolutionService.Location;
         }
 
         public override XmlDocument ToXml()
@@ -75,20 +98,13 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        public async Task ResolveAsync(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            T saml2Request, CancellationToken? cancellationToken = null)
+        public async Task ResolveAsync(T saml2Request, CancellationToken? cancellationToken = null)
         {
-            var soapEnvelope = new Saml2SoapEnvelope<T>(this);
-
 #if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
 #endif            
-          
+
+            var soapEnvelope = new Saml2SoapEnvelope<T>(this);          
             var content = new StringContent(soapEnvelope.ToSoapXml().OuterXml, Encoding.UTF8, "text/xml; charset=\"utf-8\"");
             content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
             using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(Destination, content, cancellationToken.Value) : await httpClient.PostAsync(Destination, content))

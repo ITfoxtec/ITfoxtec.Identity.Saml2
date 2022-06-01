@@ -24,7 +24,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public Uri SingleLogoutDestination { get; set; }
 
-        public Uri ArtifactResolutionService { get; set; }        
+        public IndexedEndpoint ArtifactResolutionService { get; set; }        
 
         public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
@@ -68,5 +68,12 @@ namespace ITfoxtec.Identity.Saml2
         /// Sign type for the authn responses created by the library.
         /// </summary>
         public Saml2AuthnResponseSignTypes AuthnResponseSignType { get; set; } = Saml2AuthnResponseSignTypes.SignResponse;
+
+        public class IndexedEndpoint
+        {
+            public int Index { get; set; }
+
+            public Uri Location { get; set; }
+        }
     }
 }

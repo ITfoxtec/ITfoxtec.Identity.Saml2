@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Security.Authentication;
 using TestWebAppCoreArtifact.Identity;
 using System.Net.Http;
@@ -22,9 +21,9 @@ namespace TestWebAppCoreArtifact.Controllers
         private readonly Saml2Configuration config;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthController(IOptions<Saml2Configuration> configAccessor, IHttpClientFactory httpClientFactory)
+        public AuthController(Saml2Configuration config, IHttpClientFactory httpClientFactory)
         {
-            config = configAccessor.Value;
+            this.config = config;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -52,11 +51,11 @@ namespace TestWebAppCoreArtifact.Controllers
         public async Task<IActionResult> AssertionConsumerService()
         {       
             var binding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
-            var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
+            var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(httpClientFactory, config);
             binding.Unbind(Request.ToGenericHttpRequest(), saml2ArtifactResolve);
 
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
-            await saml2ArtifactResolve.ResolveAsync(httpClientFactory, saml2AuthnResponse);
+            await saml2ArtifactResolve.ResolveAsync(saml2AuthnResponse);
             if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
             {
                 throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");

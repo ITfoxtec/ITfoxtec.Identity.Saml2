@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestWebAppCoreAngularApi.Identity;
-using Microsoft.Extensions.Options;
 using System.Security.Authentication;
 
 namespace TestWebAppCoreAngularApi.Controllers
@@ -20,9 +19,9 @@ namespace TestWebAppCoreAngularApi.Controllers
         const string relayStateReturnUrl = "ReturnUrl";
         private readonly Saml2Configuration config;
 
-        public AuthController(IOptions<Saml2Configuration> configAccessor)
+        public AuthController(Saml2Configuration config)
         {
-            config = configAccessor.Value;
+            this.config = config;
         }
 
         [Route("Login")]

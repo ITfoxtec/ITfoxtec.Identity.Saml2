@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using TestIdPCore.Models;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
@@ -29,10 +28,10 @@ namespace TestIdPCore.Controllers
         private readonly Saml2Configuration config;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AuthController(IOptions<Settings> settingsAccessor, IOptions<Saml2Configuration> configAccessor, IHttpClientFactory httpClientFactory)
+        public AuthController(Settings settings, Saml2Configuration config, IHttpClientFactory httpClientFactory)
         {
-            settings = settingsAccessor.Value;
-            config = configAccessor.Value;
+            this.settings = settings;
+            this.config = config;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -143,19 +142,19 @@ namespace TestIdPCore.Controllers
         private async Task<RelyingParty> ValidateRelyingParty(string issuer)
         {
             using var cancellationTokenSource = new CancellationTokenSource(2 * 1000); // Cancel after 2 seconds.
-            await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingParty(rp, cancellationTokenSource)));
+            await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingPartyAsync(rp, cancellationTokenSource)));
 
             return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
 
-        private async Task LoadRelyingParty(RelyingParty rp, CancellationTokenSource cancellationTokenSource)
+        private async Task LoadRelyingPartyAsync(RelyingParty rp, CancellationTokenSource cancellationTokenSource)
         {
             try
             {
                 if (string.IsNullOrEmpty(rp.Issuer))
                 {
-                    var entityDescriptor = new EntityDescriptor();
-                    await entityDescriptor.ReadSPSsoDescriptorFromUrlAsync(httpClientFactory, new Uri(rp.Metadata), cancellationTokenSource.Token);
+                    var entityDescriptor = new EntityDescriptor(httpClientFactory);
+                    await entityDescriptor.ReadSPSsoDescriptorFromUrlAsync(new Uri(rp.Metadata), cancellationTokenSource.Token);
                     if (entityDescriptor.SPSsoDescriptor != null)
                     {
                         rp.Issuer = entityDescriptor.EntityId;

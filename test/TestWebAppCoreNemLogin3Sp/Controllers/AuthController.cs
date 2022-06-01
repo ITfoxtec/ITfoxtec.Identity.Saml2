@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestWebAppCoreNemLogin3Sp.Identity;
-using Microsoft.Extensions.Options;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Linq;
@@ -22,9 +21,9 @@ namespace TestWebAppCoreNemLogin3Sp.Controllers
         const string relayStateReturnUrl = "ReturnUrl";
         private readonly Saml2Configuration config;
 
-        public AuthController(IOptions<Saml2Configuration> configAccessor)
+        public AuthController(Saml2Configuration config)
         {
-            config = configAccessor.Value;
+            this.config = config;
         }
 
         [Route("Login")]

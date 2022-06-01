@@ -4,7 +4,6 @@ using ITfoxtec.Identity.Saml2.Schemas;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -18,9 +17,9 @@ namespace TestWebApp.Controllers
     {
         private readonly Saml2Configuration config;
 
-        public MetadataController(IOptions<Saml2Configuration> configAccessor)
+        public MetadataController(Saml2Configuration config)
         {
-            config = configAccessor.Value;
+            this.config = config;
         }
 
         public IActionResult Index()

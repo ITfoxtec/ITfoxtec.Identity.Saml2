@@ -8,6 +8,8 @@ using ITfoxtec.Identity.Saml2;
 using TestWebAppCoreAzureKeyVault.Identity;
 using Azure.Core;
 using Azure.Identity;
+using ITfoxtec.Identity.Saml2.MvcCore;
+using System.Net.Http;
 
 namespace TestWebAppCoreAzureKeyVault
 {
@@ -26,14 +28,13 @@ namespace TestWebAppCoreAzureKeyVault
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var saml2Configuration = new Saml2Configuration();
-            Configuration.Bind("Saml2", saml2Configuration);
-
+            var saml2Configuration = services.BindConfig<Saml2Configuration>(Configuration, "Saml2");
             services.AddSingleton(serviceProvider => 
             {
+                var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
                 var tokenCredential = serviceProvider.GetService<TokenCredential>();
 
-                return new Saml2ConfigurationLogic(saml2Configuration, tokenCredential)
+                return new Saml2ConfigurationLogic(httpClientFactory, saml2Configuration, tokenCredential)
                 {
                     Saml2IdPMetadata = Configuration["Saml2:IdPMetadata"],
                     AzureKeyVaultBaseUrl = Configuration["AzureKeyVault:BaseUrl"],
