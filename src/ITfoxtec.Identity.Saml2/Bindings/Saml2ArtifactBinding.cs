@@ -24,10 +24,12 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override Saml2ArtifactBinding<T> BindInternal(Saml2Request saml2ArtifactResolve, string messageName)
         {
-            base.BindInternal(saml2ArtifactResolve);
-
             if (!(saml2ArtifactResolve is Saml2ArtifactResolve<T>))
                 throw new ArgumentException("Saml2Request is not a Saml2ArtifactResolve");
+
+            base.BindInternal(saml2ArtifactResolve, false);
+
+            (saml2ArtifactResolve as Saml2ArtifactResolve<T>).CreateArtifact();
 
             var requestQueryString = string.Join("&", RequestQueryString(saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName));
             RedirectLocation = new Uri(string.Join(saml2ArtifactResolve.Destination.OriginalString.Contains('?') ? "&" : "?", saml2ArtifactResolve.Destination.OriginalString, requestQueryString));
@@ -59,24 +61,24 @@ namespace ITfoxtec.Identity.Saml2
         /// used, the HTTP GET method is used to deliver the message, while POST is used with form encoding. 
         /// All endpoints that support this binding MUST support both techniques.
         /// </summary>
-        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2ArtifactResolve, string messageName, bool validateXmlSignature, bool detectReplayedTokens)
+        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!(saml2ArtifactResolve is Saml2ArtifactResolve<T>))
                 throw new ArgumentException("Saml2Request is not a Saml2ArtifactResolve");
 
             if ("GET".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
             {
-                return ReadGet(request, saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName, validateXmlSignature, detectReplayedTokens);
+                return ReadGet(request, saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName, validate, detectReplayedTokens);
             }
             else if ("POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
             {
-                return ReadPost(request, saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName, validateXmlSignature, detectReplayedTokens);
+                return ReadPost(request, saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName, validate, detectReplayedTokens);
             }
             else
                 throw new InvalidSaml2BindingException("Not HTTP GET or HTTP POST Method.");
         }
 
-        private Saml2Request ReadGet(HttpRequest request, Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName, bool validateXmlSignature, bool detectReplayedTokens)
+        private Saml2Request ReadGet(HttpRequest request, Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
@@ -87,10 +89,14 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             saml2ArtifactResolve.Artifact = request.Query[messageName];
+            if (validate)
+            {
+                saml2ArtifactResolve.ValidateArtifact();
+            }
             return saml2ArtifactResolve;
         }
 
-        private Saml2Request ReadPost(HttpRequest request, Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName, bool validateXmlSignature, bool detectReplayedTokens)
+        private Saml2Request ReadPost(HttpRequest request, Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!request.Form.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Form does not contain " + messageName);
@@ -101,6 +107,10 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             saml2ArtifactResolve.Artifact = request.Form[messageName];
+            if (validate)
+            {
+                saml2ArtifactResolve.ValidateArtifact();
+            }
             return saml2ArtifactResolve;
         }
 

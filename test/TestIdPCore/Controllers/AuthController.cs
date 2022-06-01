@@ -99,6 +99,18 @@ namespace TestIdPCore.Controllers
 
         private IActionResult LoginResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
         {
+            if (relyingParty.UseAcsArtifact)
+            {
+                return LoginArtifactResponse(inResponseTo, status, relayState, relyingParty, sessionIndex, claims);
+            }
+            else
+            {
+                return LoginPostResponse(inResponseTo, status, relayState, relyingParty, sessionIndex, claims);
+            }
+        }
+
+        private IActionResult LoginPostResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
+        {
             var responsebinding = new Saml2PostBinding();
             responsebinding.RelayState = relayState;
 
@@ -106,7 +118,32 @@ namespace TestIdPCore.Controllers
             {
                 InResponseTo = inResponseTo,
                 Status = status,
-                Destination = relyingParty.SingleSignOnDestination,
+                Destination = relyingParty.AcsDestination,
+            };
+            if (status == Saml2StatusCodes.Success && claims != null)
+            {
+                saml2AuthnResponse.SessionIndex = sessionIndex;
+
+                var claimsIdentity = new ClaimsIdentity(claims);
+                saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single(), NameIdentifierFormats.Persistent);
+                //saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single());
+                saml2AuthnResponse.ClaimsIdentity = claimsIdentity;
+
+                var token = saml2AuthnResponse.CreateSecurityToken(relyingParty.Issuer, subjectConfirmationLifetime: 5, issuedTokenLifetime: 60);
+            }
+
+            return responsebinding.Bind(saml2AuthnResponse).ToActionResult();
+        }
+        private IActionResult LoginArtifactResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
+        {
+            var responsebinding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
+            responsebinding.RelayState = relayState;
+
+            var saml2AuthnResponse = new Saml2AuthnResponse(config)
+            {
+                InResponseTo = inResponseTo,
+                Status = status,
+                Destination = relyingParty.AcsDestination,
             };
             if (status == Saml2StatusCodes.Success && claims != null)
             {
@@ -132,7 +169,7 @@ namespace TestIdPCore.Controllers
             {
                 InResponseTo = inResponseTo,
                 Status = status,
-                Destination = relyingParty.SingleLogoutResponseDestination,
+                Destination = relyingParty.SingleLogoutDestination,
                 SessionIndex = sessionIndex
             };
 
@@ -158,9 +195,9 @@ namespace TestIdPCore.Controllers
                     if (entityDescriptor.SPSsoDescriptor != null)
                     {
                         rp.Issuer = entityDescriptor.EntityId;
-                        rp.SingleSignOnDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(a => a.IsDefault).OrderBy(a => a.Index).First().Location;
+                        rp.AcsDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(a => a.IsDefault).OrderBy(a => a.Index).First().Location;
                         var singleLogoutService = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First();
-                        rp.SingleLogoutResponseDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
+                        rp.SingleLogoutDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
                         rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
                     }
                     else

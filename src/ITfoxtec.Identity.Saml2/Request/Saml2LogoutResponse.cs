@@ -42,9 +42,9 @@ namespace ITfoxtec.Identity.Saml2
             return XmlDocument;
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
+        protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature, detectReplayedTokens);
+            base.Read(xml, validate, detectReplayedTokens);
 
             SessionIndex = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.SessionIndex, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
         }

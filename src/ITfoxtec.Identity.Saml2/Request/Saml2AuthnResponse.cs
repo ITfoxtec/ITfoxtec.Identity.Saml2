@@ -234,9 +234,9 @@ namespace ITfoxtec.Identity.Saml2
             XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, certificateIncludeOption);
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
+        protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature, detectReplayedTokens);
+            base.Read(xml, validate, detectReplayedTokens);
 
             if (Status == Schemas.Saml2StatusCodes.Success)
             {

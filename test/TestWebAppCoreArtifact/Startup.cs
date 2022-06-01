@@ -44,7 +44,7 @@ namespace TestWebAppCoreArtifact
                     saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;
                     //saml2Configuration.SingleSignOnDestination = entityDescriptor.IdPSsoDescriptor.SingleSignOnServices.First().Location;
                     saml2Configuration.SingleLogoutDestination = entityDescriptor.IdPSsoDescriptor.SingleLogoutServices.First().Location;
-                    saml2Configuration.ArtifactResolutionService = entityDescriptor.IdPSsoDescriptor.ArtifactResolutionService.Select(s => new Saml2Configuration.IndexedEndpoint { Index = s.Index, Location = s.Location }).First();
+                    saml2Configuration.ArtifactResolutionService = entityDescriptor.IdPSsoDescriptor.ArtifactResolutionService.Select(s => new Saml2IndexedEndpoint { Index = s.Index, Location = s.Location }).First();
                     foreach (var signingCertificate in entityDescriptor.IdPSsoDescriptor.SigningCertificates)
                     {
                         if (signingCertificate.IsValidLocalTime())

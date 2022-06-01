@@ -30,16 +30,16 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
+        protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature, detectReplayedTokens);
+            base.Read(xml, validate, detectReplayedTokens);
 
             if (Status == Saml2StatusCodes.Success)
             {
                 if (Request is Saml2AuthnResponse authnResponse)
                 {
                     var authnReponse = GetAuthnReponse();
-                    authnResponse.Read(authnReponse.OuterXml, Config.SignatureValidationCertificates != null && validateXmlSignature);
+                    authnResponse.Read(authnReponse.OuterXml, Config.SignatureValidationCertificates != null && validate);
                 }
                 else
                 {

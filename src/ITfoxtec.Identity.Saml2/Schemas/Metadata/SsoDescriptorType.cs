@@ -50,8 +50,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// [Optional]
         /// Zero or more elements of type IndexedEndpointType that describe indexed endpoints that
-        /// support the Artifact Resolution profile defined in [SAMLProf]. The ResponseLocation attribute
-        ///MUST be omitted.
+        /// support the Artifact Resolution profile defined in [SAMLProf]. 
+        /// The ResponseLocation attribute MUST be omitted.
         /// </summary>
         public IEnumerable<ArtifactResolutionService> ArtifactResolutionService { get; set; }
 

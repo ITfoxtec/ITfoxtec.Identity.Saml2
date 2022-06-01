@@ -63,6 +63,19 @@ namespace ITfoxtec.Identity.Saml2
             Destination = config.ArtifactResolutionService.Location;
         }
 
+        internal void CreateArtifact()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void ValidateArtifact()
+        {
+            if (Config.ValidateArtifact)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public override XmlDocument ToXml()
         {
             var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);

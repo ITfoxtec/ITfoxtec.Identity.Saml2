@@ -41,7 +41,7 @@ namespace ITfoxtec.Identity.Saml2
             return BindInternal(saml2ArtifactResolve, Saml2Constants.Message.SamlResponse);
         }
 
-        protected virtual Saml2Binding<T> BindInternal(Saml2Request saml2RequestResponse)
+        protected virtual Saml2Binding<T> BindInternal(Saml2Request saml2RequestResponse, bool createXml = true)
         {
             if (saml2RequestResponse == null)
                 throw new ArgumentNullException(nameof(saml2RequestResponse));
@@ -57,11 +57,14 @@ namespace ITfoxtec.Identity.Saml2
                 }
             }
 
-            XmlDocument = saml2RequestResponse.ToXml();
+            if (createXml)
+            {
+                XmlDocument = saml2RequestResponse.ToXml();
 
 #if DEBUG
-            Debug.WriteLine("Saml2P: " + XmlDocument.OuterXml);
+                Debug.WriteLine("Saml2P: " + XmlDocument.OuterXml);
 #endif
+            }
             return this;
         }
 
@@ -118,7 +121,7 @@ namespace ITfoxtec.Identity.Saml2
             return Read(request, saml2ArtifactResolve, Saml2Constants.Message.SamlResponse, false, false);
         }
 
-        protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validateXmlSignature, bool detectReplayedTokens);
+        protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validate, bool detectReplayedTokens);
 
         public bool IsRequest(HttpRequest request)
         {
