@@ -8,6 +8,7 @@ using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -80,7 +81,7 @@ namespace ITfoxtec.Identity.Saml2
 #else
             HttpClient httpClient,
 #endif
-            T saml2Request)
+            T saml2Request, CancellationToken? cancellationToken = null)
         {
             var soapEnvelope = new Saml2SoapEnvelope<T>(this);
 
@@ -90,12 +91,16 @@ namespace ITfoxtec.Identity.Saml2
           
             var content = new StringContent(soapEnvelope.ToSoapXml().OuterXml, Encoding.UTF8, "text/xml; charset=\"utf-8\"");
             content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
-            using (var response = await httpClient.PostAsync(Destination, content))
+            using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(Destination, content, cancellationToken.Value) : await httpClient.PostAsync(Destination, content))
             {
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
+#if NET
+                        var result = cancellationToken.HasValue ? await response.Content.ReadAsStringAsync(cancellationToken.Value) : await response.Content.ReadAsStringAsync();
+#else
                         var result = await response.Content.ReadAsStringAsync();
+#endif
                         soapEnvelope.FromSoapXml(result);
 
                         var ares = new Saml2ArtifactResponse<T>(Config, saml2Request);
