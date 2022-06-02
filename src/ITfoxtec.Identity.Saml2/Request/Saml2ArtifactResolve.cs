@@ -22,12 +22,6 @@ namespace ITfoxtec.Identity.Saml2
     {
         const string elementName = Saml2Constants.Message.ArtifactResolve;
 
-#if NET || NETCORE
-        private readonly IHttpClientFactory httpClientFactory;
-#else
-        private readonly HttpClient httpClient;
-#endif
-
         /// <summary>
         /// [Optional]
         /// Default EndCertOnly (Only the end certificate is included in the X.509 chain information).
@@ -41,21 +35,9 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public string Artifact { get; set; }
 
-        public Saml2ArtifactResolve(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-#endif
-            Saml2Configuration config) : base(config)
+        public Saml2ArtifactResolve(Saml2Configuration config) : base(config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
-
-#if NET || NETCORE
-            this.httpClientFactory = httpClientFactory;
-#else
-            this.httpClient = httpClient;
-#endif  
 
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
             if (config.ArtifactResolutionService is null || config.ArtifactResolutionService.Location is null)
@@ -144,11 +126,17 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        public async Task ResolveAsync(T saml2Request, CancellationToken? cancellationToken = null)
+        public async Task ResolveAsync(
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+# endif
+            T saml2Request, CancellationToken? cancellationToken = null)
         {
 #if NET || NETCORE
             var httpClient = httpClientFactory.CreateClient();
-#endif            
+#endif
 
             var soapEnvelope = new Saml2SoapEnvelope<T>(this);          
             var content = new StringContent(soapEnvelope.ToSoapXml().OuterXml, Encoding.UTF8, "text/xml; charset=\"utf-8\"");

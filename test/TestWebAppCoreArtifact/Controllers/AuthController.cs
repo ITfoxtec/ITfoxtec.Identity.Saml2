@@ -51,11 +51,11 @@ namespace TestWebAppCoreArtifact.Controllers
         public async Task<IActionResult> AssertionConsumerService()
         {       
             var binding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
-            var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(httpClientFactory, config);
+            var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
             binding.Unbind(Request.ToGenericHttpRequest(), saml2ArtifactResolve);
 
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
-            await saml2ArtifactResolve.ResolveAsync(saml2AuthnResponse);
+            await saml2ArtifactResolve.ResolveAsync(httpClientFactory, saml2AuthnResponse);
             if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
             {
                 throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");

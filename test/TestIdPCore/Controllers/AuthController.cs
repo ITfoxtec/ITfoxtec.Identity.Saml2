@@ -65,7 +65,7 @@ namespace TestIdPCore.Controllers
         [Route("Artifact")]
         public async Task<IActionResult> Artifact()
         {
-
+            
             throw new NotImplementedException();
         }
 
@@ -149,6 +149,8 @@ namespace TestIdPCore.Controllers
             var responsebinding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
             responsebinding.RelayState = relayState;
 
+            var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
+
             var saml2AuthnResponse = new Saml2AuthnResponse(config)
             {
                 InResponseTo = inResponseTo,
@@ -167,7 +169,7 @@ namespace TestIdPCore.Controllers
                 var token = saml2AuthnResponse.CreateSecurityToken(relyingParty.Issuer, subjectConfirmationLifetime: 5, issuedTokenLifetime: 60);
             }
 
-            return responsebinding.Bind(saml2AuthnResponse).ToActionResult();
+            return responsebinding.Bind(saml2ArtifactResolve).ToActionResult();
         }
 
         private IActionResult LogoutResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, string sessionIndex, RelyingParty relyingParty)
@@ -200,8 +202,8 @@ namespace TestIdPCore.Controllers
             {
                 if (string.IsNullOrEmpty(rp.Issuer))
                 {
-                    var entityDescriptor = new EntityDescriptor(httpClientFactory);
-                    await entityDescriptor.ReadSPSsoDescriptorFromUrlAsync(new Uri(rp.Metadata), cancellationTokenSource.Token);
+                    var entityDescriptor = new EntityDescriptor();
+                    await entityDescriptor.ReadSPSsoDescriptorFromUrlAsync(httpClientFactory, new Uri(rp.Metadata), cancellationTokenSource.Token);
                     if (entityDescriptor.SPSsoDescriptor != null)
                     {
                         rp.Issuer = entityDescriptor.EntityId;
