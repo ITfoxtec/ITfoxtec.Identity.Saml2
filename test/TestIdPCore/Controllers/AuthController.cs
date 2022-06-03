@@ -14,6 +14,7 @@ using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Concurrent;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -27,6 +28,9 @@ namespace TestIdPCore.Controllers
         private readonly Settings settings;
         private readonly Saml2Configuration config;
         private readonly IHttpClientFactory httpClientFactory;
+
+        // List of Artifacts for test purposes.
+        private static ConcurrentDictionary<string, Saml2AuthnResponse> artifactSaml2AuthnResponseCache = new ConcurrentDictionary<string, Saml2AuthnResponse>();
 
         public AuthController(Settings settings, Saml2Configuration config, IHttpClientFactory httpClientFactory)
         {
@@ -63,10 +67,55 @@ namespace TestIdPCore.Controllers
         }
         
         [Route("Artifact")]
-        public async Task<IActionResult> Artifact()
+        public IActionResult Artifact()
         {
+            var soapEnvelope = new Saml2SoapEnvelope();
+
+            var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
+            soapEnvelope.Unbind(Request.ToGenericHttpRequest(readBodyAsString: true), saml2ArtifactResolve);
             
-            throw new NotImplementedException();
+            if (artifactSaml2AuthnResponseCache.Remove(saml2ArtifactResolve.Artifact, out Saml2AuthnResponse saml2AuthnResponse))
+            {
+                throw new Exception($"Saml2AuthnResponse not found by Artifact '{saml2ArtifactResolve.Artifact}' in the cache.");
+            }
+
+            var saml2ArtifactResponse = new Saml2ArtifactResponse(config, saml2AuthnResponse);
+            soapEnvelope.Bind(saml2ArtifactResponse);
+            return soapEnvelope.ToActionResult();
+
+
+            //var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
+
+            //var saml2AuthnResponse = artifactSaml2AuthnResponseCache[saml2ArtifactResolve.Artifact];
+            //if (saml2AuthnResponse == null)
+            //{
+            //    throw new Exception($"Saml2AuthnResponse not found by Artifact '{saml2ArtifactResolve.Artifact}' in the cache.");
+            //}
+
+            ////var saml2AuthnResponse = new Saml2AuthnResponse(config);
+            //await saml2ArtifactResolve.ResolveResponseAsync(httpClientFactory, saml2AuthnResponse);
+            //if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
+            //{
+            //    throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
+            //}
+            //await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
+
+            //var relayStateQuery = binding.GetRelayStateQuery();
+            //var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
+            //return Redirect(returnUrl);
+
+
+
+            ////var responsebinding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
+
+            ////var saml2SoapEnvelope = new Saml2SoapEnvelope<Saml2AuthnResponse>(config);
+            ////responsebinding.Unbind(Request.ToGenericHttpRequest(), saml2SoapEnvelope);
+
+
+
+            //////artifactSaml2AuthnResponseCache[saml2ArtifactResolve.Artifact] = saml2AuthnResponse;
+
+            ////throw new NotImplementedException();
         }
 
 
@@ -146,10 +195,11 @@ namespace TestIdPCore.Controllers
         }
         private IActionResult LoginArtifactResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
         {
-            var responsebinding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
+            var responsebinding = new Saml2ArtifactBinding();
             responsebinding.RelayState = relayState;
 
-            var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
+            var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
+            responsebinding.Bind(saml2ArtifactResolve);
 
             var saml2AuthnResponse = new Saml2AuthnResponse(config)
             {
@@ -168,8 +218,9 @@ namespace TestIdPCore.Controllers
 
                 var token = saml2AuthnResponse.CreateSecurityToken(relyingParty.Issuer, subjectConfirmationLifetime: 5, issuedTokenLifetime: 60);
             }
+            artifactSaml2AuthnResponseCache[saml2ArtifactResolve.Artifact] = saml2AuthnResponse;
 
-            return responsebinding.Bind(saml2ArtifactResolve).ToActionResult();
+            return responsebinding.ToActionResult();
         }
 
         private IActionResult LogoutResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, string sessionIndex, RelyingParty relyingParty)

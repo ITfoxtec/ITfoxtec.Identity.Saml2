@@ -1,33 +1,114 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas;
+﻿using ITfoxtec.Identity.Saml2.Http;
+using ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2SoapEnvelope<T> where T : Saml2Request
+    public class Saml2SoapEnvelope : Saml2Binding<Saml2SoapEnvelope>
     {
-        public Saml2SoapEnvelope(Saml2ArtifactResolve<T> saml2ArtifactResolve)
+        /// <summary>
+        /// SOAP response XML.
+        /// </summary>
+        public string SoapResponseXml { get; set; }
+
+        protected override Saml2SoapEnvelope BindInternal(Saml2Request saml2Request, string messageName)
         {
-            RequestBody = saml2ArtifactResolve.ToXml();
+            if (!(saml2Request is Saml2ArtifactResponse))
+                throw new ArgumentException("Only Saml2ArtifactResponse is supported");
+
+            BindInternal(saml2Request);
+
+            SoapResponseXml = ToSoapXml().OuterXml;
+            return this;
         }
 
-        private XmlDocument RequestBody { get; set; }
+        protected override Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2Request, string messageName)
+        {
+            UnbindInternal(request, saml2Request);
 
-        public XmlDocument ResponseBody { get; private set; }
+            return Read(request, saml2Request, messageName, true, true);
+        }
 
-        public XmlDocument ToSoapXml()
+        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2Request, string messageName, bool validate, bool detectReplayedTokens)
+        {
+            if (!(saml2Request is Saml2ArtifactResolve saml2ArtifactResolve))
+                throw new ArgumentException("Only Saml2ArtifactResolve is supported");
+
+            saml2ArtifactResolve.Read(FromSoapXml(request.Body).OuterXml, validate, detectReplayedTokens);
+            XmlDocument = saml2ArtifactResolve.XmlDocument;
+            return saml2ArtifactResolve;
+        }
+
+        protected override bool IsRequestResponseInternal(HttpRequest request, string messageName)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual async Task ResolveAsync(
+#if NET || NETCORE
+            IHttpClientFactory httpClientFactory,
+#else
+            HttpClient httpClient,
+# endif
+            Saml2ArtifactResolve saml2ArtifactResolve, Saml2Request saml2Request, CancellationToken? cancellationToken = null) 
+        {
+#if NET || NETCORE
+            var httpClient = httpClientFactory.CreateClient();
+#endif
+
+            XmlDocument = saml2ArtifactResolve.ToXml();
+
+            var content = new StringContent(ToSoapXml().OuterXml, Encoding.UTF8, "text/xml; charset=\"utf-8\"");
+            content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
+            using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(saml2ArtifactResolve.Destination, content, cancellationToken.Value) : await httpClient.PostAsync(saml2ArtifactResolve.Destination, content))
+            {
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.OK:
+#if NET
+                        var result = cancellationToken.HasValue ? await response.Content.ReadAsStringAsync(cancellationToken.Value) : await response.Content.ReadAsStringAsync();
+#else
+                        var result = await response.Content.ReadAsStringAsync();
+#endif
+
+                        var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request)
+                        {
+                            //TODO use SOAP error in status
+                            Status = Saml2StatusCodes.Success
+                        };
+                        ares.Read(FromSoapXml(result).OuterXml, true, true);
+                        break;
+
+                    default:
+                        throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{saml2ArtifactResolve.Destination}'.");
+                }
+            }
+        }
+
+        protected virtual XmlDocument ToSoapXml()
         {
             var envelope = new XElement(Saml2Constants.SoapEnvironmentNamespaceX + Saml2Constants.Message.Envelope);
 
             envelope.Add(GetXContent());
 
-            XmlDocument xmldoc = envelope.ToXmlDocument();
-            return xmldoc;
+            return envelope.ToXmlDocument();
         }
 
-        public void FromSoapXml(string xml)
+        protected IEnumerable<XObject> GetXContent()
+        {
+            yield return new XAttribute(Saml2Constants.SoapEnvironmentNamespaceNameX, Saml2Constants.SoapEnvironmentNamespace.OriginalString);
+            yield return new XElement(Saml2Constants.SoapEnvironmentNamespaceX + Saml2Constants.Message.Body, XmlDocument.ToXDocument().Root);
+        }
+
+        protected virtual XmlDocument FromSoapXml(string xml)
         {
             var xmlDoc = xml.ToXmlDocument();
 
@@ -42,12 +123,11 @@ namespace ITfoxtec.Identity.Saml2
             {
                 var faultcode = GetNodeByLocalname(faultBody, "faultcode");
                 var faultstring = GetNodeByLocalname(faultBody, "faultstring");
-                throw new Saml2RequestException("Soap Error: " + faultcode + "\n" + faultstring);
+                throw new Saml2RequestException("SAML 2.0 SOAP Error: " + faultcode + "\n" + faultstring);
             }
 
-            ResponseBody = bodyList[0].InnerXml.ToXmlDocument();
+            return bodyList[0].InnerXml.ToXmlDocument();
         }
-
 
         private XmlNodeList GetNodesByLocalname(XmlNode xe, string localName)
         {
@@ -57,12 +137,6 @@ namespace ITfoxtec.Identity.Saml2
         private XmlNode GetNodeByLocalname(XmlNode xe, string localName)
         {
             return xe.SelectSingleNode(string.Format("//*[local-name()='{0}']", localName));
-        }
-
-        protected IEnumerable<XObject> GetXContent()
-        {
-            yield return new XAttribute(Saml2Constants.SoapEnvironmentNamespaceNameX, Saml2Constants.SoapEnvironmentNamespace.OriginalString);
-            yield return new XElement(Saml2Constants.SoapEnvironmentNamespaceX + Saml2Constants.Message.Body, RequestBody.ToXDocument().Root);
         }
     }
 }

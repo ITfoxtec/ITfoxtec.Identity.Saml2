@@ -7,7 +7,7 @@ using ITfoxtec.Identity.Saml2.Http;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2ArtifactBinding<T> : Saml2Binding<Saml2ArtifactBinding<T>> where T : Saml2Request
+    public class Saml2ArtifactBinding : Saml2Binding<Saml2ArtifactBinding> 
     {
         /// <summary>
         /// [Optional]
@@ -22,22 +22,22 @@ namespace ITfoxtec.Identity.Saml2
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
         }
 
-        protected override Saml2ArtifactBinding<T> BindInternal(Saml2Request saml2ArtifactResolve, string messageName)
+        protected override Saml2ArtifactBinding BindInternal(Saml2Request saml2Request, string messageName)
         {
-            if (!(saml2ArtifactResolve is Saml2ArtifactResolve<T>))
-                throw new ArgumentException("Saml2Request is not a Saml2ArtifactResolve");
+            if (!(saml2Request is Saml2ArtifactResolve saml2ArtifactResolve))
+                throw new ArgumentException("Only Saml2ArtifactResolve is supported");
 
             base.BindInternal(saml2ArtifactResolve, false);
 
-            (saml2ArtifactResolve as Saml2ArtifactResolve<T>).CreateArtifact();
+            saml2ArtifactResolve.CreateArtifact();
 
-            var requestQueryString = string.Join("&", RequestQueryString(saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName));
+            var requestQueryString = string.Join("&", RequestQueryString(saml2ArtifactResolve, messageName));
             RedirectLocation = new Uri(string.Join(saml2ArtifactResolve.Destination.OriginalString.Contains('?') ? "&" : "?", saml2ArtifactResolve.Destination.OriginalString, requestQueryString));
 
             return this;
         }
 
-        private IEnumerable<string> RequestQueryString(Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName)
+        private IEnumerable<string> RequestQueryString(Saml2ArtifactResolve saml2ArtifactResolve, string messageName)
         {
             yield return string.Join("=", messageName, Uri.EscapeDataString(saml2ArtifactResolve.Artifact));
 
@@ -47,11 +47,11 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected override Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2ArtifactResolve, string messageName)
+        protected override Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2Request, string messageName)
         {
-            UnbindInternal(request, saml2ArtifactResolve);
+            UnbindInternal(request, saml2Request);
 
-            return Read(request, saml2ArtifactResolve, messageName, true, true);
+            return Read(request, saml2Request, messageName, true, true);
         }
 
         /// <summary>
@@ -61,24 +61,24 @@ namespace ITfoxtec.Identity.Saml2
         /// used, the HTTP GET method is used to deliver the message, while POST is used with form encoding. 
         /// All endpoints that support this binding MUST support both techniques.
         /// </summary>
-        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
+        protected override Saml2Request Read(HttpRequest request, Saml2Request saml2Request, string messageName, bool validate, bool detectReplayedTokens)
         {
-            if (!(saml2ArtifactResolve is Saml2ArtifactResolve<T>))
-                throw new ArgumentException("Saml2Request is not a Saml2ArtifactResolve");
+            if (!(saml2Request is Saml2ArtifactResolve saml2ArtifactResolve))
+                throw new ArgumentException("Only Saml2ArtifactResolve is supported");
 
             if ("GET".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
             {
-                return ReadGet(request, saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName, validate, detectReplayedTokens);
+                return ReadGet(request, saml2ArtifactResolve, messageName, validate, detectReplayedTokens);
             }
             else if ("POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
             {
-                return ReadPost(request, saml2ArtifactResolve as Saml2ArtifactResolve<T>, messageName, validate, detectReplayedTokens);
+                return ReadPost(request, saml2ArtifactResolve, messageName, validate, detectReplayedTokens);
             }
             else
                 throw new InvalidSaml2BindingException("Not HTTP GET or HTTP POST Method.");
         }
 
-        private Saml2Request ReadGet(HttpRequest request, Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
+        private Saml2Request ReadGet(HttpRequest request, Saml2ArtifactResolve saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
@@ -96,7 +96,7 @@ namespace ITfoxtec.Identity.Saml2
             return saml2ArtifactResolve;
         }
 
-        private Saml2Request ReadPost(HttpRequest request, Saml2ArtifactResolve<T> saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
+        private Saml2Request ReadPost(HttpRequest request, Saml2ArtifactResolve saml2ArtifactResolve, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!request.Form.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Form does not contain " + messageName);

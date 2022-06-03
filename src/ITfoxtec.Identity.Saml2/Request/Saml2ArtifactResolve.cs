@@ -4,11 +4,6 @@ using System.Xml.Linq;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Threading;
 using ITfoxtec.Identity.Saml2.Configuration;
 using System.Linq;
 using ITfoxtec.Identity.Saml2.Util;
@@ -18,7 +13,7 @@ namespace ITfoxtec.Identity.Saml2
     /// <summary>
     /// Saml2 Artifact Resolve.
     /// </summary>
-    public class Saml2ArtifactResolve<T> : Saml2Request where T : Saml2Request
+    public class Saml2ArtifactResolve : Saml2Request
     {
         const string elementName = Saml2Constants.Message.ArtifactResolve;
 
@@ -48,9 +43,9 @@ namespace ITfoxtec.Identity.Saml2
         }
 
         /// <summary>
-        /// Create SAML V2.0 defined artifact type of type code 0x0004.
+        /// Create SAML V2.0 defined artifact type with type code 0x0004.
         /// </summary>
-        internal void CreateArtifact()
+        protected internal virtual void CreateArtifact()
         {
             var artifactBytes = new byte[44];
             artifactBytes[1] = 4; // 0x0004
@@ -66,11 +61,19 @@ namespace ITfoxtec.Identity.Saml2
             Artifact = Uri.EscapeDataString(Convert.ToBase64String(artifactBytes));
         }
 
-        internal void ValidateArtifact()
+        /// <summary>
+        /// Validate SAML V2.0 defined artifact type with type code 0x0004.
+        /// </summary>
+        protected internal virtual void ValidateArtifact()
         {
             if (Config.ValidateArtifact)
             {
                 var artifactBytes = Convert.FromBase64String(Artifact);
+
+                if (artifactBytes[1] != 4)
+                {
+                    throw new Saml2RequestException("Invalid Artifact type, not type code 0x0004. Artifact validation can be disabled in config.");
+                }
 
                 if (string.IsNullOrEmpty(Config.AllowedIssuer))
                 {
@@ -94,7 +97,6 @@ namespace ITfoxtec.Identity.Saml2
         public override XmlDocument ToXml()
         {
             var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
-
             envelope.Add(base.GetXContent());
             envelope.Add(GetXContent());
 
@@ -118,48 +120,18 @@ namespace ITfoxtec.Identity.Saml2
             yield return new XElement(Saml2Constants.ProtocolNamespaceX + Saml2Constants.Message.Artifact, Artifact);
         }
 
+        protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
+        {
+            base.Read(xml, validate, detectReplayedTokens);
+
+            Artifact = XmlDocument.DocumentElement[Saml2Constants.Message.Artifact, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<string>();            
+        }
+
         protected override void ValidateElementName()
         {
             if (XmlDocument.DocumentElement.LocalName != elementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Artifact Resolve Request.");
-            }
-        }
-
-        public async Task ResolveAsync(
-#if NET || NETCORE
-            IHttpClientFactory httpClientFactory,
-#else
-            HttpClient httpClient,
-# endif
-            T saml2Request, CancellationToken? cancellationToken = null)
-        {
-#if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
-#endif
-
-            var soapEnvelope = new Saml2SoapEnvelope<T>(this);          
-            var content = new StringContent(soapEnvelope.ToSoapXml().OuterXml, Encoding.UTF8, "text/xml; charset=\"utf-8\"");
-            content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
-            using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(Destination, content, cancellationToken.Value) : await httpClient.PostAsync(Destination, content))
-            {
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
-#if NET
-                        var result = cancellationToken.HasValue ? await response.Content.ReadAsStringAsync(cancellationToken.Value) : await response.Content.ReadAsStringAsync();
-#else
-                        var result = await response.Content.ReadAsStringAsync();
-#endif
-                        soapEnvelope.FromSoapXml(result);
-
-                        var ares = new Saml2ArtifactResponse<T>(Config, saml2Request);
-                        ares.Read(soapEnvelope.ResponseBody.OuterXml, true);
-                        break;
-
-                    default:
-                        throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{Destination}'.");
-                }
             }
         }
     }
