@@ -125,9 +125,9 @@ namespace ITfoxtec.Identity.Saml2
                 return (request.Form?.AllKeys?.Contains(messageName)).GetValueOrDefault(false);
             }
             else
+            {
                 throw new InvalidSaml2BindingException("Not HTTP GET or HTTP POST Method.");
-
-            
+            }
         }
     }
 }

@@ -82,44 +82,7 @@ namespace TestIdPCore.Controllers
             var saml2ArtifactResponse = new Saml2ArtifactResponse(config, saml2AuthnResponse);
             soapEnvelope.Bind(saml2ArtifactResponse);
             return soapEnvelope.ToActionResult();
-
-
-            //var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
-
-            //var saml2AuthnResponse = artifactSaml2AuthnResponseCache[saml2ArtifactResolve.Artifact];
-            //if (saml2AuthnResponse == null)
-            //{
-            //    throw new Exception($"Saml2AuthnResponse not found by Artifact '{saml2ArtifactResolve.Artifact}' in the cache.");
-            //}
-
-            ////var saml2AuthnResponse = new Saml2AuthnResponse(config);
-            //await saml2ArtifactResolve.ResolveResponseAsync(httpClientFactory, saml2AuthnResponse);
-            //if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
-            //{
-            //    throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
-            //}
-            //await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
-
-            //var relayStateQuery = binding.GetRelayStateQuery();
-            //var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
-            //return Redirect(returnUrl);
-
-
-
-            ////var responsebinding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
-
-            ////var saml2SoapEnvelope = new Saml2SoapEnvelope<Saml2AuthnResponse>(config);
-            ////responsebinding.Unbind(Request.ToGenericHttpRequest(), saml2SoapEnvelope);
-
-
-
-            //////artifactSaml2AuthnResponseCache[saml2ArtifactResolve.Artifact] = saml2AuthnResponse;
-
-            ////throw new NotImplementedException();
         }
-
-
-
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()

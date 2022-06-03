@@ -67,22 +67,6 @@ namespace TestWebAppCoreArtifact.Controllers
             var relayStateQuery = binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
             return Redirect(returnUrl);
-
-            //var binding = new Saml2ArtifactBinding<Saml2AuthnResponse>();
-            //var saml2ArtifactResolve = new Saml2ArtifactResolve<Saml2AuthnResponse>(config);
-            //binding.Unbind(Request.ToGenericHttpRequest(), saml2ArtifactResolve);
-
-            //var saml2AuthnResponse = new Saml2AuthnResponse(config);
-            //await saml2ArtifactResolve.ResolveAsync(httpClientFactory, saml2AuthnResponse);
-            //if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
-            //{
-            //    throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
-            //}
-            //await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
-
-            //var relayStateQuery = binding.GetRelayStateQuery();
-            //var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
-            //return Redirect(returnUrl);
         }
 
         [HttpPost("Logout")]
