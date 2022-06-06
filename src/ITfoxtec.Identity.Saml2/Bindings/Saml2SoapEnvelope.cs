@@ -87,13 +87,10 @@ namespace ITfoxtec.Identity.Saml2
                         var result = await response.Content.ReadAsStringAsync();
 #endif
 
-                        var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request)
-                        {
-                            //TODO use SOAP error in status
-                            Status = Saml2StatusCodes.Success,                            
-                        };
+                        var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
                         SetSignatureValidationCertificates(ares);                        
                         ares.Read(FromSoapXml(result).OuterXml, ares.SignatureValidationCertificates?.Count() > 0, true);
+                        ares.Status = Saml2StatusCodes.Success;
                         break;
 
                     default:
@@ -132,7 +129,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 var faultcode = GetNodeByLocalname(faultBody, "faultcode");
                 var faultstring = GetNodeByLocalname(faultBody, "faultstring");
-                throw new Saml2RequestException("SAML 2.0 SOAP Error: " + faultcode + "\n" + faultstring);
+                throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultcode + "\n" + faultstring);
             }
 
             return bodyList[0].InnerXml.ToXmlDocument();
