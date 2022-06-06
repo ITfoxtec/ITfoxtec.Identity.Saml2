@@ -8,7 +8,7 @@ namespace ITfoxtec.Identity.Saml2
 {
     public class Saml2ArtifactResponse : Saml2Response
     {
-        const string elementName = Saml2Constants.Message.ArtifactResponse;
+        public override string ElementName => Saml2Constants.Message.ArtifactResponse;
 
         /// <summary>
         /// [Optional]
@@ -29,7 +29,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + ElementName);
             envelope.Add(base.GetXContent());
             XmlDocument = envelope.ToXmlDocument();
 
@@ -53,7 +53,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void ValidateElementName()
         {
-            if (XmlDocument.DocumentElement.LocalName != elementName)
+            if (XmlDocument.DocumentElement.LocalName != ElementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Artifact Response.");
             }
@@ -65,25 +65,18 @@ namespace ITfoxtec.Identity.Saml2
 
             if (Status == Saml2StatusCodes.Success)
             {
-                if (InnerRequest is Saml2AuthnResponse innerAuthnResponse)
-                {
-                    innerAuthnResponse.Read(GetAuthnResponseXml(), false, false);
-                }
-                else
-                {
-                    throw new Saml2RequestException($"SAML2 request type '{InnerRequest.GetType().Name}' not supported.");
-                }
+                InnerRequest.Read(GetInnerArtifactResponseXml(InnerRequest.ElementName), false, false);
             }
         }
 
-        private string GetAuthnResponseXml()
+        private string GetInnerArtifactResponseXml(string innerElementName)
         {
-            var assertionElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", Saml2Constants.Message.AuthnResponse));
-            if (assertionElements.Count != 1)
+            var innerElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", innerElementName));
+            if (innerElements.Count != 1)
             {
-                throw new Saml2RequestException("There is not exactly one Assertion element.");
+                throw new Saml2RequestException("There is not exactly one inner artifact response element.");
             }
-            return assertionElements[0].OuterXml;
+            return innerElements[0].OuterXml;
         }
     }
 }

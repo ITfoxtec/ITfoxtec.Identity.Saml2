@@ -14,7 +14,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2LogoutResponse : Saml2Response
     {
-        const string elementName = Schemas.Saml2Constants.Message.LogoutResponse;
+        public override string ElementName => Schemas.Saml2Constants.Message.LogoutResponse;
 
         public Saml2LogoutResponse(Saml2Configuration config) : base(config)
         {
@@ -25,7 +25,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void ValidateElementName()
         {
-            if (XmlDocument.DocumentElement.LocalName != elementName)
+            if (XmlDocument.DocumentElement.LocalName != ElementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Logout Response.");
             }
@@ -33,7 +33,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + ElementName);
 
             envelope.Add(base.GetXContent());
             //envelope.Add(GetXContent());

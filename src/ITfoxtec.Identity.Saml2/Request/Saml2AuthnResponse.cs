@@ -24,8 +24,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2AuthnResponse : Saml2Response
     {
-
-        const string elementName = Schemas.Saml2Constants.Message.AuthnResponse;
+        public override string ElementName => Schemas.Saml2Constants.Message.AuthnResponse;
 
         internal X509Certificate2 DecryptionCertificate { get; private set; }
         internal X509Certificate2 EncryptionCertificate { get; private set; }
@@ -82,7 +81,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void ValidateElementName()
         {
-            if (XmlDocument.DocumentElement.LocalName != elementName)
+            if (XmlDocument.DocumentElement.LocalName != ElementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Authn Response.");
             }
@@ -207,7 +206,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + ElementName);
             envelope.Add(base.GetXContent());
             XmlDocument = envelope.ToXmlDocument();
 

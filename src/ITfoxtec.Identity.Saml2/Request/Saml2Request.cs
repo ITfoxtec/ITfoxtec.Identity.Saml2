@@ -21,6 +21,8 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public abstract class Saml2Request
     {        
+        public abstract string ElementName { get; }
+
         public Saml2Configuration Config { get; protected set; }
 
         public XmlDocument XmlDocument { get; protected set; }
