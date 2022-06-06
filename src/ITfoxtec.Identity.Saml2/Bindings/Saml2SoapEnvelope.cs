@@ -1,7 +1,9 @@
-﻿using ITfoxtec.Identity.Saml2.Http;
+﻿using ITfoxtec.Identity.Saml2.Configuration;
+using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -66,9 +68,15 @@ namespace ITfoxtec.Identity.Saml2
 
             XmlDocument = saml2ArtifactResolve.ToXml();
 
-            var content = new StringContent(ToSoapXml().OuterXml, Encoding.UTF8, "text/xml; charset=\"utf-8\"");
+            if (saml2ArtifactResolve.Config.ArtifactResolutionService is null || saml2ArtifactResolve.Config.ArtifactResolutionService.Location is null)
+            {
+                throw new Saml2ConfigurationException("The ArtifactResolutionService is required to be configured.");
+            }
+            var artifactDestination = saml2ArtifactResolve.Config.ArtifactResolutionService.Location;
+
+            var content = new StringContent(ToSoapXml().OuterXml, Encoding.UTF8, "text/xml");
             content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
-            using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(saml2ArtifactResolve.Destination, content, cancellationToken.Value) : await httpClient.PostAsync(saml2ArtifactResolve.Destination, content))
+            using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(artifactDestination, content, cancellationToken.Value) : await httpClient.PostAsync(artifactDestination, content))
             {
                 switch (response.StatusCode)
                 {
@@ -82,13 +90,14 @@ namespace ITfoxtec.Identity.Saml2
                         var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request)
                         {
                             //TODO use SOAP error in status
-                            Status = Saml2StatusCodes.Success
+                            Status = Saml2StatusCodes.Success,                            
                         };
-                        ares.Read(FromSoapXml(result).OuterXml, true, true);
+                        SetSignatureValidationCertificates(ares);                        
+                        ares.Read(FromSoapXml(result).OuterXml, ares.SignatureValidationCertificates?.Count() > 0, true);
                         break;
 
                     default:
-                        throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{saml2ArtifactResolve.Destination}'.");
+                        throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{artifactDestination?.OriginalString}'.");
                 }
             }
         }

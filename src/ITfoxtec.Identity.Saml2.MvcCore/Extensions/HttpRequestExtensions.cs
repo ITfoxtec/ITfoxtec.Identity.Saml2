@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore
 {
@@ -16,16 +17,34 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
         /// <summary>
         /// Converts a Microsoft.AspNet.Http.HttpRequest to ITfoxtec.Identity.Saml2.Http.HttpRequest.
         /// </summary>
-        public static Http.HttpRequest ToGenericHttpRequest(this HttpRequest request, bool readBodyAsString = false)
+        public static Http.HttpRequest ToGenericHttpRequest(this HttpRequest request)
         {
             return new Http.HttpRequest
             {
                 Method = request.Method,
                 QueryString = request.QueryString.Value,
                 Query = ToNameValueCollection(request.Query),
-                Form = "POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase) ? ToNameValueCollection(request.Form) : null,
-                Body = ReadBody(request, readBodyAsString)
+                Form = "POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase) ? ToNameValueCollection(request.Form) : null
             };
+        }
+
+        /// <summary>
+        /// Converts a Microsoft.AspNet.Http.HttpRequest to ITfoxtec.Identity.Saml2.Http.HttpRequest.
+        /// </summary>
+        public static async Task<Http.HttpRequest> ToGenericHttpRequestAsync(this HttpRequest request, bool readBodyAsString = false)
+        {
+            if (readBodyAsString)
+            {
+                return new Http.HttpRequest
+                {
+                    Method = request.Method,
+                    Body = await ReadBodyAsync(request, readBodyAsString)
+                };
+            }
+            else
+            {
+                return ToGenericHttpRequest(request);
+            }
         }
 
         private static NameValueCollection ToNameValueCollection(IEnumerable<KeyValuePair<string, StringValues>> items)
@@ -38,23 +57,16 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             return nv;
         }
 
-        private static string ReadBody(HttpRequest request, bool readBodyAsString)
+        private static async Task<string> ReadBodyAsync(HttpRequest request, bool readBodyAsString)
         {
             if (!readBodyAsString)
             {
                 return null;
             }
 
-            try
+            using (var reader = new StreamReader(request.Body))
             {
-                using (var reader = new StreamReader(request.Body))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            finally
-            {
-                request.Body.Position = 0;
+                return await reader.ReadToEndAsync();
             }
         }
     }

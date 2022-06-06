@@ -42,7 +42,7 @@ namespace TestWebApp.Controllers
                 {
                     new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = config.SingleLogoutDestination }
                 },
-                ArtifactResolutionService = new ArtifactResolutionService[]
+                ArtifactResolutionServices = new ArtifactResolutionService[]
                 {
                     new ArtifactResolutionService { Binding = ProtocolBindings.HttpArtifact, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
                 },

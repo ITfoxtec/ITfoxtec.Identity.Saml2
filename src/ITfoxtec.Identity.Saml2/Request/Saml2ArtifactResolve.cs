@@ -35,11 +35,8 @@ namespace ITfoxtec.Identity.Saml2
             if (config == null) throw new ArgumentNullException(nameof(config));
 
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
-            if (config.ArtifactResolutionService is null || config.ArtifactResolutionService.Location is null)
-            {
-                throw new Saml2ConfigurationException("The ArtifactResolutionService is required to be configured.");
-            }
-            Destination = config.ArtifactResolutionService.Location;
+
+            Destination = config.SingleSignOnDestination;  
         }
 
         /// <summary>
@@ -58,7 +55,7 @@ namespace ITfoxtec.Identity.Saml2
 
             Array.Copy(RandomGenerator.GenerateArtifactMessageHandle(), 0, artifactBytes, 24, 20);
 
-            Artifact = Uri.EscapeDataString(Convert.ToBase64String(artifactBytes));
+            Artifact = Convert.ToBase64String(artifactBytes);
         }
 
         /// <summary>
@@ -124,7 +121,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validate, detectReplayedTokens);
 
-            Artifact = XmlDocument.DocumentElement[Saml2Constants.Message.Artifact, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<string>();            
+            Artifact = XmlDocument.DocumentElement[Saml2Constants.Message.Artifact, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();            
         }
 
         protected override void ValidateElementName()

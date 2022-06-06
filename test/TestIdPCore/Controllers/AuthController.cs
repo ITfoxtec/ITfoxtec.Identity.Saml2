@@ -67,21 +67,35 @@ namespace TestIdPCore.Controllers
         }
         
         [Route("Artifact")]
-        public IActionResult Artifact()
+        public async Task<IActionResult> Artifact()
         {
-            var soapEnvelope = new Saml2SoapEnvelope();
-
-            var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
-            soapEnvelope.Unbind(Request.ToGenericHttpRequest(readBodyAsString: true), saml2ArtifactResolve);
-            
-            if (artifactSaml2AuthnResponseCache.Remove(saml2ArtifactResolve.Artifact, out Saml2AuthnResponse saml2AuthnResponse))
+            try
             {
-                throw new Exception($"Saml2AuthnResponse not found by Artifact '{saml2ArtifactResolve.Artifact}' in the cache.");
-            }
+                var soapEnvelope = new Saml2SoapEnvelope();
 
-            var saml2ArtifactResponse = new Saml2ArtifactResponse(config, saml2AuthnResponse);
-            soapEnvelope.Bind(saml2ArtifactResponse);
-            return soapEnvelope.ToActionResult();
+                var httpRequest = await Request.ToGenericHttpRequestAsync(readBodyAsString: true);
+                var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromSoapEnvelopeRequest(httpRequest, soapEnvelope));
+
+                var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
+                saml2ArtifactResolve.SignatureValidationCertificates = new X509Certificate2[] { relyingParty.SignatureValidationCertificate };
+                soapEnvelope.Unbind(httpRequest, saml2ArtifactResolve);
+
+                if (!artifactSaml2AuthnResponseCache.Remove(saml2ArtifactResolve.Artifact, out Saml2AuthnResponse saml2AuthnResponse))
+                {
+                    throw new Exception($"Saml2AuthnResponse not found by Artifact '{saml2ArtifactResolve.Artifact}' in the cache.");
+                }
+
+                var saml2ArtifactResponse = new Saml2ArtifactResponse(config, saml2AuthnResponse);
+                soapEnvelope.Bind(saml2ArtifactResponse);
+                return soapEnvelope.ToActionResult();
+            }
+            catch (Exception exc)
+            {
+#if DEBUG
+                Debug.WriteLine($"SPSsoDescriptor error: {exc.ToString()}");
+#endif
+                throw;
+            }
         }
 
         [HttpPost("Logout")]
@@ -117,6 +131,11 @@ namespace TestIdPCore.Controllers
         private string ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(config))?.Issuer;
+        }
+
+        private string ReadRelyingPartyFromSoapEnvelopeRequest<T>(ITfoxtec.Identity.Saml2.Http.HttpRequest httpRequest, Saml2Binding<T> binding)
+        {
+            return binding.ReadSamlRequest(httpRequest, new Saml2ArtifactResolve(config))?.Issuer;
         }
 
         private IActionResult LoginResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
@@ -161,14 +180,16 @@ namespace TestIdPCore.Controllers
             var responsebinding = new Saml2ArtifactBinding();
             responsebinding.RelayState = relayState;
 
-            var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
+            var saml2ArtifactResolve = new Saml2ArtifactResolve(config)
+            {
+                Destination = relyingParty.AcsDestination
+            };
             responsebinding.Bind(saml2ArtifactResolve);
 
             var saml2AuthnResponse = new Saml2AuthnResponse(config)
             {
                 InResponseTo = inResponseTo,
-                Status = status,
-                Destination = relyingParty.AcsDestination,
+                Status = status
             };
             if (status == Saml2StatusCodes.Success && claims != null)
             {
@@ -204,7 +225,7 @@ namespace TestIdPCore.Controllers
 
         private async Task<RelyingParty> ValidateRelyingParty(string issuer)
         {
-            using var cancellationTokenSource = new CancellationTokenSource(2 * 1000); // Cancel after 2 seconds.
+            using var cancellationTokenSource = new CancellationTokenSource(3 * 1000); // Cancel after 2 seconds.
             await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingPartyAsync(rp, cancellationTokenSource)));
 
             return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();

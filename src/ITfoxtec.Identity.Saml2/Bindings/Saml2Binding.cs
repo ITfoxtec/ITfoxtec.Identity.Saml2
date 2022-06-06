@@ -85,18 +85,23 @@ namespace ITfoxtec.Identity.Saml2
 
             if (saml2RequestResponse.Config == null)
                 throw new ArgumentNullException("saml2RequestResponse.Config");
+            
+            SetSignatureValidationCertificates(saml2RequestResponse);
 
-            if(saml2RequestResponse.SignatureValidationCertificates == null || saml2RequestResponse.SignatureValidationCertificates.Count() < 1)
+            return saml2RequestResponse;
+        }
+
+        protected void SetSignatureValidationCertificates(Saml2Request saml2RequestResponse)
+        {
+            if (saml2RequestResponse.SignatureValidationCertificates == null || saml2RequestResponse.SignatureValidationCertificates.Count() < 1)
                 saml2RequestResponse.SignatureValidationCertificates = saml2RequestResponse.Config.SignatureValidationCertificates;
             if (saml2RequestResponse.SignatureAlgorithm == null)
                 saml2RequestResponse.SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;
             if (saml2RequestResponse.XmlCanonicalizationMethod == null)
-                saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;          
+                saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
 
             if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => c.GetRSAPublicKey() == null) > 0)
                 throw new ArgumentException("No RSA Public Key present in at least Signature Validation Certificate.");
-
-            return saml2RequestResponse;
         }
 
         protected abstract Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2RequestResponse, string messageName);

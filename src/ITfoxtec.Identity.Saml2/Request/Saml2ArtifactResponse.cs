@@ -67,7 +67,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 if (InnerRequest is Saml2AuthnResponse innerAuthnResponse)
                 {
-                    innerAuthnResponse.Read(GetAuthnResponseXml(), Config.SignatureValidationCertificates != null && validate);
+                    innerAuthnResponse.Read(GetAuthnResponseXml(), false, false);
                 }
                 else
                 {

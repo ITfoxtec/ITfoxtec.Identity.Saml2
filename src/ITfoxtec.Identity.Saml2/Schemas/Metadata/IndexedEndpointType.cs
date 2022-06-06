@@ -28,7 +28,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected override IEnumerable<XObject> GetXContent()
         {
-            base.GetXContent();
+            foreach (var item in base.GetXContent())
+            {
+                yield return item;
+            }
 
             yield return new XAttribute(Saml2MetadataConstants.Message.Index, Index);
 

@@ -31,16 +31,9 @@ namespace ITfoxtec.Identity.Saml2.Mvc
                 return null;
             }
 
-            try
+            using (var reader = new StreamReader(request.InputStream))
             {
-                using (var reader = new StreamReader(request.InputStream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            finally
-            {
-                request.InputStream.Position = 0;
+                return reader.ReadToEnd();
             }
         }
     }
