@@ -85,7 +85,10 @@ namespace TestIdPCore.Controllers
                     throw new Exception($"Saml2AuthnResponse not found by Artifact '{saml2ArtifactResolve.Artifact}' in the cache.");
                 }
 
-                var saml2ArtifactResponse = new Saml2ArtifactResponse(config, saml2AuthnResponse);
+                var saml2ArtifactResponse = new Saml2ArtifactResponse(config, saml2AuthnResponse)
+                {
+                    InResponseTo = saml2ArtifactResolve.Id
+                };
                 soapEnvelope.Bind(saml2ArtifactResponse);
                 return soapEnvelope.ToActionResult();
             }
@@ -175,6 +178,7 @@ namespace TestIdPCore.Controllers
 
             return responsebinding.Bind(saml2AuthnResponse).ToActionResult();
         }
+
         private IActionResult LoginArtifactResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
         {
             var responsebinding = new Saml2ArtifactBinding();

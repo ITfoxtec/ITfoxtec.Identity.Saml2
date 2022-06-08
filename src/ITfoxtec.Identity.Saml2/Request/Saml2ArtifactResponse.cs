@@ -25,6 +25,7 @@ namespace ITfoxtec.Identity.Saml2
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
 
             InnerRequest = request;
+            InnerRequest.Destination = null;
         }
 
         public override XmlDocument ToXml()

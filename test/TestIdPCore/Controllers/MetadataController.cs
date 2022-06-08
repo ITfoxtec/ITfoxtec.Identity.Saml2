@@ -44,7 +44,7 @@ namespace TestWebApp.Controllers
                 },
                 ArtifactResolutionServices = new ArtifactResolutionService[]
                 {
-                    new ArtifactResolutionService { Binding = ProtocolBindings.HttpArtifact, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
+                    new ArtifactResolutionService { Binding = ProtocolBindings.ArtifactSoap, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
                 },
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
             };

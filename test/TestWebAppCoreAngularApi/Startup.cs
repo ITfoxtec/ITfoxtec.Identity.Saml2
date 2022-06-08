@@ -42,8 +42,8 @@ namespace TestWebAppCoreAngularApi
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
                 var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
-                var entityDescriptor = new EntityDescriptor(httpClientFactory);
-                entityDescriptor.ReadIdPSsoDescriptorFromUrlAsync(new Uri(Configuration["Saml2:IdPMetadata"])).GetAwaiter().GetResult();
+                var entityDescriptor = new EntityDescriptor();
+                entityDescriptor.ReadIdPSsoDescriptorFromUrlAsync(httpClientFactory, new Uri(Configuration["Saml2:IdPMetadata"])).GetAwaiter().GetResult();
                 if (entityDescriptor.IdPSsoDescriptor != null)
                 {
                     saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;

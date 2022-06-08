@@ -191,7 +191,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 if (endpoint is IndexedEndpointType indexedEndpoint)
                 {
                     indexedEndpoint.Index = serviceElement.Attributes[Saml2MetadataConstants.Message.Index].GetValueOrNull<int>();
-                    indexedEndpoint.IsDefault = serviceElement.Attributes[Saml2MetadataConstants.Message.IsDefault].GetValueOrNull<bool?>();
+                    indexedEndpoint.IsDefault = serviceElement.Attributes[Saml2MetadataConstants.Message.IsDefault].GetValueOrNull<bool>();
                 }
 
                 yield return endpoint;

@@ -36,6 +36,11 @@ namespace ITfoxtec.Identity.Saml2
             return BindInternal(saml2Response, Saml2Constants.Message.SamlResponse);
         }
 
+        public T Bind(Saml2ArtifactResolve saml2ArtifactResolve)
+        {
+            return BindInternal(saml2ArtifactResolve, Saml2Constants.Message.SamlArt);
+        }
+
         protected virtual Saml2Binding<T> BindInternal(Saml2Request saml2RequestResponse, bool createXml = true)
         {
             if (saml2RequestResponse == null)
@@ -67,12 +72,17 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2Request Unbind(HttpRequest request, Saml2Request saml2Request)
         {
-            return UnbindInternal(request, saml2Request as Saml2Request, Saml2Constants.Message.SamlRequest);
+            return UnbindInternal(request, saml2Request, Saml2Constants.Message.SamlRequest);
         }
 
         public Saml2Response Unbind(HttpRequest request, Saml2Response saml2Response)
         {
-            return UnbindInternal(request, saml2Response as Saml2Request, Saml2Constants.Message.SamlResponse) as Saml2Response;
+            return UnbindInternal(request, saml2Response, Saml2Constants.Message.SamlResponse) as Saml2Response;
+        }
+
+        public Saml2ArtifactResolve Unbind(HttpRequest request, Saml2ArtifactResolve saml2ArtifactResolve)
+        {
+            return UnbindInternal(request, saml2ArtifactResolve, Saml2Constants.Message.SamlArt) as Saml2ArtifactResolve;
         }
 
         protected Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2RequestResponse)
@@ -115,6 +125,12 @@ namespace ITfoxtec.Identity.Saml2
         {
             return Read(request, saml2Response, Saml2Constants.Message.SamlResponse, false, false);
         }
+
+        public Saml2Request ReadSamlResponse(HttpRequest request, Saml2ArtifactResolve saml2ArtifactResolve)
+        {
+            return Read(request, saml2ArtifactResolve, Saml2Constants.Message.SamlArt, false, false);
+        }
+
 
         protected abstract Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validate, bool detectReplayedTokens);
 

@@ -45,7 +45,7 @@ namespace TestWebAppArtifact.Controllers
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
                 AssertionConsumerServices = new AssertionConsumerService[]
                 {
-                    new AssertionConsumerService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },
+                    new AssertionConsumerService { Binding = ProtocolBindings.HttpArtifact, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
