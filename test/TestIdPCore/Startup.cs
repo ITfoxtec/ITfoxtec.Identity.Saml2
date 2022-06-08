@@ -27,9 +27,8 @@ namespace TestIdPCore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Settings>(Configuration.GetSection("Settings"));
-            services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2"));
-            services.Configure<Saml2Configuration>(saml2Configuration =>
+            services.BindConfig<Settings>(Configuration, "Settings");
+            services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
                 saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
                 if (!saml2Configuration.SigningCertificate.IsValidLocalTime())
@@ -37,9 +36,12 @@ namespace TestIdPCore
                     throw new Exception("The IdP signing certificates has expired.");
                 }
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
+
+                return saml2Configuration;
             });
 
             services.AddSaml2();
+            services.AddHttpClient();
 
             services.AddControllersWithViews();
         }

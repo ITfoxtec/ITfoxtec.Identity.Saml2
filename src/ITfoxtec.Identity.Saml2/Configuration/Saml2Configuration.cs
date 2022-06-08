@@ -24,6 +24,10 @@ namespace ITfoxtec.Identity.Saml2
 
         public Uri SingleLogoutDestination { get; set; }
 
+        public Saml2IndexedEndpoint ArtifactResolutionService { get; set; }
+
+        public bool ValidateArtifact { get; set; } = true;
+
         public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
 

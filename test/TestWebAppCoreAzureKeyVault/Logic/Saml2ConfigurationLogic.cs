@@ -6,17 +6,20 @@ using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using RSAKeyVaultProvider;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 
 namespace TestWebAppCoreAzureKeyVault.Identity
 {
     public class Saml2ConfigurationLogic
     {
+        private readonly IHttpClientFactory httpClientFactory;
         private readonly Saml2Configuration config;
         private readonly TokenCredential tokenCredential;
 
-        public Saml2ConfigurationLogic(Saml2Configuration config, TokenCredential tokenCredential)
+        public Saml2ConfigurationLogic(IHttpClientFactory httpClientFactory, Saml2Configuration config, TokenCredential tokenCredential)
         {
+            this.httpClientFactory = httpClientFactory;
             this.config = config;
             this.tokenCredential = tokenCredential;
         }
@@ -47,7 +50,7 @@ namespace TestWebAppCoreAzureKeyVault.Identity
             saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
             var entityDescriptor = new EntityDescriptor();
-            entityDescriptor.ReadIdPSsoDescriptorFromUrl(new Uri(Saml2IdPMetadata));
+            entityDescriptor.ReadIdPSsoDescriptorFromUrlAsync(httpClientFactory, new Uri(Saml2IdPMetadata)).GetAwaiter().GetResult();
             if (entityDescriptor.IdPSsoDescriptor != null)
             {
                 saml2Configuration.AllowedIssuer = entityDescriptor.EntityId;

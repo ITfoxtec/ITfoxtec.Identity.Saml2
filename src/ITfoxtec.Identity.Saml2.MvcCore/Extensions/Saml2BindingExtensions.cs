@@ -28,6 +28,26 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
         }
 
         /// <summary>
+        /// To Artifact Action Result
+        /// </summary>
+        public static IActionResult ToActionResult(this Saml2ArtifactBinding binding)
+        {
+            return new RedirectResult(binding.RedirectLocation.OriginalString);
+        }
+
+        /// <summary>
+        /// To SOAP Action Result
+        /// </summary>
+        public static IActionResult ToActionResult(this Saml2SoapEnvelope binding)
+        {
+            return new ContentResult
+            {
+                ContentType = "text/xml; charset=\"utf-8\"",                
+                Content = binding.SoapResponseXml
+            };
+        }
+
+        /// <summary>
         /// To XML Action Result
         /// </summary>
         public static IActionResult ToActionResult(this Saml2Metadata metadata)

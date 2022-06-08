@@ -70,6 +70,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 }
             }
 
+            if (ArtifactResolutionServices != null)
+            {
+                foreach (var artifactResolutionService in ArtifactResolutionServices)
+                {
+                    yield return artifactResolutionService.ToXElement();
+                }
+            }
+
             if (NameIDFormats != null)
             {
                 foreach (var nameIDFormat in NameIDFormats)
@@ -98,6 +106,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             {
                 SingleSignOnServices = ReadServices<SingleSignOnService>(singleSignOnServiceElements);
             }
+
+            ReadArtifactResolutionService(xmlElement);
 
             ReadSingleLogoutService(xmlElement);
 

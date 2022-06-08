@@ -21,6 +21,8 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public abstract class Saml2Request
     {        
+        public abstract string ElementName { get; }
+
         public Saml2Configuration Config { get; protected set; }
 
         public XmlDocument XmlDocument { get; protected set; }
@@ -161,7 +163,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public abstract XmlDocument ToXml();
 
-        protected internal virtual void Read(string xml, bool validateXmlSignature, bool detectReplayedTokens)
+        protected internal virtual void Read(string xml, bool validate, bool detectReplayedTokens)
         {
 #if DEBUG
             Debug.WriteLine("Saml2P: " + xml);
@@ -200,11 +202,11 @@ namespace ITfoxtec.Identity.Saml2
                 Extensions = new Schemas.Extensions { Element = extensionsElement.ToXmlDocument().ToXElement() };
             }
 
-            var documentValidationResult = MustValidateXmlSignature(validateXmlSignature) ? ValidateXmlSignature(XmlDocument.DocumentElement) : SignatureValidation.NotPresent;
+            var documentValidationResult = MustValidateXmlSignature(validate) ? ValidateXmlSignature(XmlDocument.DocumentElement) : SignatureValidation.NotPresent;
 
             DecryptMessage();
 
-            if (MustValidateXmlSignature(validateXmlSignature))
+            if (MustValidateXmlSignature(validate))
             {
                 ValidateXmlSignature(documentValidationResult);
             }
@@ -220,9 +222,9 @@ namespace ITfoxtec.Identity.Saml2
             return null;
         }
 
-        private bool MustValidateXmlSignature(bool validateXmlSignature)
+        private bool MustValidateXmlSignature(bool validate)
         {
-            return !(this is Saml2AuthnRequest) && validateXmlSignature;
+            return !(this is Saml2AuthnRequest) && validate;
         }
 
         private void ValidateXmlSignature(SignatureValidation documentValidationResult)

@@ -19,7 +19,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2LogoutRequest : Saml2Request
     {
-        const string elementName = Schemas.Saml2Constants.Message.LogoutRequest;
+        public override string ElementName => Schemas.Saml2Constants.Message.LogoutRequest;
 
         /// <summary>
         /// [Optional]
@@ -80,7 +80,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + ElementName);
 
             envelope.Add(base.GetXContent());
             envelope.Add(GetXContent());
@@ -121,9 +121,9 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
+        protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature, detectReplayedTokens);
+            base.Read(xml, validate, detectReplayedTokens);
 
             NameId = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.NameId, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Saml2NameIdentifier>();
 
@@ -132,7 +132,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void ValidateElementName()
         {
-            if (XmlDocument.DocumentElement.LocalName != elementName)
+            if (XmlDocument.DocumentElement.LocalName != ElementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Logout Request.");
             }

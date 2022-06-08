@@ -48,7 +48,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageReference Include="System.ServiceModel.Security" Version="4.9.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
-    <DefineConstants>NET60</DefineConstants>
+    <DefineConstants>NET60;NET</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
     <DebugType>pdbonly</DebugType>
@@ -69,7 +69,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0'">
-    <DefineConstants>NET50</DefineConstants>
+    <DefineConstants>NET50;NET</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0|AnyCPU'">
     <DebugType>pdbonly</DebugType>

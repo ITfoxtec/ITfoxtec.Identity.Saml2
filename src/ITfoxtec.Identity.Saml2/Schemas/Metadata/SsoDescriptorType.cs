@@ -45,7 +45,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// [Optional]
         /// Specifying algorithms and algorithm-specific settings supported by the entity.
         /// </summary>
-        public IEnumerable<EncryptionMethodType> EncryptionMethods { get; set; }        
+        public IEnumerable<EncryptionMethodType> EncryptionMethods { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Zero or more elements of type IndexedEndpointType that describe indexed endpoints that
+        /// support the Artifact Resolution profile defined in [SAMLProf]. 
+        /// The ResponseLocation attribute MUST be omitted.
+        /// </summary>
+        public IEnumerable<ArtifactResolutionService> ArtifactResolutionServices { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -115,6 +123,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
         }
 
+        protected void ReadArtifactResolutionService(XmlElement xmlElement)
+        {
+            var artifactResolutionElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.ArtifactResolutionService}']");
+            if (artifactResolutionElements != null)
+            {
+                ArtifactResolutionServices = ReadServices<ArtifactResolutionService>(artifactResolutionElements);
+            }
+        }
+
         protected void ReadNameIDFormat(XmlElement xmlElement)
         {
             var nameIDFormatElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.NameIDFormat}']");
@@ -164,12 +181,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             foreach (XmlNode serviceElement in serviceElements)
             {
-                yield return new T
+                var endpoint = new T
                 {
                     Binding = serviceElement.Attributes[Saml2MetadataConstants.Message.Binding].GetValueOrNull<Uri>(),
                     Location = serviceElement.Attributes[Saml2MetadataConstants.Message.Location].GetValueOrNull<Uri>(),
                     ResponseLocation = serviceElement.Attributes[Saml2MetadataConstants.Message.ResponseLocation].GetValueOrNull<Uri>()
                 };
+
+                if (endpoint is IndexedEndpointType indexedEndpoint)
+                {
+                    indexedEndpoint.Index = serviceElement.Attributes[Saml2MetadataConstants.Message.Index].GetValueOrNull<int>();
+                    indexedEndpoint.IsDefault = serviceElement.Attributes[Saml2MetadataConstants.Message.IsDefault].GetValueOrNull<bool>();
+                }
+
+                yield return endpoint;
             }
         }
     }

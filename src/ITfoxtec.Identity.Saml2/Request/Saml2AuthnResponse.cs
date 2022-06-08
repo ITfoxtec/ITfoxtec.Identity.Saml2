@@ -1,5 +1,4 @@
-﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Tokens;
+﻿using ITfoxtec.Identity.Saml2.Tokens;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -25,8 +24,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2AuthnResponse : Saml2Response
     {
-
-        const string elementName = Schemas.Saml2Constants.Message.AuthnResponse;
+        public override string ElementName => Schemas.Saml2Constants.Message.AuthnResponse;
 
         internal X509Certificate2 DecryptionCertificate { get; private set; }
         internal X509Certificate2 EncryptionCertificate { get; private set; }
@@ -83,7 +81,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void ValidateElementName()
         {
-            if (XmlDocument.DocumentElement.LocalName != elementName)
+            if (XmlDocument.DocumentElement.LocalName != ElementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Authn Response.");
             }
@@ -208,7 +206,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + elementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + ElementName);
             envelope.Add(base.GetXContent());
             XmlDocument = envelope.ToXmlDocument();
 
@@ -235,9 +233,9 @@ namespace ITfoxtec.Identity.Saml2
             XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, certificateIncludeOption);
         }
 
-        protected internal override void Read(string xml, bool validateXmlSignature = false, bool detectReplayedTokens = true)
+        protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
         {
-            base.Read(xml, validateXmlSignature);
+            base.Read(xml, validate, detectReplayedTokens);
 
             if (Status == Schemas.Saml2StatusCodes.Success)
             {
@@ -360,7 +358,6 @@ namespace ITfoxtec.Identity.Saml2
 #if DEBUG
             Debug.WriteLine("Saml2P (Encrypted): " + XmlDocument.OuterXml);
 #endif
-
         }
     }
 }

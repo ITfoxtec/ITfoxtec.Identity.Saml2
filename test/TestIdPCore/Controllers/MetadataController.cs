@@ -4,7 +4,6 @@ using ITfoxtec.Identity.Saml2.Schemas;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Security.Cryptography.X509Certificates;
 
@@ -16,9 +15,9 @@ namespace TestWebApp.Controllers
     {
         private readonly Saml2Configuration config;
 
-        public MetadataController(IOptions<Saml2Configuration> configAccessor)
+        public MetadataController(Saml2Configuration config)
         {
-            config = configAccessor.Value;
+            this.config = config;
         }
 
         public IActionResult Index()
@@ -42,6 +41,10 @@ namespace TestWebApp.Controllers
                 SingleLogoutServices = new SingleLogoutService[]
                 {
                     new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = config.SingleLogoutDestination }
+                },
+                ArtifactResolutionServices = new ArtifactResolutionService[]
+                {
+                    new ArtifactResolutionService { Binding = ProtocolBindings.ArtifactSoap, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
                 },
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
             };
