@@ -16,7 +16,9 @@
       Support .NET Standard 2.1 
       Support .NET Framework 4.6.1 and 4.7.2 
 
-Support Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
+Support message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
+
+Support redirect binding, post binding and artifact binding.
 
 Support signing/encryption certificates in Azure Key Vault.
 

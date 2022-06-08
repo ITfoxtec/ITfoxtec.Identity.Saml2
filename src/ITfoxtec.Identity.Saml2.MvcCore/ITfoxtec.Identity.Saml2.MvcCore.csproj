@@ -17,6 +17,8 @@
 
 Support Message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
 
+Support redirect binding, post binding and artifact binding.
+
 Support signing/encryption certificates in Azure Key Vault.
 
 Tested for compliance with AD FS, Azure AD and Azure AD B2C. 
