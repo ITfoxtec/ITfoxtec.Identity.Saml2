@@ -17,5 +17,7 @@ namespace TestIdPCore.Models
 
         public X509Certificate2 SignatureValidationCertificate { get; set; }
 
+        public X509Certificate2 AssertionEncryptionCertificate { get; set; }
+
     }
 }

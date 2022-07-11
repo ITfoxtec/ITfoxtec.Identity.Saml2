@@ -230,7 +230,10 @@ namespace TestIdPCore.Controllers
         private async Task<RelyingParty> ValidateRelyingParty(string issuer)
         {
             using var cancellationTokenSource = new CancellationTokenSource(3 * 1000); // Cancel after 2 seconds.
-            await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingPartyAsync(rp, cancellationTokenSource)));
+            await Task.WhenAll(
+                settings.RelyingParties.Where(rp=>rp.Issuer?.Equals(
+                        issuer,StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    .Select(rp => LoadRelyingPartyAsync(rp, cancellationTokenSource)));
 
             return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
@@ -239,14 +242,26 @@ namespace TestIdPCore.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(rp.Issuer))
-                {
+                //if (string.IsNullOrEmpty(rp.Issuer))
+                //{
                     var entityDescriptor = new EntityDescriptor();
                     await entityDescriptor.ReadSPSsoDescriptorFromUrlAsync(httpClientFactory, new Uri(rp.Metadata), cancellationTokenSource.Token);
                     if (entityDescriptor.SPSsoDescriptor != null)
                     {
                         rp.Issuer = entityDescriptor.EntityId;
-                        rp.AcsDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(a => a.IsDefault).OrderBy(a => a.Index).First().Location;
+                        rp.AcsDestination =
+                            1==entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Count() ?
+                                entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.First().Location :
+                                entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(
+                                    a => a.IsDefault).OrderBy(a => a.Index).First().Location;
+
+                        rp.AssertionEncryptionCertificate =
+                            entityDescriptor.SPSsoDescriptor.EncryptionCertificates?.FirstOrDefault() ??
+                            rp.AssertionEncryptionCertificate;
+                        
+                        if (null==config.EncryptionCertificate && null!=rp.AssertionEncryptionCertificate)
+                            config.EncryptionCertificate = rp.AssertionEncryptionCertificate; 
+
                         var singleLogoutService = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First();
                         rp.SingleLogoutDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
                         rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
@@ -255,7 +270,7 @@ namespace TestIdPCore.Controllers
                     {
                         throw new Exception($"SPSsoDescriptor not loaded from metadata '{rp.Metadata}'.");
                     }
-                }
+                //}
             }
             catch (Exception exc)
             {
