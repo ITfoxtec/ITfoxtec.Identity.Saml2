@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +31,12 @@ namespace TestIdPCore
             services.BindConfig<Settings>(Configuration, "Settings");
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
-                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(
+                    AppEnvironment.MapToPhysicalFilePath(
+                        Configuration["Saml2:SigningCertificateFile"]),
+                    Configuration["Saml2:SigningCertificatePassword"],
+                    X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+
                 if (!saml2Configuration.SigningCertificate.IsValidLocalTime())
                 {
                     throw new Exception("The IdP signing certificates has expired.");
@@ -41,7 +47,9 @@ namespace TestIdPCore
             });
 
             services.AddSaml2();
-            services.AddHttpClient();
+            services.AddHttpClient(String.Empty,
+                client =>
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("ITFoxtec.TestIdpCore"));
 
             services.AddControllersWithViews();
         }
