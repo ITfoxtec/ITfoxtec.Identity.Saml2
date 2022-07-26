@@ -9,6 +9,7 @@ using ITfoxtec.Identity.Saml2.MvcCore;
 using ITfoxtec.Identity.Saml2.Util;
 using TestIdPCore.Models;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TestIdPCore
 {
@@ -30,7 +31,7 @@ namespace TestIdPCore
             services.BindConfig<Settings>(Configuration, "Settings");
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
-                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 if (!saml2Configuration.SigningCertificate.IsValidLocalTime())
                 {
                     throw new Exception("The IdP signing certificates has expired.");
