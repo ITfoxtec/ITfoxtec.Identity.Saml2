@@ -45,7 +45,7 @@ namespace TestIdPCore.Controllers
             var requestBinding = new Saml2RedirectBinding();
             var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(requestBinding));
 
-            var saml2AuthnRequest = new Saml2AuthnRequest(config);
+            var saml2AuthnRequest = new Saml2AuthnRequest(GetRpSaml2Configuration());
             try
             {
                 requestBinding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnRequest);
@@ -76,8 +76,7 @@ namespace TestIdPCore.Controllers
                 var httpRequest = await Request.ToGenericHttpRequestAsync(readBodyAsString: true);
                 var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromSoapEnvelopeRequest(httpRequest, soapEnvelope));
 
-                var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
-                saml2ArtifactResolve.SignatureValidationCertificates = new X509Certificate2[] { relyingParty.SignatureValidationCertificate };
+                var saml2ArtifactResolve = new Saml2ArtifactResolve(GetRpSaml2Configuration(relyingParty));
                 soapEnvelope.Unbind(httpRequest, saml2ArtifactResolve);
 
                 if (!artifactSaml2AuthnResponseCache.Remove(saml2ArtifactResolve.Artifact, out Saml2AuthnResponse saml2AuthnResponse))
@@ -107,8 +106,7 @@ namespace TestIdPCore.Controllers
             var requestBinding = new Saml2PostBinding();
             var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest(requestBinding));
 
-            var saml2LogoutRequest = new Saml2LogoutRequest(config);
-            saml2LogoutRequest.SignatureValidationCertificates = new X509Certificate2[] { relyingParty.SignatureValidationCertificate };
+            var saml2LogoutRequest = new Saml2LogoutRequest(GetRpSaml2Configuration(relyingParty));
             try
             {
                 requestBinding.Unbind(Request.ToGenericHttpRequest(), saml2LogoutRequest);
@@ -128,17 +126,17 @@ namespace TestIdPCore.Controllers
 
         private string ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
         {
-            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(config))?.Issuer;
+            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
         private string ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
         {
-            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(config))?.Issuer;
+            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
         private string ReadRelyingPartyFromSoapEnvelopeRequest<T>(ITfoxtec.Identity.Saml2.Http.HttpRequest httpRequest, Saml2Binding<T> binding)
         {
-            return binding.ReadSamlRequest(httpRequest, new Saml2ArtifactResolve(config))?.Issuer;
+            return binding.ReadSamlRequest(httpRequest, new Saml2ArtifactResolve(GetRpSaml2Configuration()))?.Issuer;
         }
 
         private IActionResult LoginResponse(Saml2Id inResponseTo, Saml2StatusCodes status, string relayState, RelyingParty relyingParty, string sessionIndex = null, IEnumerable<Claim> claims = null)
@@ -158,7 +156,7 @@ namespace TestIdPCore.Controllers
             var responsebinding = new Saml2PostBinding();
             responsebinding.RelayState = relayState;
 
-            var saml2AuthnResponse = new Saml2AuthnResponse(config)
+            var saml2AuthnResponse = new Saml2AuthnResponse(GetRpSaml2Configuration(relyingParty))
             {
                 InResponseTo = inResponseTo,
                 Status = status,
@@ -184,13 +182,13 @@ namespace TestIdPCore.Controllers
             var responsebinding = new Saml2ArtifactBinding();
             responsebinding.RelayState = relayState;
 
-            var saml2ArtifactResolve = new Saml2ArtifactResolve(config)
+            var saml2ArtifactResolve = new Saml2ArtifactResolve(GetRpSaml2Configuration(relyingParty))
             {
                 Destination = relyingParty.AcsDestination
             };
             responsebinding.Bind(saml2ArtifactResolve);
 
-            var saml2AuthnResponse = new Saml2AuthnResponse(config)
+            var saml2AuthnResponse = new Saml2AuthnResponse(GetRpSaml2Configuration(relyingParty))
             {
                 InResponseTo = inResponseTo,
                 Status = status
@@ -216,7 +214,7 @@ namespace TestIdPCore.Controllers
             var responsebinding = new Saml2PostBinding();
             responsebinding.RelayState = relayState;
 
-            var saml2LogoutResponse = new Saml2LogoutResponse(config)
+            var saml2LogoutResponse = new Saml2LogoutResponse(GetRpSaml2Configuration(relyingParty))
             {
                 InResponseTo = inResponseTo,
                 Status = status,
@@ -227,9 +225,34 @@ namespace TestIdPCore.Controllers
             return responsebinding.Bind(saml2LogoutResponse).ToActionResult();
         }
 
+        private Saml2Configuration GetRpSaml2Configuration(RelyingParty relyingParty = null)
+        {
+            var rpConfig = new Saml2Configuration()
+            {
+                Issuer = config.Issuer,
+                SingleSignOnDestination = config.SingleSignOnDestination,
+                SingleLogoutDestination = config.SingleLogoutDestination,
+                ArtifactResolutionService = config.ArtifactResolutionService,
+                SigningCertificate = config.SigningCertificate,
+                SignatureAlgorithm = config.SignatureAlgorithm,
+                CertificateValidationMode = config.CertificateValidationMode,
+                RevocationMode = config.RevocationMode
+            };
+
+            rpConfig.AllowedAudienceUris.AddRange(config.AllowedAudienceUris);
+
+            if (relyingParty != null) 
+            {
+                rpConfig.SignatureValidationCertificates.Add(relyingParty.SignatureValidationCertificate);
+                rpConfig.EncryptionCertificate = relyingParty.EncryptionCertificate;
+            }
+
+            return rpConfig;
+        }
+
         private async Task<RelyingParty> ValidateRelyingParty(string issuer)
         {
-            using var cancellationTokenSource = new CancellationTokenSource(3 * 1000); // Cancel after 2 seconds.
+            using var cancellationTokenSource = new CancellationTokenSource(3 * 1000); // Cancel after 3 seconds.
             await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingPartyAsync(rp, cancellationTokenSource)));
 
             return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
@@ -239,6 +262,7 @@ namespace TestIdPCore.Controllers
         {
             try
             {
+                // Load RP if not already loaded.
                 if (string.IsNullOrEmpty(rp.Issuer))
                 {
                     var entityDescriptor = new EntityDescriptor();
