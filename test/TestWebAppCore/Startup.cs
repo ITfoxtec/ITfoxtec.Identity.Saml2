@@ -33,6 +33,8 @@ namespace TestWebAppCore
             {
                 //saml2Configuration.SignAuthnRequest = true;
                 saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                //Alternatively load the certificate by thumbprint from the machines Certificate Store.
+                //saml2Configuration.SigningCertificate = CertificateUtil.Load(StoreName.My, StoreLocation.LocalMachine, X509FindType.FindByThumbprint, Configuration["Saml2:SigningCertificateThumbprint"]);
 
                 //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
