@@ -21,6 +21,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
+        public const string AttributeValueNameSpace = "saml:";
 
         public class Message
         {
@@ -95,6 +96,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             public const string Lang = "lang";
 
             public const string RequestedAttribute = "RequestedAttribute";
+
+            public const string AttributeValue = "AttributeValue";
 
             public const string Name = "Name";
 
