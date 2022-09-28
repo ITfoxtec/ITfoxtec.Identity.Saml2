@@ -9,6 +9,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// The XML namespace of the Metadata.
         /// </summary>
         internal static readonly Uri MetadataNamespace = new Uri("urn:oasis:names:tc:SAML:2.0:metadata");
+
+        /// <summary>
+        /// The XML namespace Uri of saml assertion
+        /// </summary>
+        internal static readonly Uri SamlAssertionNamespace = new Uri("urn:oasis:names:tc:SAML:2.0:assertion");
+        
         /// <summary>
         /// The XML namespace of the Metadata.
         /// </summary>
@@ -17,11 +23,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// The XML namespace Name of the Metadata.
         /// </summary>
-        public static readonly XName MetadataNamespaceNameX = XNamespace.Xmlns + "m";     
+        public static readonly XName MetadataNamespaceNameX = XNamespace.Xmlns + "m";
+
+        /// <summary>
+        /// The XML namespace of saml assertion
+        /// </summary>
+        public static readonly XNamespace SamlAssertionNamespaceX = XNamespace.Get(SamlAssertionNamespace.OriginalString);
+
+        /// <summary>
+        /// The XML namespace Name of the saml assertion.
+        /// </summary>
+        public static readonly XName SamlAssertionNamespaceNameX = XNamespace.Xmlns + "saml";
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
-        public const string AttributeValueNameSpace = "saml:";
 
         public class Message
         {
