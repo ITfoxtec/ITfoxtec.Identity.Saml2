@@ -14,11 +14,19 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             NameFormat = nameFormat;
         }
 
+        public RequestedAttribute(string name, string attributeValue, bool isRequired = true, string nameFormat = Saml2MetadataConstants.AttributeNameFormat)
+            : this(name, isRequired, nameFormat)
+        {
+            AttributeValue = attributeValue;
+        }
+
         public string Name { get; protected set; }
 
         public bool IsRequired { get; protected set; }
-        
+
         public string NameFormat { get; protected set; }
+
+        public string AttributeValue { get; protected set; }
 
         public XElement ToXElement()
         {
@@ -34,6 +42,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Name, Name);
             yield return new XAttribute(Saml2MetadataConstants.Message.NameFormat, NameFormat);
             yield return new XAttribute(Saml2MetadataConstants.Message.IsRequired, IsRequired);
+
+            if (AttributeValue != null) {
+                var attribVal = new XElement(Saml2MetadataConstants.AttributeValueNameSpace + Saml2MetadataConstants.Message.AttributeValue) {
+                    Value = AttributeValue
+                };
+                yield return new XElement(attribVal);
+            }
         }
     }
 }
