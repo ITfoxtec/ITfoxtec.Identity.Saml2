@@ -82,6 +82,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             var keyinfo = new KeyInfo();
             keyinfo.AddClause(new KeyInfoX509Data(certificate, CertificateIncludeOption));
+            keyinfo.Id = Convert.ToBase64String(certificate.GetCertHash());
 
             var keyDescriptorElement = new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.KeyDescriptor,
                 new XAttribute(Saml2MetadataConstants.Message.Use, keyType),
