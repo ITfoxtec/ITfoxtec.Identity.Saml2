@@ -81,6 +81,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         protected XObject KeyDescriptor(X509Certificate2 certificate, string keyType, IEnumerable<EncryptionMethodType> encryptionMethods = null)
         {
             var keyinfo = new KeyInfo();
+            keyinfo.AddClause(new KeyInfoName(Guid.NewGuid().ToString()));
             keyinfo.AddClause(new KeyInfoX509Data(certificate, CertificateIncludeOption));
 
             var keyDescriptorElement = new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.KeyDescriptor,
