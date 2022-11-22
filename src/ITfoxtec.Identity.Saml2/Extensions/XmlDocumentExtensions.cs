@@ -13,13 +13,13 @@ namespace ITfoxtec.Identity.Saml2
     internal static class XmlDocumentExtensions
     {
         /// <summary>
-        /// Signs an XmlDocument with an xml signature using the signing certificate given as argument to the method.
+        /// Signs an XmlDocument with an XML signature using the signing certificate given as argument to the method.
         /// </summary>
         /// <param name="certificate">The certificate used to sign the document</param>
         /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the document</param>
         /// <param name="xmlCanonicalizationMethod">The Signature XML canonicalization method used to sign the document</param>
         /// <param name="includeOption">Certificate include option</param>
-        /// <param name="id">The is of the topmost element in the xmldocument</param>
+        /// <param name="id">The id of the topmost element in the XML document</param>
         internal static XmlDocument SignDocument(this XmlDocument xmlDocument, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption, string id)
         {
             if (certificate == null)
@@ -36,7 +36,7 @@ namespace ITfoxtec.Identity.Saml2
         }
 
         /// <summary>
-        /// Signs an Xml assertion with an xml signature using the signing certificate given as argument to the method.
+        /// Signs an XML assertion with an XML signature using the signing certificate given as argument to the method.
         /// </summary>
         /// <param name="certificate">The certificate used to sign the assertion</param>
         /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the assertion</param>
