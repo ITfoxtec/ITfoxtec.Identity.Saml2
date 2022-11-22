@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;net48;net462</TargetFrameworks>
+    <TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1;net48;net462</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
@@ -10,6 +10,7 @@
     <Title>ITfoxtec Identity SAML 2.0 MVC Core</Title>
     <Description>ASP.NET MVC Core is supported by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec Identity SAML2 package and add support for SAML-P and SAML 2.0 tokens.
 
+      Support .NET 7.0 
       Support .NET 6.0 
       Support .NET 5.0 
       Support .NET Core 3.1 
@@ -27,10 +28,10 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3 ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.8.3.3</AssemblyVersion>
-    <FileVersion>4.8.3.3</FileVersion>
+    <AssemblyVersion>4.8.3.4</AssemblyVersion>
+    <FileVersion>4.8.3.4</FileVersion>
     <Copyright>Copyright © 2021</Copyright>
-    <Version>4.8.3-beta3</Version>
+    <Version>4.8.3-beta4</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -40,14 +41,27 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 
   <ItemGroup>
     <ProjectReference Include="..\ITfoxtec.Identity.Saml2\ITfoxtec.Identity.Saml2.csproj" />
+  </ItemGroup>	
+		
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0'">
+    <DefineConstants>NET70;NET</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
 	
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.15.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.0" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.9.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <DefineConstants>NET60;NET</DefineConstants>
