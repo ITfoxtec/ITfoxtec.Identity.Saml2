@@ -44,7 +44,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.IsRequired, IsRequired);
 
             if (AttributeValue != null) {
-                var attribVal = new XElement(Saml2MetadataConstants.SamlAssertionNamespaceNameX + Saml2MetadataConstants.Message.AttributeValue) {
+                var attribVal = new XElement(Saml2MetadataConstants.SamlAssertionNamespaceX + Saml2MetadataConstants.Message.AttributeValue) {
                     Value = AttributeValue
                 };
                 yield return new XElement(attribVal);
