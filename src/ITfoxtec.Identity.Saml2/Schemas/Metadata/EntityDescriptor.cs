@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -136,6 +137,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
             yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
             yield return new XAttribute(Saml2MetadataConstants.SamlAssertionNamespaceNameX, Saml2MetadataConstants.SamlAssertionNamespace);
+            yield return new XAttribute(Saml2MetadataConstants.XsiNamespaceNameX, XmlSchema.InstanceNamespace);
 
             if (SPSsoDescriptor != null)
             {

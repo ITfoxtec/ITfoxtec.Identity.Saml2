@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
@@ -14,7 +15,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// The XML namespace Uri of saml assertion
         /// </summary>
         internal static readonly Uri SamlAssertionNamespace = new Uri("urn:oasis:names:tc:SAML:2.0:assertion");
-        
+
         /// <summary>
         /// The XML namespace of the Metadata.
         /// </summary>
@@ -34,6 +35,16 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// The XML namespace Name of the saml assertion.
         /// </summary>
         public static readonly XName SamlAssertionNamespaceNameX = XNamespace.Xmlns + "saml";
+
+        /// <summary>
+        /// Xsi namespace
+        /// </summary>
+        public static readonly XNamespace XsiNamespaceX = XNamespace.Get(XmlSchema.InstanceNamespace);
+
+        /// <summary>
+        /// Xsi namespace name
+        /// </summary>
+        public static readonly XName XsiNamespaceNameX = XNamespace.Xmlns + "xsi";
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
