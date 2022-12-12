@@ -258,8 +258,12 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (assertionElementCache == null)
             {
+#if NETFULL
                 assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
-            }            
+#else
+                assertionElementCache = GetAssertionElementReference();
+#endif
+            }
             return assertionElementCache;
         }
 
