@@ -45,7 +45,7 @@ namespace TestWebApp.Controllers
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
                 AssertionConsumerServices = new AssertionConsumerService[]
                 {
-                    new AssertionConsumerService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },
+                    new AssertionConsumerService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },                    
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
@@ -77,6 +77,8 @@ namespace TestWebApp.Controllers
         {
             yield return new RequestedAttribute("urn:oid:2.5.4.4");
             yield return new RequestedAttribute("urn:oid:2.5.4.3", false);
+            yield return new RequestedAttribute("urn:xxx", "test-value");
+            yield return new RequestedAttribute("urn:yyy", "123") { AttributeValueType = "xs:integer" };
         }
     }
 }

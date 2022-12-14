@@ -135,7 +135,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 yield return new XAttribute(Saml2MetadataConstants.Message.ValidUntil, DateTimeOffset.UtcNow.AddDays(ValidUntil.Value).UtcDateTime.ToString(Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
             }
             yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
-            yield return new XAttribute(Saml2MetadataConstants.SamlAssertionNamespaceNameX, Saml2MetadataConstants.SamlAssertionNamespace);
 
             if (SPSsoDescriptor != null)
             {

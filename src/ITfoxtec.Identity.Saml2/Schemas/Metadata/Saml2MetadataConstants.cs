@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
@@ -34,6 +35,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// The XML namespace Name of the saml assertion.
         /// </summary>
         public static readonly XName SamlAssertionNamespaceNameX = XNamespace.Xmlns + "saml";
+      
+        /// <summary>
+        /// Xsi namespace name.
+        /// </summary>
+        public static readonly XName XsiNamespaceNameX = XNamespace.Xmlns + "xsi";
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
@@ -120,6 +126,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             public const string IsRequired = "isRequired";
 
+            public const string Type = "type";
         }
 
         public class KeyTypes
