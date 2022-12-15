@@ -33,6 +33,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public string AttributeValueTypeNamespace { get; set; } = XmlSchema.InstanceNamespace;
 
+        public string AttributeValueDataTypeNamespace { get; set; } = XmlSchema.Namespace;
+
         public XElement ToXElement()
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
@@ -56,7 +58,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 attribVal.Add(new XAttribute(Saml2MetadataConstants.SamlAssertionNamespaceNameX, Saml2MetadataConstants.SamlAssertionNamespace));
                 if (!string.IsNullOrWhiteSpace(AttributeValueType) && !string.IsNullOrWhiteSpace(AttributeValueTypeNamespace))
                 {
-                    attribVal.Add(new XAttribute(Saml2MetadataConstants.XsiNamespaceNameX, AttributeValueTypeNamespace));
+                    attribVal.Add(new XAttribute(Saml2MetadataConstants.XmlSchemaNamespaceNameX, AttributeValueDataTypeNamespace));
+                    attribVal.Add(new XAttribute(Saml2MetadataConstants.XmlSchemaInstanceNamespaceNameX, AttributeValueTypeNamespace));
                     attribVal.Add(new XAttribute(XNamespace.Get(AttributeValueTypeNamespace) + Saml2MetadataConstants.Message.Type, AttributeValueType));
                 }
                 yield return attribVal;

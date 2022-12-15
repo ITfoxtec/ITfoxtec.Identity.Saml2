@@ -37,31 +37,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public static readonly XName SamlAssertionNamespaceNameX = XNamespace.Xmlns + "saml";
       
         /// <summary>
-        /// Xsi namespace name.
-        /// </summary>
-        public static readonly XName XsiNamespaceNameX = XNamespace.Xmlns + "xsi";
-
-        /// <summary>
-        /// Xsi namespace
-        /// </summary>
-        public static readonly XNamespace XmlSchemaInstanceNamespaceX = XNamespace.Get(XmlSchema.InstanceNamespace);
-
-        /// <summary>
         /// Xsi namespace name
         /// </summary>
         public static readonly XName XmlSchemaInstanceNamespaceNameX = XNamespace.Xmlns + "xsi";
 
         /// <summary>
-        /// Xml schema namespace
-        /// </summary>
-        public static readonly XNamespace XmlSchemaNamespaceX = XNamespace.Get(XmlSchema.Namespace);
-
-        public const string XmlSchemaNameSpaceAlias = "xs";
-
-        /// <summary>
         /// Xml schema namespace name
         /// </summary>
-        public static readonly XName XmlSchemaNamespaceNameX = XNamespace.Xmlns + XmlSchemaNameSpaceAlias;
+        public static readonly XName XmlSchemaNamespaceNameX = XNamespace.Xmlns + "xs";
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
