@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
@@ -28,6 +29,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public string AttributeValue { get; protected set; }
 
+        public string AttributeValueType { get; set; } = "xs:string";
+
+        public string AttributeValueTypeNamespace { get; set; } = XmlSchema.InstanceNamespace;
+
         public XElement ToXElement()
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
@@ -44,11 +49,16 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.IsRequired, IsRequired);
 
             if (AttributeValue != null) {
-                var attribVal = new XElement(Saml2MetadataConstants.SamlAssertionNamespaceX + Saml2MetadataConstants.Message.AttributeValue) {
+                var attribVal = new XElement(Saml2MetadataConstants.SamlAssertionNamespaceX + Saml2MetadataConstants.Message.AttributeValue) 
+                {
                     Value = AttributeValue
                 };
-                attribVal.Add(new XAttribute(Saml2MetadataConstants.XmlSchemaInstanceNamespaceX + "type",
-                    Saml2MetadataConstants.XmlSchemaNameSpaceAlias + ":string"));
+                attribVal.Add(new XAttribute(Saml2MetadataConstants.SamlAssertionNamespaceNameX, Saml2MetadataConstants.SamlAssertionNamespace));
+                if (!string.IsNullOrWhiteSpace(AttributeValueType) && !string.IsNullOrWhiteSpace(AttributeValueTypeNamespace))
+                {
+                    attribVal.Add(new XAttribute(Saml2MetadataConstants.XsiNamespaceNameX, AttributeValueTypeNamespace));
+                    attribVal.Add(new XAttribute(XNamespace.Get(AttributeValueTypeNamespace) + Saml2MetadataConstants.Message.Type, AttributeValueType));
+                }
                 yield return attribVal;
             }
         }
