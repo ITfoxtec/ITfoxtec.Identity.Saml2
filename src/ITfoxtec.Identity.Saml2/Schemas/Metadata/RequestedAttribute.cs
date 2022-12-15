@@ -47,7 +47,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 var attribVal = new XElement(Saml2MetadataConstants.SamlAssertionNamespaceX + Saml2MetadataConstants.Message.AttributeValue) {
                     Value = AttributeValue
                 };
-                attribVal.Add(new XAttribute(Saml2MetadataConstants.XsiNamespaceX + "type", "xs:string"));
+                attribVal.Add(new XAttribute(Saml2MetadataConstants.XmlSchemaInstanceNamespaceX + "type",
+                    Saml2MetadataConstants.XmlSchemaNameSpaceAlias + ":string"));
                 yield return attribVal;
             }
         }

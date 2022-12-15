@@ -137,7 +137,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
             yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
             yield return new XAttribute(Saml2MetadataConstants.SamlAssertionNamespaceNameX, Saml2MetadataConstants.SamlAssertionNamespace);
-            yield return new XAttribute(Saml2MetadataConstants.XsiNamespaceNameX, XmlSchema.InstanceNamespace);
+            yield return new XAttribute(Saml2MetadataConstants.XmlSchemaInstanceNamespaceNameX, XmlSchema.InstanceNamespace);
+            yield return new XAttribute(Saml2MetadataConstants.XmlSchemaNamespaceNameX, XmlSchema.Namespace);
 
             if (SPSsoDescriptor != null)
             {
