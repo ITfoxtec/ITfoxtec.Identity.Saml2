@@ -26,7 +26,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>4.8.3.6</AssemblyVersion>
     <FileVersion>4.8.3.6</FileVersion>
-    <Copyright>Copyright © 2022</Copyright>
+    <Copyright>Copyright © 2023</Copyright>
     <Version>4.8.3-beta6</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
