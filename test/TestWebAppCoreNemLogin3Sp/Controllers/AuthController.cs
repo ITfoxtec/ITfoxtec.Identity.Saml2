@@ -44,12 +44,6 @@ namespace TestWebAppCoreNemLogin3Sp.Controllers
                         "https://data.gov.dk/concept/core/nsis/loa/Substantial",
                         //"https://data.gov.dk/concept/core/nsis/loa/High"
 
-                        //"https://nemlogin.dk/internal/credential/type/nemidkeycard"
-                        //"https://nemlogin.dk/internal/credential/type/nemidkeyfile"
-                        //"https://nemlogin.dk/internal/credential/type/mitid"
-                        //"https://nemlogin.dk/internal/credential/type/local"
-                        //"https://nemlogin.dk/internal/credential/type/test"
-
                         //"https://data.gov.dk/eid/Professional"
                         //"https://data.gov.dk/eid/Person"
                     },
