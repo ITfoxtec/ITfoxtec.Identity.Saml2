@@ -57,6 +57,14 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
+        /// This index MUST refer to an endpoint of an AssertionConsumerService in the issuer's metadata 
+        /// for the recipient.
+        /// Note: as a consequence the AssertionConsumerServiceURL MUST NOT be included
+        /// </summary>
+        public int? AssertionConsumerServiceIndex { get; set; }
+
+        /// <summary>
+        /// [Optional]
         /// A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt; 
         /// message. See[SAMLBind] for more information about protocol bindings and URI references defined 
         /// for them. This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
@@ -126,6 +134,10 @@ namespace ITfoxtec.Identity.Saml2
                 yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceURL, AssertionConsumerServiceUrl);
             }
 
+            if (AssertionConsumerServiceIndex != null) {
+                yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceIndex, AssertionConsumerServiceIndex);
+            }
+
             if (ProtocolBinding != null)
             {
                 yield return new XAttribute(Saml2Constants.Message.ProtocolBinding, ProtocolBinding);
@@ -162,6 +174,8 @@ namespace ITfoxtec.Identity.Saml2
 
             AssertionConsumerServiceUrl = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AssertionConsumerServiceURL].GetValueOrNull<Uri>();
 
+            AssertionConsumerServiceIndex = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AssertionConsumerServiceIndex].GetValueOrNull<int>();
+            
             ProtocolBinding = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.ProtocolBinding].GetValueOrNull<Uri>();
 
             Subject = XmlDocument.DocumentElement[Saml2Constants.Message.Subject, Saml2Constants.AssertionNamespace.OriginalString].GetElementOrNull<Subject>();

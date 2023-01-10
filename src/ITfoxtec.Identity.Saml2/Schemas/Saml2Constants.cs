@@ -120,6 +120,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string AssertionConsumerServiceURL = "AssertionConsumerServiceURL";
 
+            internal const string AssertionConsumerServiceIndex = "AssertionConsumerServiceIndex";
+
             internal const string ProtocolBinding = "ProtocolBinding";
 
             internal const string RequestedAuthnContext = "RequestedAuthnContext";
