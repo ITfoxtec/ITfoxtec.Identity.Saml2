@@ -114,6 +114,15 @@ namespace ITfoxtec.Identity.Saml2
             envelope.Add(GetXContent());
 
             XmlDocument = envelope.ToXmlDocument();
+
+            if (Config.SignAuthnRequest) 
+            {
+                XmlDocument.SignDocument(Config.SigningCertificate, 
+                    SignatureAlgorithm, XmlCanonicalizationMethod, 
+                    System.Security.Cryptography.X509Certificates.X509IncludeOption.EndCertOnly, 
+                    IdAsString);
+            }
+
             return XmlDocument;
         }
 
