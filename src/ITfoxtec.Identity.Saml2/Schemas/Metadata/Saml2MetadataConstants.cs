@@ -39,7 +39,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// Xsi namespace name.
         /// </summary>
-        public static readonly XName XsiNamespaceNameX = XNamespace.Xmlns + "xsi";
+        public static readonly XName XsiInstanceNamespaceNameX = XNamespace.Xmlns + "xis";
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";

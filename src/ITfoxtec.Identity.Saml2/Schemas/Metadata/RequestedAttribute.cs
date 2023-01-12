@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.Schema;
 
@@ -31,6 +32,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public string AttributeValueType { get; set; } = "xs:string";
 
+        public string AttributeValueDataTypeNamespace { get; set; } = XmlSchema.Namespace;
+
         public string AttributeValueTypeNamespace { get; set; } = XmlSchema.InstanceNamespace;
 
         public XElement ToXElement()
@@ -54,13 +57,27 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                     Value = AttributeValue
                 };
                 attribVal.Add(new XAttribute(Saml2MetadataConstants.SamlAssertionNamespaceNameX, Saml2MetadataConstants.SamlAssertionNamespace));
-                if (!string.IsNullOrWhiteSpace(AttributeValueType) && !string.IsNullOrWhiteSpace(AttributeValueTypeNamespace))
+                if (!string.IsNullOrWhiteSpace(AttributeValueType) && TryGetAttributeValueTypeNamespaceName(out var attributeValueTypeNamespaceName) && !string.IsNullOrWhiteSpace(AttributeValueDataTypeNamespace) && !string.IsNullOrWhiteSpace(AttributeValueTypeNamespace))
                 {
-                    attribVal.Add(new XAttribute(Saml2MetadataConstants.XsiNamespaceNameX, AttributeValueTypeNamespace));
+                    attribVal.Add(new XAttribute(XNamespace.Xmlns + attributeValueTypeNamespaceName, AttributeValueDataTypeNamespace));
+                    attribVal.Add(new XAttribute(Saml2MetadataConstants.XsiInstanceNamespaceNameX, AttributeValueTypeNamespace));
                     attribVal.Add(new XAttribute(XNamespace.Get(AttributeValueTypeNamespace) + Saml2MetadataConstants.Message.Type, AttributeValueType));
                 }
                 yield return attribVal;
             }
+        }
+
+        private bool TryGetAttributeValueTypeNamespaceName(out string attributeValueTypeNamespaceName)
+        {
+            var splitValues = AttributeValueType?.Split(':');
+            if (splitValues?.Length == 2)
+            {
+                attributeValueTypeNamespaceName = splitValues[0];
+                return true;
+            }
+
+            attributeValueTypeNamespaceName = null;
+            return false;
         }
     }
 }
