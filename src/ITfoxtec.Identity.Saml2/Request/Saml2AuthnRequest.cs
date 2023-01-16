@@ -65,6 +65,15 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
+        /// Only one of Extensions or AttributeConsumerServiceIndex MUST be present. 
+        /// This element MAY only be used if the issuer is a DV.
+        /// This element MUST NOT be used in other cases. If present, MUST refer to an 
+        /// AttributeConsumingService in the DV's metadata
+        /// </summary>
+        public int? AttributeConsumingServiceIndex { get; set; }
+
+        /// <summary>
+        /// [Optional]
         /// A URI reference that identifies a SAML protocol binding to be used when returning the &lt;Response&gt; 
         /// message. See[SAMLBind] for more information about protocol bindings and URI references defined 
         /// for them. This attribute is mutually exclusive with the AssertionConsumerServiceIndex attribute
@@ -115,14 +124,6 @@ namespace ITfoxtec.Identity.Saml2
 
             XmlDocument = envelope.ToXmlDocument();
 
-            if (Config.SignAuthnRequest) 
-            {
-                XmlDocument.SignDocument(Config.SigningCertificate, 
-                    SignatureAlgorithm, XmlCanonicalizationMethod, 
-                    System.Security.Cryptography.X509Certificates.X509IncludeOption.EndCertOnly, 
-                    IdAsString);
-            }
-
             return XmlDocument;
         }
 
@@ -143,8 +144,14 @@ namespace ITfoxtec.Identity.Saml2
                 yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceURL, AssertionConsumerServiceUrl);
             }
 
-            if (AssertionConsumerServiceIndex != null) {
+            if (AssertionConsumerServiceIndex != null) 
+            {
                 yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceIndex, AssertionConsumerServiceIndex);
+            }
+
+            if (AttributeConsumingServiceIndex != null) 
+            {
+                yield return new XAttribute(Saml2Constants.Message.AttributeConsumingServiceIndex, AttributeConsumingServiceIndex);
             }
 
             if (ProtocolBinding != null)
