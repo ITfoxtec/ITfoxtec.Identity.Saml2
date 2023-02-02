@@ -38,7 +38,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// <summary>
         /// The XML Namespace Name of the SAML2 Assertion.
         /// </summary>
-        public static readonly XName AssertionNamespaceNameX = XNamespace.Xmlns + "saml";
+        public static readonly XName AssertionNamespaceNameX = XNamespace.Xmlns + "saml2";
+        public static readonly XName AssertionNamespaceNameXSaml = XNamespace.Xmlns + "saml";
 
         /// <summary>
         /// The XML namespace of the SAML2 Protocol.
@@ -51,7 +52,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// <summary>
         /// The XML Namespace Name of the SAML2 Protocol.
         /// </summary>
-        public static readonly XName ProtocolNamespaceNameX = XNamespace.Xmlns + "samlp";
+        public static readonly XName ProtocolNamespaceNameX = XNamespace.Xmlns + "saml2p";
+        public static readonly XName ProtocolNamespaceNameXSamlp = XNamespace.Xmlns + "samlp";
 
         /// <summary>
         /// The XML namespace of the SAML2 SOAP Envelope.

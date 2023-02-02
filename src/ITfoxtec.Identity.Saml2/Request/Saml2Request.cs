@@ -134,8 +134,13 @@ namespace ITfoxtec.Identity.Saml2
 
         protected virtual IEnumerable<XObject> GetXContent()
         {
-            yield return new XAttribute(Schemas.Saml2Constants.ProtocolNamespaceNameX, Schemas.Saml2Constants.ProtocolNamespace.OriginalString);
-            yield return new XAttribute(Schemas.Saml2Constants.AssertionNamespaceNameX, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
+            if (Config.BackwardCompatibility) {
+                yield return new XAttribute(Schemas.Saml2Constants.ProtocolNamespaceNameXSamlp, Schemas.Saml2Constants.ProtocolNamespace.OriginalString);
+                yield return new XAttribute(Schemas.Saml2Constants.AssertionNamespaceNameXSaml, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
+            } else {
+                yield return new XAttribute(Schemas.Saml2Constants.ProtocolNamespaceNameX, Schemas.Saml2Constants.ProtocolNamespace.OriginalString);
+                yield return new XAttribute(Schemas.Saml2Constants.AssertionNamespaceNameX, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
+            }
             yield return new XAttribute(Schemas.Saml2Constants.Message.Id, IdAsString);
             yield return new XAttribute(Schemas.Saml2Constants.Message.Version, Version);
             yield return new XAttribute(Schemas.Saml2Constants.Message.IssueInstant, IssueInstant.UtcDateTime.ToString(Schemas.Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
