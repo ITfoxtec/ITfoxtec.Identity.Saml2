@@ -6,12 +6,12 @@ namespace ITfoxtec.Identity.Saml2
     /// <summary>
     /// Extension methods for string
     /// </summary>
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Converts an string to an XmlDocument.
         /// </summary>
-        internal static XmlDocument ToXmlDocument(this string xml)
+        public static XmlDocument ToXmlDocument(this string xml)
         {
             using (var stringReader = new StringReader(xml))
             using (var xmlReader = XmlReader.Create(stringReader, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null }))
