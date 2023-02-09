@@ -61,17 +61,15 @@ namespace ITfoxtec.Identity.Saml2
 #else
             HttpClient httpClient,
 # endif
-            Saml2ArtifactResolve saml2ArtifactResolve, 
-            Saml2Request saml2Request, 
-            CancellationToken? cancellationToken = null,
-            string httpClientName = null) 
-        {
+            Saml2ArtifactResolve saml2ArtifactResolve, Saml2Request saml2Request, CancellationToken? cancellationToken = null
 #if NET || NETCORE
-            var httpClient = !string.IsNullOrEmpty(httpClientName) ? 
-                httpClientFactory.CreateClient(httpClientName):
-                httpClientFactory.CreateClient();
+            , string httpClientName = null) 
+        {
+            var httpClient = string.IsNullOrEmpty(httpClientName) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(httpClientName);
+#else
+        )
+        {
 #endif
-
             if (saml2ArtifactResolve.Config.ArtifactResolutionService is null || saml2ArtifactResolve.Config.ArtifactResolutionService.Location is null)
             {
                 throw new Saml2ConfigurationException("The ArtifactResolutionService is required to be configured.");
