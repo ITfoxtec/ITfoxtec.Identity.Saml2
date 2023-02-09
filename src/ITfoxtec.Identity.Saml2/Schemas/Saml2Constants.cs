@@ -118,7 +118,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string Value = "Value";
 
+            internal const string AssertionConsumerServiceIndex = "AssertionConsumerServiceIndex";
+
             internal const string AssertionConsumerServiceURL = "AssertionConsumerServiceURL";
+
+            internal const string AttributeConsumingServiceIndex = "AttributeConsumingServiceIndex";
 
             internal const string ProtocolBinding = "ProtocolBinding";
 
