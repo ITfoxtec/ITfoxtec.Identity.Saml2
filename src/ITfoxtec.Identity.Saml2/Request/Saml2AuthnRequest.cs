@@ -46,6 +46,20 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
+        /// Indirectly identifies the location to which the <Response> message should be returned to the
+        /// requester.It applies only to profiles in which the requester is different from the presenter, such as the
+        /// Web Browser SSO profile in [SAMLProf]. The identity provider MUST have a trusted means to map
+        /// the index value in the attribute to a location associated with the requester. [SAMLMeta] provides one
+        /// possible mechanism.If omitted, then the identity provider MUST return the<Response> message to
+        /// the default location associated with the requester for the profile of use.If the index specified is invalid,
+        /// then the identity provider MAY return an error <Response> or it MAY use the default location.This
+        /// attribute is mutually exclusive with the AssertionConsumerServiceURL and ProtocolBinding
+        /// attributes.
+        /// </summary>
+        public int? AssertionConsumerServiceIndex { get; set; }
+
+        /// <summary>
+        /// [Optional]
         /// Specifies by value the location to which the &lt;Response&gt; message MUST be returned to the
         /// requester. The responder MUST ensure by some means that the value specified is in fact associated
         /// with the requester. [SAMLMeta] provides one possible mechanism; signing the enclosing
@@ -54,6 +68,17 @@ namespace ITfoxtec.Identity.Saml2
         /// ProtocolBinding attribute.
         /// </summary>
         public Uri AssertionConsumerServiceUrl { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Indirectly identifies information associated with the requester describing the SAML attributes the
+        /// requester desires or requires to be supplied by the identity provider in the<Response> message.The
+        /// identity provider MUST have a trusted means to map the index value in the attribute to information
+        /// associated with the requester. [SAMLMeta] provides one possible mechanism. The identity provider
+        /// MAY use this information to populate one or more <saml:AttributeStatement> elements in the
+        /// assertion(s) it returns.
+        /// </summary>
+        public int? AttributeConsumingServiceIndex { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -121,9 +146,19 @@ namespace ITfoxtec.Identity.Saml2
                 yield return new XAttribute(Saml2Constants.Message.IsPassive, IsPassive);
             }
 
+            if (AssertionConsumerServiceIndex != null)
+            {
+                yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceIndex, AssertionConsumerServiceIndex);
+            }
+
             if (AssertionConsumerServiceUrl != null)
             {
                 yield return new XAttribute(Saml2Constants.Message.AssertionConsumerServiceURL, AssertionConsumerServiceUrl);
+            }
+
+            if (AttributeConsumingServiceIndex != null)
+            {
+                yield return new XAttribute(Saml2Constants.Message.AttributeConsumingServiceIndex, AttributeConsumingServiceIndex);
             }
 
             if (ProtocolBinding != null)
@@ -160,7 +195,11 @@ namespace ITfoxtec.Identity.Saml2
 
             IsPassive = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.IsPassive].GetValueOrNull<bool>();
 
+            AssertionConsumerServiceIndex = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AssertionConsumerServiceIndex].GetValueOrNull<int?>();
+
             AssertionConsumerServiceUrl = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AssertionConsumerServiceURL].GetValueOrNull<Uri>();
+
+            AttributeConsumingServiceIndex = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AttributeConsumingServiceIndex].GetValueOrNull<int?>();
 
             ProtocolBinding = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.ProtocolBinding].GetValueOrNull<Uri>();
 
