@@ -60,22 +60,27 @@ namespace ITfoxtec.Identity.Saml2
 #else
             HttpClient httpClient,
 # endif
-            Saml2ArtifactResolve saml2ArtifactResolve, Saml2Request saml2Request, CancellationToken? cancellationToken = null) 
-        {
+            Saml2ArtifactResolve saml2ArtifactResolve, Saml2Request saml2Request, CancellationToken? cancellationToken = null
 #if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
+            , string httpClientName = null) 
+        {
+            var httpClient = string.IsNullOrEmpty(httpClientName) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(httpClientName);
+#else
+        )
+        {
 #endif
-
-            XmlDocument = saml2ArtifactResolve.ToXml();
-
             if (saml2ArtifactResolve.Config.ArtifactResolutionService is null || saml2ArtifactResolve.Config.ArtifactResolutionService.Location is null)
             {
                 throw new Saml2ConfigurationException("The ArtifactResolutionService is required to be configured.");
             }
             var artifactDestination = saml2ArtifactResolve.Config.ArtifactResolutionService.Location;
+            saml2ArtifactResolve.Destination = artifactDestination;
+            saml2ArtifactResolve.Issuer = saml2ArtifactResolve.Config.Issuer;
+            XmlDocument = saml2ArtifactResolve.ToXml();
 
             var content = new StringContent(ToSoapXml().OuterXml, Encoding.UTF8, "text/xml");
             content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
+
             using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(artifactDestination, content, cancellationToken.Value) : await httpClient.PostAsync(artifactDestination, content))
             {
                 switch (response.StatusCode)
