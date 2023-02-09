@@ -75,7 +75,6 @@ namespace ITfoxtec.Identity.Saml2
             }
             var artifactDestination = saml2ArtifactResolve.Config.ArtifactResolutionService.Location;
             saml2ArtifactResolve.Destination = artifactDestination;
-            saml2ArtifactResolve.Issuer = saml2ArtifactResolve.Config.Issuer;
             XmlDocument = saml2ArtifactResolve.ToXml();
 
             var content = new StringContent(ToSoapXml().OuterXml, Encoding.UTF8, "text/xml");
