@@ -28,7 +28,7 @@ namespace ITfoxtec.Identity.Saml2
 
             BindInternal(saml2Request);
 
-            SoapResponseXml = ToSoapXml().OuterXml;
+            SoapResponseXml = ToSoapXml();
             return this;
         }
 
@@ -44,7 +44,7 @@ namespace ITfoxtec.Identity.Saml2
             if (!(saml2Request is Saml2ArtifactResolve saml2ArtifactResolve))
                 throw new ArgumentException("Only Saml2ArtifactResolve is supported");
 
-            saml2ArtifactResolve.Read(FromSoapXml(request.Body).OuterXml, validate, detectReplayedTokens);
+            saml2ArtifactResolve.Read(FromSoapXml(request.Body), validate, detectReplayedTokens);
             XmlDocument = saml2ArtifactResolve.XmlDocument;
             return saml2ArtifactResolve;
         }
@@ -77,7 +77,7 @@ namespace ITfoxtec.Identity.Saml2
             saml2ArtifactResolve.Destination = artifactDestination;
             XmlDocument = saml2ArtifactResolve.ToXml();
 
-            var content = new StringContent(ToSoapXml().OuterXml, Encoding.UTF8, "text/xml");
+            var content = new StringContent(ToSoapXml(), Encoding.UTF8, "text/xml");
             content.Headers.Add("SOAPAction", "\"http://www.oasis-open.org/committees/security\"");
 
             using (var response = cancellationToken.HasValue ? await httpClient.PostAsync(artifactDestination, content, cancellationToken.Value) : await httpClient.PostAsync(artifactDestination, content))
@@ -93,7 +93,7 @@ namespace ITfoxtec.Identity.Saml2
 
                         var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
                         SetSignatureValidationCertificates(ares);                        
-                        ares.Read(FromSoapXml(result).OuterXml, ares.SignatureValidationCertificates?.Count() > 0, true);
+                        ares.Read(FromSoapXml(result), ares.SignatureValidationCertificates?.Count() > 0, true);
                         ares.Status = Saml2StatusCodes.Success;
                         break;
 
@@ -103,13 +103,13 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected virtual XmlDocument ToSoapXml()
+        protected virtual string ToSoapXml()
         {
             var envelope = new XElement(Saml2Constants.SoapEnvironmentNamespaceX + Saml2Constants.Message.Envelope);
 
             envelope.Add(GetXContent());
 
-            return envelope.ToXmlDocument();
+            return envelope.ToString(SaveOptions.DisableFormatting);
         }
 
         protected IEnumerable<XObject> GetXContent()
@@ -118,7 +118,7 @@ namespace ITfoxtec.Identity.Saml2
             yield return new XElement(Saml2Constants.SoapEnvironmentNamespaceX + Saml2Constants.Message.Body, XmlDocument.ToXDocument().Root);
         }
 
-        protected virtual XmlDocument FromSoapXml(string xml)
+        protected virtual string FromSoapXml(string xml)
         {
             var xmlDoc = xml.ToXmlDocument();
 
@@ -136,7 +136,7 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultcode + "\n" + faultstring);
             }
 
-            return bodyList[0].InnerXml.ToXmlDocument();
+            return bodyList[0].InnerXml;
         }
 
         private XmlNodeList GetNodesByLocalname(XmlNode xe, string localName)
