@@ -235,12 +235,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 #else
             HttpClient httpClient,
 # endif
-            Uri idPMetadataUrl, CancellationToken? cancellationToken = null)
-        {
+            Uri idPMetadataUrl, CancellationToken? cancellationToken = null
 #if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
+            , string httpClientName = null)
+        {
+            var httpClient = string.IsNullOrEmpty(httpClientName) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(httpClientName);
+#else
+        )
+        {
 #endif
-
             using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(idPMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(idPMetadataUrl))
             {
                 // Handle the response
@@ -279,12 +282,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 #else
             HttpClient httpClient,
 # endif
-            Uri spMetadataUrl, CancellationToken? cancellationToken = null)
-        {
+            Uri spMetadataUrl, CancellationToken? cancellationToken = null
 #if NET || NETCORE
-            var httpClient = httpClientFactory.CreateClient();
+            , string httpClientName = null)
+        {
+            var httpClient = string.IsNullOrEmpty(httpClientName) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(httpClientName);
+#else
+        )
+        {
 #endif
-
             using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(spMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(spMetadataUrl))
             {
                 // Handle the response
