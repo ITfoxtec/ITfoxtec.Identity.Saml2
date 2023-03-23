@@ -31,7 +31,7 @@ namespace TestIdPCore
             services.BindConfig<Settings>(Configuration, "Settings");
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
-                saml2Configuration.SignAuthnRequest = true;
+                //saml2Configuration.SignAuthnRequest = true;
                 saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 if (!saml2Configuration.SigningCertificate.IsValidLocalTime())
                 {
