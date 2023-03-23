@@ -1,6 +1,5 @@
-﻿    using System;
+﻿using System;
 using System.Xml.Linq;
-using System.Xml.Schema;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
