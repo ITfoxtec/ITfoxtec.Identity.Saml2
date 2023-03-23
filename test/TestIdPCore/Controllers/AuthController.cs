@@ -45,7 +45,7 @@ namespace TestIdPCore.Controllers
             var requestBinding = new Saml2RedirectBinding();
             var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(requestBinding));
 
-            var saml2AuthnRequest = new Saml2AuthnRequest(GetRpSaml2Configuration());
+            var saml2AuthnRequest = new Saml2AuthnRequest(GetRpSaml2Configuration(relyingParty));
             try
             {
                 requestBinding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnRequest);
@@ -230,6 +230,7 @@ namespace TestIdPCore.Controllers
             var rpConfig = new Saml2Configuration()
             {
                 Issuer = config.Issuer,
+                SignAuthnRequest = config.SignAuthnRequest,
                 SingleSignOnDestination = config.SingleSignOnDestination,
                 SingleLogoutDestination = config.SingleLogoutDestination,
                 ArtifactResolutionService = config.ArtifactResolutionService,
