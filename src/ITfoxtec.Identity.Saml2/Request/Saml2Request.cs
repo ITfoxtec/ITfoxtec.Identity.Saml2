@@ -224,7 +224,7 @@ namespace ITfoxtec.Identity.Saml2
 
         private bool MustValidateXmlSignature(bool validate)
         {
-            return !(this is Saml2AuthnRequest) && validate;
+            return (!(this is Saml2AuthnRequest) || Config.SignAuthnRequest) && validate;
         }
 
         private void ValidateXmlSignature(SignatureValidation documentValidationResult)
