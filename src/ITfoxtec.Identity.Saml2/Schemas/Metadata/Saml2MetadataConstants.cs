@@ -118,6 +118,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             public const string RequestedAttribute = "RequestedAttribute";
 
+            public const string Attribute = "Attribute";
+
             public const string AttributeValue = "AttributeValue";
 
             public const string Name = "Name";
@@ -127,6 +129,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             public const string IsRequired = "isRequired";
 
             public const string Type = "type";
+    
+            public const string FriendlyName = "FriendlyName"; 
         }
 
         public class KeyTypes

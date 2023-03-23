@@ -47,6 +47,11 @@ namespace TestWebApp.Controllers
                     new ArtifactResolutionService { Binding = ProtocolBindings.ArtifactSoap, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
                 },
                 NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
+                Attributes = new SamlAttribute[] 
+                {
+                    new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.6", friendlyName: "eduPersonPrincipalName"), 
+                    new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.1", new string[] { "member", "student", "employee" }) 
+                }
             };
             entityDescriptor.ContactPersons = new[] {
                 new ContactPerson(ContactTypes.Administrative)

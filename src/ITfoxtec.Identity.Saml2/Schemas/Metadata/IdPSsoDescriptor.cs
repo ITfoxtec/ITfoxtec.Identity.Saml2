@@ -28,6 +28,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public IEnumerable<SingleSignOnService> SingleSignOnServices { get; set; }
 
+        /// <summary>
+        /// Zero or more elements that identify the SAML attributes supported by the identity provider.
+        /// Specific values MAY optionally be included, indicating that only certain values permitted by the
+        /// attribute's definition are supported. In this context, "support" for an attribute means that the identity
+        /// provider has the capability to include it when delivering assertions during single sign-on.
+        /// </summary>
+        public IEnumerable<SamlAttribute> Attributes { get; set; }
+
         public XElement ToXElement()
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
@@ -91,6 +99,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 foreach (var singleSignOnService in SingleSignOnServices)
                 {
                     yield return singleSignOnService.ToXElement();
+                }
+            }
+
+            if (Attributes != null)
+            {
+                foreach (var attribute in Attributes)
+                {
+                    yield return attribute.ToXElement();
                 }
             }
         }
