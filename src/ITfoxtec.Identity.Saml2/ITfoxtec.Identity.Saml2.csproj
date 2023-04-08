@@ -41,11 +41,11 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
-	<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.25.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.0" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.10.2" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <DefineConstants>NET70;NET</DefineConstants>
@@ -63,10 +63,10 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 	
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 	<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.25.0" />
-	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
-	<PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.0" />
-	<PackageReference Include="System.ServiceModel.Security" Version="4.10.0" />
+	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
+	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
+	<PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
+	<PackageReference Include="System.ServiceModel.Security" Version="4.10.2" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <DefineConstants>NET60;NET</DefineConstants>
@@ -84,10 +84,10 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 	
   <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0'">
 	<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.8.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.10.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0'">
     <DefineConstants>NET50;NET</DefineConstants>
