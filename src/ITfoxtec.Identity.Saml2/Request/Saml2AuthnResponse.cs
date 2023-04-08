@@ -258,7 +258,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (assertionElementCache == null)
             {
-#if NETFULL
+#if NETFULL || NETSTANDARD || NETCORE || NET50 || NET60
                 assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
 #else
                 assertionElementCache = GetAssertionElementReference();
