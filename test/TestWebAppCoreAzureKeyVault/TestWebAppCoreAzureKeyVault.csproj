@@ -28,6 +28,5 @@
     <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.2.0" />
 	<PackageReference Include="Azure.Identity" Version="1.5.0" />
 	<PackageReference Include="RSAKeyVaultProvider" Version="2.1.1" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
   </ItemGroup>
 </Project>

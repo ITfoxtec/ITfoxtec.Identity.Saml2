@@ -38,7 +38,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
                 return new Http.HttpRequest
                 {
                     Method = request.Method,
-                    Body = await ReadBodyAsync(request, readBodyAsString)
+                    Body = await ReadBodyStringAsync(request)
                 };
             }
             else
@@ -57,13 +57,8 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             return nv;
         }
 
-        private static async Task<string> ReadBodyAsync(HttpRequest request, bool readBodyAsString)
+        private static async Task<string> ReadBodyStringAsync(HttpRequest request)
         {
-            if (!readBodyAsString)
-            {
-                return null;
-            }
-
             using (var reader = new StreamReader(request.Body))
             {
                 return await reader.ReadToEndAsync();

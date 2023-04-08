@@ -23,6 +23,5 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.447" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
   </ItemGroup>
 </Project>
