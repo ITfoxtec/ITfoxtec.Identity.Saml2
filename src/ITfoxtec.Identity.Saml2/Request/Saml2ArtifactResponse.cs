@@ -70,14 +70,59 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        private string GetInnerArtifactResponseXml(string innerElementName)
+        string innerArtifactResponseXmlCache = null;
+        private string GetInnerArtifactResponseXml(string innerElementName, bool returnNull = false)
         {
-            var innerElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", innerElementName));
-            if (innerElements.Count != 1)
+            if (innerArtifactResponseXmlCache == null)
             {
-                throw new Saml2RequestException("There is not exactly one inner artifact response element.");
+                var innerElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", innerElementName));
+                if (innerElements?.Count == 1)
+                {
+                    innerArtifactResponseXmlCache = innerElements[0].OuterXml;
+                }
+                else
+                {
+                    if (!returnNull && innerElements?.Count != 1)
+                    {
+                        throw new Saml2RequestException("There is not exactly one inner artifact response element.");
+                    }
+                }
             }
-            return innerElements[0].OuterXml;
+            return innerArtifactResponseXmlCache;
+        }
+
+        XmlElement assertionElementCache = null;
+        protected override XmlElement GetAssertionElement()
+        {
+            if (assertionElementCache == null)
+            {
+#if NETFULL || NETSTANDARD || NETCORE || NET50 || NET60
+                assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
+#else
+                assertionElementCache = GetAssertionElementReference();
+#endif
+            }
+            return assertionElementCache;
+        }
+
+        private XmlElement GetAssertionElementReference()
+        {
+            if(InnerRequest is Saml2AuthnResponse)
+            {
+                var innerArtifactResponseXml = GetInnerArtifactResponseXml(InnerRequest.ElementName, returnNull: true);
+                if (innerArtifactResponseXml != null)
+                {
+                    InnerRequest.Read(innerArtifactResponseXml, false, false);
+
+                    var assertionElements = InnerRequest.XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
+                    if (assertionElements.Count != 1)
+                    {
+                        throw new Saml2RequestException("There is not exactly one Assertion element. Maybe the response is encrypted (set the Saml2Configuration.DecryptionCertificate).");
+                    }
+                    return assertionElements[0] as XmlElement;
+                }
+            }
+            return null;
         }
     }
 }
