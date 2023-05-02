@@ -23,8 +23,12 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 return;
             }
+            else if (Saml2SecurityAlgorithms.RsaPssSha256Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            {
+                return;
+            }
+            throw new NotSupportedException($"Only SHA1 ({Saml2SecurityAlgorithms.RsaSha1Signature}), SHA256 ({Saml2SecurityAlgorithms.RsaSha256Signature}), SHA384 ({Saml2SecurityAlgorithms.RsaSha384Signature}), SHA512 ({Saml2SecurityAlgorithms.RsaSha512Signature}) and Sha256 Rsa MGF1 ({Saml2SecurityAlgorithms.RsaPssSha256Signature}) is supported.");
 
-            throw new NotSupportedException($"Only SHA1 ({Saml2SecurityAlgorithms.RsaSha1Signature}), SHA256 ({Saml2SecurityAlgorithms.RsaSha256Signature}), SHA384 ({Saml2SecurityAlgorithms.RsaSha384Signature}) and SHA512 ({Saml2SecurityAlgorithms.RsaSha512Signature}) is supported.");
         }
 
         public static string DigestMethod(string signatureAlgorithm)
@@ -45,11 +49,15 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 return Saml2SecurityAlgorithms.Sha512Digest;
             }
+            else if (Saml2SecurityAlgorithms.RsaPssSha256Signature.Equals(signatureAlgorithm, StringComparison.InvariantCulture))
+            {
+                return Saml2SecurityAlgorithms.Sha256Digest;
+            }
             else
             {
                 ValidateAlgorithm(signatureAlgorithm);
                 throw new InvalidOperationException();
-            }
+            }            
         }
     }
 }
