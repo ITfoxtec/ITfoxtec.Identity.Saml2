@@ -37,6 +37,9 @@
         /// URI for the RSA-SHA-512 signature method for signing XML.
         /// </summary>
         public const string RsaSha512Signature = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512";
-
+        /// <summary>
+        /// URI for the sha256-rsa-mgf1 signature method for signing XML.
+        /// </summary>
+        public const string RsaPssSha256Signature = "http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1";
     }
 }

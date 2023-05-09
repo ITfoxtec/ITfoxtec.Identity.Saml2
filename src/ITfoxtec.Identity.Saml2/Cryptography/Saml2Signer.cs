@@ -20,6 +20,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA256SignatureDescription), Saml2SecurityAlgorithms.RsaSha256Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA384SignatureDescription), Saml2SecurityAlgorithms.RsaSha384Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA512SignatureDescription), Saml2SecurityAlgorithms.RsaSha512Signature);
+            CryptoConfig.AddAlgorithm(typeof(RSAPSSSHA256SignatureDescription), Saml2SecurityAlgorithms.RsaPssSha256Signature);
         }
 #endif
 
