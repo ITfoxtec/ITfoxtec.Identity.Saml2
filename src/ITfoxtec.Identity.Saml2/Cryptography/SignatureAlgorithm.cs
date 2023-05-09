@@ -27,7 +27,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 return;
             }
-            throw new NotSupportedException($"Only SHA1 ({Saml2SecurityAlgorithms.RsaSha1Signature}), SHA256 ({Saml2SecurityAlgorithms.RsaSha256Signature}), SHA384 ({Saml2SecurityAlgorithms.RsaSha384Signature}), SHA512 ({Saml2SecurityAlgorithms.RsaSha512Signature}) and Sha256 Rsa MGF1 ({Saml2SecurityAlgorithms.RsaPssSha256Signature}) is supported.");
+            throw new NotSupportedException($"Only SHA1 ({Saml2SecurityAlgorithms.RsaSha1Signature}), SHA256 ({Saml2SecurityAlgorithms.RsaSha256Signature}), SHA384 ({Saml2SecurityAlgorithms.RsaSha384Signature}), SHA512 ({Saml2SecurityAlgorithms.RsaSha512Signature}) and SHA256 RSA MGF1 ({Saml2SecurityAlgorithms.RsaPssSha256Signature}) is supported.");
 
         }
 

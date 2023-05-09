@@ -9,7 +9,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         public RSAPKCS1SHA256SignatureDescription()
         {
             KeyAlgorithm = typeof(RSACryptoServiceProvider).AssemblyQualifiedName;
-            DigestAlgorithm = typeof(SHA256Managed).AssemblyQualifiedName;
+            DigestAlgorithm = "SHA256";
             FormatterAlgorithm = typeof(RSAPKCS1SignatureFormatter).AssemblyQualifiedName;
             DeformatterAlgorithm = typeof(RSAPKCS1SignatureDeformatter).AssemblyQualifiedName;
         }
@@ -22,7 +22,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             }
 
             RSAPKCS1SignatureDeformatter deformatter = new RSAPKCS1SignatureDeformatter(key);
-            deformatter.SetHashAlgorithm("SHA256");
+            deformatter.SetHashAlgorithm(DigestAlgorithm);
             return deformatter;
         }
 
@@ -34,7 +34,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             }
 
             RSAPKCS1SignatureFormatter formatter = new RSAPKCS1SignatureFormatter(key);
-            formatter.SetHashAlgorithm("SHA256");
+            formatter.SetHashAlgorithm(DigestAlgorithm);
             return formatter;
         }
     }

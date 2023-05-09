@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 
 namespace ITfoxtec.Identity.Saml2.Cryptography
 {
@@ -6,29 +7,35 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     {
         public RSAPSSSHA256SignatureDescription()
         {
-            using (var rsa = RSA.Create())
-            {
-                this.KeyAlgorithm = rsa.GetType().AssemblyQualifiedName; // Does not like a simple algorithm name, but wants a type name (AssembyQualifiedName in Core)
-            }
-           
-            this.DigestAlgorithm = "SHA256"; // Somehow wants a simple algorithm name
-            this.FormatterAlgorithm = typeof(RsaPssSignatureFormatter).FullName;
-            this.DeformatterAlgorithm = typeof(RsaPssSignatureDeformatter).FullName;
+            KeyAlgorithm = typeof(RSACryptoServiceProvider).AssemblyQualifiedName;
+            DigestAlgorithm = "SHA256"; 
+            FormatterAlgorithm = typeof(RsaPssSignatureFormatter).FullName;
+            DeformatterAlgorithm = typeof(RsaPssSignatureDeformatter).FullName;
         }
 
         public override AsymmetricSignatureFormatter CreateFormatter(AsymmetricAlgorithm key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("key");
+            }
+
             var signatureFormatter = new RsaPssSignatureFormatter();
             signatureFormatter.SetKey(key);
-            signatureFormatter.SetHashAlgorithm(this.DigestAlgorithm);
+            signatureFormatter.SetHashAlgorithm(DigestAlgorithm);
             return signatureFormatter;
         }
 
         public override AsymmetricSignatureDeformatter CreateDeformatter(AsymmetricAlgorithm key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("key");
+            }
+
             var signatureDeformatter = new RsaPssSignatureDeformatter();
             signatureDeformatter.SetKey(key);
-            signatureDeformatter.SetHashAlgorithm(this.DigestAlgorithm);
+            signatureDeformatter.SetHashAlgorithm(DigestAlgorithm);
             return signatureDeformatter;
         }
 
@@ -39,7 +46,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
             public override void SetKey(AsymmetricAlgorithm key)
             {
-                this.Key = (RSA)key;
+                Key = (RSA)key;
             }
 
             public override void SetHashAlgorithm(string strName)
@@ -47,12 +54,12 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
                 // Verify the name
                 Oid.FromFriendlyName(strName, OidGroup.HashAlgorithm);
 
-                this.HashAlgorithmName = strName;
+                HashAlgorithmName = strName;
             }
 
             public override byte[] CreateSignature(byte[] rgbHash)
             {
-                return this.Key.SignHash(rgbHash, new HashAlgorithmName(this.HashAlgorithmName), RSASignaturePadding.Pss);
+                return Key.SignHash(rgbHash, new HashAlgorithmName(HashAlgorithmName), RSASignaturePadding.Pss);
             }
         }
 
@@ -63,7 +70,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
             public override void SetKey(AsymmetricAlgorithm key)
             {
-                this.Key = (RSA)key;
+                Key = (RSA)key;
             }
 
             public override void SetHashAlgorithm(string strName)
@@ -71,12 +78,12 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
                 // Verify the name
                 Oid.FromFriendlyName(strName, OidGroup.HashAlgorithm);
 
-                this.HashAlgorithmName = strName;
+                HashAlgorithmName = strName;
             }
             
             public override bool VerifySignature(byte[] rgbHash, byte[] rgbSignature)
             {
-                return this.Key.VerifyHash(rgbHash, rgbSignature, new HashAlgorithmName(this.HashAlgorithmName), RSASignaturePadding.Pss);
+                return Key.VerifyHash(rgbHash, rgbSignature, new HashAlgorithmName(HashAlgorithmName), RSASignaturePadding.Pss);
             }
         }
     }
