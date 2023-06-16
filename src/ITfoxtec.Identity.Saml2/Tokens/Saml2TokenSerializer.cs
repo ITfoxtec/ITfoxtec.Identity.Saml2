@@ -1,4 +1,5 @@
-﻿using ITfoxtec.Identity.Saml2.Cryptography;
+﻿#if !NETFULL
+using ITfoxtec.Identity.Saml2.Cryptography;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using System;
 using System.Collections.Generic;
@@ -35,3 +36,4 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         }
     }
 }
+#endif
