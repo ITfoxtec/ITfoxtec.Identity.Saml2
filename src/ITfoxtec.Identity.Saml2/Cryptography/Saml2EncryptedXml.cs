@@ -52,6 +52,19 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             }
         }
 
+        public override byte[] GetDecryptionIV(EncryptedData encryptedData, string symmetricAlgorithmUri)
+        {
+
+            if (symmetricAlgorithmUri==AesGcmAlgorithm.AesGcm128Identifier || symmetricAlgorithmUri == AesGcmAlgorithm.AesGcm256Identifier)
+            {
+                int initBytesSize = 12;
+                byte[] iv = new byte[initBytesSize];
+                Buffer.BlockCopy(encryptedData.CipherData.CipherValue, 0, iv, 0, iv.Length);
+                return iv;
+            } else
+                return base.GetDecryptionIV(encryptedData, symmetricAlgorithmUri);
+        }
+
         public override byte[] DecryptEncryptedKey(EncryptedKey encryptedKey)
         {
             return DecryptKey(encryptedKey.CipherData.CipherValue, EncryptionPrivateKey, (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncRSAOAEPUrl));
