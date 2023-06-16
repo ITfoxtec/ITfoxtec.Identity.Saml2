@@ -54,9 +54,13 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public override byte[] GetDecryptionIV(EncryptedData encryptedData, string symmetricAlgorithmUri)
         {
-
+            if (symmetricAlgorithmUri == null)
+                symmetricAlgorithmUri = encryptedData?.EncryptionMethod?.KeyAlgorithm;
             if (symmetricAlgorithmUri==AesGcmAlgorithm.AesGcm128Identifier || symmetricAlgorithmUri == AesGcmAlgorithm.AesGcm256Identifier)
             {
+                if (encryptedData == null)
+                    throw new ArgumentNullException(nameof(encryptedData));
+
                 int initBytesSize = 12;
                 byte[] iv = new byte[initBytesSize];
                 Buffer.BlockCopy(encryptedData.CipherData.CipherValue, 0, iv, 0, iv.Length);
