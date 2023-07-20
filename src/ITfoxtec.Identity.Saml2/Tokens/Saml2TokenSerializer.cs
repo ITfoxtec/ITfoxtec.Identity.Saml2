@@ -1,38 +1,28 @@
 ﻿#if !NETFULL
 using ITfoxtec.Identity.Saml2.Cryptography;
 using Microsoft.IdentityModel.Tokens.Saml2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 
 namespace ITfoxtec.Identity.Saml2.Tokens
 {
     internal class Saml2TokenSerializer : Saml2Serializer
     {
-        private readonly RSA encryptionPrivateKey;
+        private readonly X509Certificate2 decryptionCertificate;
 
-        public Saml2TokenSerializer(RSA encryptionPrivateKey) : base() 
+        public Saml2TokenSerializer(X509Certificate2 decryptionCertificate) : base() 
         {
-            this.encryptionPrivateKey = encryptionPrivateKey;
+            this.decryptionCertificate = decryptionCertificate;
         }
 
         protected override Saml2NameIdentifier ReadEncryptedId(XmlDictionaryReader reader)
         {
-            var xmlDoc = new XmlDocument(reader.NameTable);
-            xmlDoc.PreserveWhitespace = true;
-            xmlDoc.LoadXml(reader.ReadOuterXml());
-            XmlElement decrypted = null;
+            var xmlDocument = reader.ReadOuterXml().ToXmlDocument();
 
-            var enc = new Saml2EncryptedXml(xmlDoc, encryptionPrivateKey);
-            enc.DecryptDocument();
-            decrypted = xmlDoc.DocumentElement;
+            new Saml2EncryptedXml(xmlDocument, decryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
 
-            reader = XmlDictionaryReader.CreateDictionaryReader(new XmlNodeReader(decrypted.FirstChild));
-            return ReadNameIdentifier(reader, null);
+            var decryptedReader = XmlDictionaryReader.CreateDictionaryReader(new XmlNodeReader(xmlDocument.DocumentElement.FirstChild));
+            return ReadNameIdentifier(decryptedReader, null);
         }
     }
 }

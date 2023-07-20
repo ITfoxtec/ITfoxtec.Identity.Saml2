@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Xml;
-using System.Security.Cryptography;
 #if NETFULL
 using System;
 using System.IO;
@@ -26,7 +25,7 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         public TokenValidationParameters TokenValidationParameters { get; protected set; }
 #endif
 
-        public static Saml2ResponseSecurityTokenHandler GetSaml2SecurityTokenHandler(Saml2IdentityConfiguration configuration, RSA decryptionKey)
+        public static Saml2ResponseSecurityTokenHandler GetSaml2SecurityTokenHandler(Saml2IdentityConfiguration configuration)
         {
             var handler = new Saml2ResponseSecurityTokenHandler();
 #if NETFULL
@@ -47,8 +46,10 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             handler.SamlSecurityTokenRequirement.NameClaimType = ClaimTypes.NameIdentifier;
 #else
             handler.TokenValidationParameters = configuration;
-            if (decryptionKey != null)
-                handler.Serializer = new Saml2TokenSerializer(decryptionKey);
+            if (configuration.DecryptionCertificate != null)
+            {
+                handler.Serializer = new Saml2TokenSerializer(configuration.DecryptionCertificate);
+            }
 #endif
             return handler;
         }

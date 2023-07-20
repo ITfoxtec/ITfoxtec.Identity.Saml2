@@ -76,7 +76,7 @@ namespace ITfoxtec.Identity.Saml2
                     throw new ArgumentException("No RSA Public Key present in Encryption Certificate.");
                 }
             }
-            Saml2SecurityTokenHandler = Saml2ResponseSecurityTokenHandler.GetSaml2SecurityTokenHandler(IdentityConfiguration, Config?.DecryptionCertificate?.GetSamlRSAPrivateKey());
+            Saml2SecurityTokenHandler = Saml2ResponseSecurityTokenHandler.GetSaml2SecurityTokenHandler(IdentityConfiguration);
         }
 
         protected override void ValidateElementName()
