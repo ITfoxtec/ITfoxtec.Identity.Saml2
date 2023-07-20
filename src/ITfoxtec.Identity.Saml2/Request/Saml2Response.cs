@@ -23,7 +23,7 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional]
-        /// A text message describing the <see cref="Status"/> of the corresponding request.
+        /// A message which MAY be returned to an operator, describing the <see cref="Status"/> of the corresponding request.
         /// </summary>
         public string StatusMessage { get; set; }
 
