@@ -13,6 +13,15 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         public RSA EncryptionPublicKey { get; set; }
         public RSA EncryptionPrivateKey { get; set; }
 
+#if !NETFULL
+        static Saml2EncryptedXml()
+        {
+            // Register AES-GCM wrapper on .NET Core targets where AES-GCM algorithm is available
+            CryptoConfig.AddAlgorithm(typeof(AesGcmAlgorithm), AesGcmAlgorithm.AesGcm256Identifier);
+            CryptoConfig.AddAlgorithm(typeof(AesGcmAlgorithm), AesGcmAlgorithm.AesGcm128Identifier);
+        }
+#endif
+
         public Saml2EncryptedXml(RSA encryptionPublicKey) : base()
         {
             EncryptionPublicKey = encryptionPublicKey;
@@ -53,6 +62,28 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
                 return encryptedData.GetXml();
             }
+        }
+
+        public override byte[] GetDecryptionIV(EncryptedData encryptedData, string symmetricAlgorithmUri)
+        {
+            if (encryptedData is null)
+            {
+                throw new ArgumentNullException(nameof(encryptedData));
+            }
+
+#if !NETFULL
+
+            var aesGcmSymmetricAlgorithmUri = symmetricAlgorithmUri ?? encryptedData.EncryptionMethod?.KeyAlgorithm;
+            if (aesGcmSymmetricAlgorithmUri == AesGcmAlgorithm.AesGcm128Identifier || aesGcmSymmetricAlgorithmUri == AesGcmAlgorithm.AesGcm256Identifier)
+            {
+                int initBytesSize = 12;
+                byte[] iv = new byte[initBytesSize];
+                Buffer.BlockCopy(encryptedData.CipherData.CipherValue, 0, iv, 0, iv.Length);
+                return iv;
+            }
+#endif
+
+            return base.GetDecryptionIV(encryptedData, symmetricAlgorithmUri);
         }
 
         public override byte[] DecryptEncryptedKey(EncryptedKey encryptedKey)
