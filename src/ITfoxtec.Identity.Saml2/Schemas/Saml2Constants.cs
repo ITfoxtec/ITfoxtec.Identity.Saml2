@@ -116,6 +116,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string StatusCode = "StatusCode";
 
+            internal const string StatusMessage = "StatusMessage";
+
             internal const string Value = "Value";
 
             internal const string AssertionConsumerServiceIndex = "AssertionConsumerServiceIndex";
