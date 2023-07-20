@@ -2,7 +2,6 @@
 using System.Xml;
 using System.Xml.Linq;
 using ITfoxtec.Identity.Saml2.Util;
-using Schemas = ITfoxtec.Identity.Saml2.Schemas;
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -57,13 +56,13 @@ namespace ITfoxtec.Identity.Saml2
                 yield return item;
             }
 
-            // Create the Status element with its required child StatusCode element.
-            var statusEnvelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.Status, GetStatusCodeElement());
+            var statusEnvelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.Status,
+                new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.StatusCode,
+                    new XAttribute(Schemas.Saml2Constants.Message.Value, Saml2StatusCodeUtil.ToString(Status))));
 
             if (!string.IsNullOrWhiteSpace(StatusMessage))
             {
-                // The optional StatusMessage has a value, so create an element for it.
-                statusEnvelope.Add(GetStatusMessageElement());
+                statusEnvelope.Add(new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.StatusMessage, StatusMessage));
             }
 
             yield return statusEnvelope;
@@ -83,18 +82,6 @@ namespace ITfoxtec.Identity.Saml2
             Status = Saml2StatusCodeUtil.ToEnum(XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString][Schemas.Saml2Constants.Message.StatusCode, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].Attributes[Schemas.Saml2Constants.Message.Value].GetValueOrNull<string>());
 
             StatusMessage = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString][Schemas.Saml2Constants.Message.StatusMessage, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
-        }
-
-
-        private XElement GetStatusCodeElement()
-        {
-            return new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.StatusCode,
-                    new XAttribute(Schemas.Saml2Constants.Message.Value, Saml2StatusCodeUtil.ToString(Status)));
-        }
-
-        private XElement GetStatusMessageElement()
-        {
-            return new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + Schemas.Saml2Constants.Message.StatusMessage, StatusMessage);
         }
     }
 }
