@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETFULL
+using System;
 using System.Security.Cryptography;
 
 namespace ITfoxtec.Identity.Saml2.Cryptography
@@ -51,3 +52,4 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         }
     }
 }
+#endif

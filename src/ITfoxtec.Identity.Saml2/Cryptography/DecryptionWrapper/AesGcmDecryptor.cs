@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETFULL
+using System;
 using System.Security.Cryptography;
 
 namespace ITfoxtec.Identity.Saml2.Cryptography
@@ -36,9 +37,6 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
         {
-#if NETFULL
-            throw new NotImplementedException();
-#else
             //inspired by https://stackoverflow.com/a/60891115
 
             var tagSize = authenticationTagSizeInBits / 8;
@@ -59,7 +57,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             aesgcm.Decrypt(nonce, cipherBytes, tag, plainBytes);
 
             return plainBytes.ToArray();
-#endif
         }
     }
 }
+#endif

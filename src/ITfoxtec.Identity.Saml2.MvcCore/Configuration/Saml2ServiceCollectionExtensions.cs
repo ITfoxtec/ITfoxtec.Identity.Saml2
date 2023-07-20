@@ -2,8 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Cryptography;
-using System.Security.Cryptography;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
 {
@@ -21,11 +19,6 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
         /// <param name="cookieSecurePolicy">The cookie policy. The default value is Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest.</param>
         public static IServiceCollection AddSaml2(this IServiceCollection services, string loginPath = "/Auth/Login", bool slidingExpiration = false, string accessDeniedPath = null, ITicketStore sessionStore = null, SameSiteMode cookieSameSite = SameSiteMode.Lax, string cookieDomain = null, CookieSecurePolicy cookieSecurePolicy = CookieSecurePolicy.SameAsRequest)
         {
-            // Register aesgcm wrapper on .net core targets where aesgcm algorithm is available
-#if !NETFULL
-            CryptoConfig.AddAlgorithm(typeof(AesGcmAlgorithm), AesGcmAlgorithm.AesGcm256Identifier);
-            CryptoConfig.AddAlgorithm(typeof(AesGcmAlgorithm), AesGcmAlgorithm.AesGcm128Identifier);
-#endif
             services.AddAuthentication(Saml2Constants.AuthenticationScheme)
                 .AddCookie(Saml2Constants.AuthenticationScheme, o =>
                 {
