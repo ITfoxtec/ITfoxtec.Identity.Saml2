@@ -10,6 +10,7 @@ using System.Linq;
 using ITfoxtec.Identity.Saml2.Util;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.IdentityModel.Selectors;
 #endif
 
@@ -25,6 +26,8 @@ namespace ITfoxtec.Identity.Saml2.Configuration
 
 #if !NETFULL
         public X509CertificateValidator CertificateValidator { get; set; }
+
+        public X509Certificate2 DecryptionCertificate { get; set; }
 #endif
 
         public static Saml2IdentityConfiguration GetIdentityConfiguration(Saml2Configuration config)
@@ -72,6 +75,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
                 CertificateValidationMode = config.CertificateValidationMode,
                 RevocationMode = config.RevocationMode,
             };
+            configuration.DecryptionCertificate = config.DecryptionCertificate;
             SetCustomCertificateValidator(configuration, config);
 #endif
 
