@@ -28,8 +28,8 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3 ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.8.7.1</AssemblyVersion>
-    <FileVersion>4.8.7.1</FileVersion>
+    <AssemblyVersion>4.8.7.2</AssemblyVersion>
+    <FileVersion>4.8.7.2</FileVersion>
     <Copyright>Copyright © 2023</Copyright>
     <Version>4.8.7-beta1</Version>
     <SignAssembly>true</SignAssembly>
