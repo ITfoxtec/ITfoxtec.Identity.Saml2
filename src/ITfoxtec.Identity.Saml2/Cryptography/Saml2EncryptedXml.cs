@@ -8,6 +8,8 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 {
     public class Saml2EncryptedXml : EncryptedXml
     {
+        public const string XmlEncKeyAlgorithmRSAOAEPUrl = "http://www.w3.org/2009/xmlenc11#rsa-oaep";
+
         public RSA EncryptionPublicKey { get; set; }
         public RSA EncryptionPrivateKey { get; set; }
 
@@ -30,20 +32,20 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public virtual XmlElement EncryptAassertion(XmlElement assertionElement)
         {
-            using (var encryptionAlgorithm = new AesCryptoServiceProvider())
+            using (var encryptionAlgorithm = Aes.Create())
             {
                 encryptionAlgorithm.KeySize = 256;
 
                 var encryptedData = new EncryptedData
                 {
-                    Type = EncryptedXml.XmlEncElementUrl,
-                    EncryptionMethod = new EncryptionMethod(EncryptedXml.XmlEncAES256Url),
+                    Type = XmlEncElementUrl,
+                    EncryptionMethod = new EncryptionMethod(XmlEncAES256Url),
                     KeyInfo = new KeyInfo()
                 };
                 encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(new EncryptedKey
                 {
-                    EncryptionMethod = new EncryptionMethod(EncryptedXml.XmlEncRSAOAEPUrl),
-                    CipherData = new CipherData(EncryptedXml.EncryptKey(encryptionAlgorithm.Key, EncryptionPublicKey, true))
+                    EncryptionMethod = new EncryptionMethod(XmlEncRSAOAEPUrl),
+                    CipherData = new CipherData(EncryptKey(encryptionAlgorithm.Key, EncryptionPublicKey, true))
                 }));
 
                 var encryptedXml = new EncryptedXml();
@@ -55,43 +57,40 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public override byte[] DecryptEncryptedKey(EncryptedKey encryptedKey)
         {
-            string rsaoaep = "http://www.w3.org/2009/xmlenc11#rsa-oaep";
-
-            byte[] key;
-            if (encryptedKey.EncryptionMethod.KeyAlgorithm == rsaoaep)
+            if (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncKeyAlgorithmRSAOAEPUrl)
             {
-                // check if we have an explicit digest method, default to SHA1
-                var padding = RSAEncryptionPadding.OaepSHA1;
-
-                var xml = encryptedKey.GetXml();
-                XmlNamespaceManager nsm = new XmlNamespaceManager(xml.OwnerDocument.NameTable);
-                nsm.AddNamespace("enc", EncryptedXml.XmlEncNamespaceUrl);
-                nsm.AddNamespace("ds", SignedXml.XmlDsigNamespaceUrl);
-                var digestMethodElement = xml.SelectSingleNode("enc:EncryptionMethod/ds:DigestMethod", nsm) as XmlElement;
-                if (digestMethodElement != null)
-                {
-                    var method = digestMethodElement.GetAttribute("Algorithm");
-                    switch (method)
-                    {
-                        case Saml2SecurityAlgorithms.Sha1Digest:
-                            padding = RSAEncryptionPadding.OaepSHA1;
-                            break;
-                        case Saml2SecurityAlgorithms.Sha256Digest:
-                            padding = RSAEncryptionPadding.OaepSHA256;
-                            break;
-                        case Saml2SecurityAlgorithms.Sha384Digest:
-                            padding = RSAEncryptionPadding.OaepSHA384;
-                            break;
-                        case Saml2SecurityAlgorithms.Sha512Digest:
-                            padding = RSAEncryptionPadding.OaepSHA512;
-                            break;
-                    }
-                }
-                key = EncryptionPrivateKey.Decrypt(encryptedKey.CipherData.CipherValue, padding);
+                return EncryptionPrivateKey.Decrypt(encryptedKey.CipherData.CipherValue, GetEncryptionPadding(encryptedKey));
             }
             else
-                key = DecryptKey(encryptedKey.CipherData.CipherValue, EncryptionPrivateKey, (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncRSAOAEPUrl));
-            return key;
+            {
+                return DecryptKey(encryptedKey.CipherData.CipherValue, EncryptionPrivateKey, (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncRSAOAEPUrl));
+            }
+        }
+
+        private static RSAEncryptionPadding GetEncryptionPadding(EncryptedKey encryptedKey)
+        {
+            var xmlElement = encryptedKey.GetXml();
+            var nsm = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
+            nsm.AddNamespace("enc", XmlEncNamespaceUrl);
+            nsm.AddNamespace("ds", SignedXml.XmlDsigNamespaceUrl);
+            var digestMethodElement = xmlElement.SelectSingleNode("enc:EncryptionMethod/ds:DigestMethod", nsm) as XmlElement;
+            if (digestMethodElement != null)
+            {
+                var method = digestMethodElement.GetAttribute("Algorithm");
+                switch (method)
+                {
+                    case Saml2SecurityAlgorithms.Sha1Digest:
+                        return RSAEncryptionPadding.OaepSHA1;
+                    case Saml2SecurityAlgorithms.Sha256Digest:
+                        return RSAEncryptionPadding.OaepSHA256;
+                    case Saml2SecurityAlgorithms.Sha384Digest:
+                        return RSAEncryptionPadding.OaepSHA384;
+                    case Saml2SecurityAlgorithms.Sha512Digest:
+                        return RSAEncryptionPadding.OaepSHA512;
+                }
+            }
+
+            return RSAEncryptionPadding.OaepSHA256;
         }
     }
 }
