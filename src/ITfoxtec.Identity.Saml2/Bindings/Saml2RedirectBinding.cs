@@ -96,7 +96,7 @@ namespace ITfoxtec.Identity.Saml2
             UnbindInternal(request, saml2RequestResponse);
 
             if (!"GET".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
-                throw new InvalidSaml2BindingException("Not HTTP GET Method.");
+                throw new InvalidSaml2BindingException("Not redirect binding (HTTP GET).");
 
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);
@@ -147,7 +147,7 @@ namespace ITfoxtec.Identity.Saml2
         protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!"GET".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
-                throw new InvalidSaml2BindingException("Not HTTP GET Method.");
+                throw new InvalidSaml2BindingException("Not redirect binding (HTTP GET).");
 
             if (!request.Query.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Query String does not contain " + messageName);

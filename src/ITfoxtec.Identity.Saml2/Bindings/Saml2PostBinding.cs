@@ -109,7 +109,7 @@ namespace ITfoxtec.Identity.Saml2
         protected override Saml2Request Read(HttpRequest request, Saml2Request saml2RequestResponse, string messageName, bool validate, bool detectReplayedTokens)
         {
             if (!"POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase))
-                throw new InvalidSaml2BindingException("Not HTTP POST Method.");
+                throw new InvalidSaml2BindingException("Not POST binding (HTTP POST).");
 
             if (!request.Form.AllKeys.Contains(messageName))
                 throw new Saml2BindingException("HTTP Form does not contain " + messageName);
