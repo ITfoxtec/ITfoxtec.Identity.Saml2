@@ -31,7 +31,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <AssemblyVersion>4.8.8</AssemblyVersion>
     <FileVersion>4.8.8</FileVersion>
     <Copyright>Copyright © 2023</Copyright>
-    <Version>4.8.8/Version>
+    <Version>4.8.8</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
