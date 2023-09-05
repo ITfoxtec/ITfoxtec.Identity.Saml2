@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITfoxtec.Identity.Saml2.Schemas;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -7,10 +8,29 @@ namespace ITfoxtec.Identity.Saml2
 {
     public static class Saml2BindingExtensions
     {
+        public static T Bind<T>(this T binding, Saml2Request saml2Request) where T : Saml2Binding
+        {
+            binding.BindInternal(saml2Request, Saml2Constants.Message.SamlRequest);
+            return binding;
+        }
+
+        public static T Bind<T>(this T binding, Saml2Response saml2Response) where T : Saml2Binding
+        {
+            binding.BindInternal(saml2Response, Saml2Constants.Message.SamlResponse);
+            return binding;
+        }
+
+        public static T Bind<T>(this T binding, Saml2ArtifactResolve saml2ArtifactResolve) where T : Saml2Binding
+        {
+            binding.BindInternal(saml2ArtifactResolve, Saml2Constants.Message.SamlArt);
+            return binding;
+        }
+
         /// <summary>
         /// Set a Dictionary of key value pairs as a Query string in the Relay State.
         /// </summary>
-        public static string SetRelayStateQuery<T>(this Saml2Binding<T> saml2Binding, Dictionary<string, string> elements)
+        public static string SetRelayStateQuery<T>(this T saml2Binding, Dictionary<string, string> elements)
+            where T : Saml2Binding
         {
             if(elements == null)
             {
@@ -32,7 +52,8 @@ namespace ITfoxtec.Identity.Saml2
         /// <summary>
         /// Get the Relay State Query string as a Dictionary of key value pairs.
         /// </summary>
-        public static Dictionary<string, string> GetRelayStateQuery<T>(this Saml2Binding<T> saml2Binding)
+        public static Dictionary<string, string> GetRelayStateQuery<T>(this T saml2Binding)
+            where T : Saml2Binding
         {
             Dictionary<string, string> elements = new Dictionary<string,string>();
             if(string.IsNullOrWhiteSpace(saml2Binding.RelayState))

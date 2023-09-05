@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public abstract class Saml2Binding<T>
+    public abstract class Saml2Binding
     {
         public XmlDocument XmlDocument { get; protected set; }
 
@@ -26,22 +26,7 @@ namespace ITfoxtec.Identity.Saml2
         public Saml2Binding()
         { }
 
-        public T Bind(Saml2Request saml2Request)
-        {
-            return BindInternal(saml2Request, Saml2Constants.Message.SamlRequest);
-        }
-
-        public T Bind(Saml2Response saml2Response)
-        {
-            return BindInternal(saml2Response, Saml2Constants.Message.SamlResponse);
-        }
-
-        public T Bind(Saml2ArtifactResolve saml2ArtifactResolve)
-        {
-            return BindInternal(saml2ArtifactResolve, Saml2Constants.Message.SamlArt);
-        }
-
-        protected virtual Saml2Binding<T> BindInternal(Saml2Request saml2RequestResponse, bool createXml = true)
+        protected internal virtual void BindInternal(Saml2Request saml2RequestResponse, bool createXml = true)
         {
             if (saml2RequestResponse == null)
                 throw new ArgumentNullException(nameof(saml2RequestResponse));
@@ -65,10 +50,9 @@ namespace ITfoxtec.Identity.Saml2
                 Debug.WriteLine("Saml2P: " + XmlDocument.OuterXml);
 #endif
             }
-            return this;
         }
 
-        protected abstract T BindInternal(Saml2Request saml2RequestResponse, string messageName);
+        protected internal abstract void BindInternal(Saml2Request saml2RequestResponse, string messageName);
 
         public Saml2Request Unbind(HttpRequest request, Saml2Request saml2Request)
         {
@@ -95,7 +79,7 @@ namespace ITfoxtec.Identity.Saml2
 
             if (saml2RequestResponse.Config == null)
                 throw new ArgumentNullException("saml2RequestResponse.Config");
-            
+
             SetSignatureValidationCertificates(saml2RequestResponse);
 
             return saml2RequestResponse;

@@ -14,14 +14,14 @@ using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2SoapEnvelope : Saml2Binding<Saml2SoapEnvelope>
+    public class Saml2SoapEnvelope : Saml2Binding
     {
         /// <summary>
         /// SOAP response XML.
         /// </summary>
         public string SoapResponseXml { get; set; }
 
-        protected override Saml2SoapEnvelope BindInternal(Saml2Request saml2Request, string messageName)
+        protected internal override void BindInternal(Saml2Request saml2Request, string messageName)
         {
             if (!(saml2Request is Saml2ArtifactResponse))
                 throw new ArgumentException("Only Saml2ArtifactResponse is supported");
@@ -29,7 +29,6 @@ namespace ITfoxtec.Identity.Saml2
             BindInternal(saml2Request);
 
             SoapResponseXml = ToSoapXml();
-            return this;
         }
 
         protected override Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2Request, string messageName)

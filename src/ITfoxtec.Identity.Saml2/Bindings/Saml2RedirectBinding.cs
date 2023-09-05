@@ -13,13 +13,13 @@ using ITfoxtec.Identity.Saml2.Http;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2RedirectBinding : Saml2Binding<Saml2RedirectBinding>
+    public class Saml2RedirectBinding : Saml2Binding
     {
         public Uri RedirectLocation { get; protected set; }
 
         public string Signature { get; protected set; }
 
-        protected override Saml2RedirectBinding BindInternal(Saml2Request saml2RequestResponse, string messageName)
+        protected internal override void BindInternal(Saml2Request saml2RequestResponse, string messageName)
         {
             base.BindInternal(saml2RequestResponse);
 
@@ -50,8 +50,6 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             RedirectLocation = new Uri(string.Join(saml2RequestResponse.Destination.OriginalString.Contains('?') ? "&" : "?", saml2RequestResponse.Destination.OriginalString, requestQueryString));
-
-            return this;
         }
 
         private string SigneQueryString(string queryString, X509Certificate2 signingCertificate)
