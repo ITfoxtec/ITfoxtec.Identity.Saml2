@@ -31,7 +31,9 @@ namespace TestWebAppCoreNemLogin3Sp
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
                 saml2Configuration.SignAuthnRequest = true;
-                saml2Configuration.SigningCertificate = saml2Configuration.DecryptionCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                var cert = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                saml2Configuration.SigningCertificate = cert;
+                saml2Configuration.DecryptionCertificates = new[] { cert };
 
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
