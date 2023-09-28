@@ -32,7 +32,12 @@ namespace ITfoxtec.Identity.Saml2
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
 
         public X509Certificate2 SigningCertificate { get; set; }
-        public X509Certificate2 DecryptionCertificate { get; set; }
+
+        /// <summary>
+        /// The list of decryption certificates should match the list of encryption certificates provided in the metadata for the SP/IdP
+        /// </summary>
+        public X509Certificate2[] DecryptionCertificates { get; set; }
+
         /// <summary>
         /// If set the authn responses created by the library is encrypt.
         /// </summary>

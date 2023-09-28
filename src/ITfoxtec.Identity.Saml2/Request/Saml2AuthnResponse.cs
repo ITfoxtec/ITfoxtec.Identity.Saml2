@@ -26,7 +26,10 @@ namespace ITfoxtec.Identity.Saml2
     {
         public override string ElementName => Schemas.Saml2Constants.Message.AuthnResponse;
 
-        internal X509Certificate2 DecryptionCertificate { get; private set; }
+        /// <summary>
+        /// Array of Decryption certificates
+        /// </summary>
+        internal X509Certificate2[] DecryptionCertificates { get; private set; }
         internal X509Certificate2 EncryptionCertificate { get; private set; }
 
         /// <summary>
@@ -56,14 +59,14 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2AuthnResponse(Saml2Configuration config) : base(config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if(config == null) throw new ArgumentNullException(nameof(config));
 
             Destination = config.SingleSignOnDestination;
 
-            if (config.DecryptionCertificate != null)
+            if(config.DecryptionCertificates != null)
             {
-                DecryptionCertificate = config.DecryptionCertificate;
-                if (config.DecryptionCertificate.GetSamlRSAPrivateKey() == null)
+                DecryptionCertificates = config.DecryptionCertificates;
+                if(config.DecryptionCertificates.Any(c => c.GetSamlRSAPrivateKey() == null))
                 {
                     throw new ArgumentException("No RSA Private Key present in Decryption Certificate or missing private key read credentials.");
                 }
@@ -71,7 +74,7 @@ namespace ITfoxtec.Identity.Saml2
             if(config.EncryptionCertificate != null)
             {
                 EncryptionCertificate = config.EncryptionCertificate;
-                if (config.EncryptionCertificate.GetRSAPublicKey() == null)
+                if(config.EncryptionCertificate.GetRSAPublicKey() == null)
                 {
                     throw new ArgumentException("No RSA Public Key present in Encryption Certificate.");
                 }
@@ -81,7 +84,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void ValidateElementName()
         {
-            if (XmlDocument.DocumentElement.LocalName != ElementName)
+            if(XmlDocument.DocumentElement.LocalName != ElementName)
             {
                 throw new Saml2RequestException("Not a SAML2 Authn Response.");
             }
@@ -97,8 +100,8 @@ namespace ITfoxtec.Identity.Saml2
         /// <returns>The SAML 2.0 Security Token.</returns>
         public Saml2SecurityToken CreateSecurityToken(string appliesToAddress, Uri authnContext = null, int subjectConfirmationLifetime = 5, int issuedTokenLifetime = 60)
         {
-            if (appliesToAddress == null) throw new ArgumentNullException(nameof(appliesToAddress));
-            if (ClaimsIdentity == null) throw new ArgumentNullException("ClaimsIdentity property");
+            if(appliesToAddress == null) throw new ArgumentNullException(nameof(appliesToAddress));
+            if(ClaimsIdentity == null) throw new ArgumentNullException("ClaimsIdentity property");
 
             var tokenDescriptor = CreateTokenDescriptor(ClaimsIdentity.Claims, appliesToAddress, issuedTokenLifetime);
             Saml2SecurityToken = Saml2SecurityTokenHandler.CreateToken(tokenDescriptor) as Saml2SecurityToken;
@@ -119,9 +122,9 @@ namespace ITfoxtec.Identity.Saml2
         /// <returns>The SAML 2.0 Security Token.</returns>
         public Saml2SecurityToken CreateSecurityToken(SecurityTokenDescriptor tokenDescriptor, Saml2AuthenticationStatement authenticationStatement, Saml2SubjectConfirmation subjectConfirmation)
         {
-            if (tokenDescriptor == null) throw new ArgumentNullException(nameof(tokenDescriptor));
-            if (authenticationStatement == null) throw new ArgumentNullException(nameof(authenticationStatement));
-            if (subjectConfirmation == null) throw new ArgumentNullException(nameof(subjectConfirmation));
+            if(tokenDescriptor == null) throw new ArgumentNullException(nameof(tokenDescriptor));
+            if(authenticationStatement == null) throw new ArgumentNullException(nameof(authenticationStatement));
+            if(subjectConfirmation == null) throw new ArgumentNullException(nameof(subjectConfirmation));
 
             Saml2SecurityToken = Saml2SecurityTokenHandler.CreateToken(tokenDescriptor) as Saml2SecurityToken;
 
@@ -134,7 +137,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected virtual SecurityTokenDescriptor CreateTokenDescriptor(IEnumerable<Claim> claims, string appliesToAddress, int issuedTokenLifetime)
         {
-            if (string.IsNullOrEmpty(Issuer)) throw new ArgumentNullException("Issuer property");
+            if(string.IsNullOrEmpty(Issuer)) throw new ArgumentNullException("Issuer property");
 
             var now = DateTimeOffset.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor();
@@ -154,7 +157,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected virtual Saml2SubjectConfirmation CreateSubjectConfirmation(int subjectConfirmationLifetime)
         {
-            if (Destination == null) throw new ArgumentNullException("Destination property");
+            if(Destination == null) throw new ArgumentNullException("Destination property");
 
             var subjectConfirmationData = new Saml2SubjectConfirmationData
             {
@@ -162,7 +165,7 @@ namespace ITfoxtec.Identity.Saml2
                 NotOnOrAfter = DateTimeOffset.UtcNow.AddMinutes(subjectConfirmationLifetime).UtcDateTime,
             };
 
-            if (InResponseTo != null)
+            if(InResponseTo != null)
             {
                 subjectConfirmationData.InResponseTo = InResponseTo;
             }
@@ -179,14 +182,14 @@ namespace ITfoxtec.Identity.Saml2
 
         private void AddNameIdFormat(IEnumerable<Claim> claims = null)
         {
-            if (NameId != null)
+            if(NameId != null)
             {
                 Saml2SecurityToken.Assertion.Subject.NameId = NameId;
             }
-            else if (claims != null)
+            else if(claims != null)
             {
                 var nameIdValue = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).FirstOrDefault();
-                if (!string.IsNullOrEmpty(nameIdValue))
+                if(!string.IsNullOrEmpty(nameIdValue))
                 {
                     Saml2SecurityToken.Assertion.Subject.NameId = new Saml2NameIdentifier(nameIdValue);
                 }
@@ -210,7 +213,7 @@ namespace ITfoxtec.Identity.Saml2
             envelope.Add(base.GetXContent());
             XmlDocument = envelope.ToXmlDocument();
 
-            if (Saml2SecurityToken != null)
+            if(Saml2SecurityToken != null)
             {
                 var tokenXml = Saml2SecurityTokenHandler.WriteToken(Saml2SecurityToken);
 
@@ -223,7 +226,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected internal void SignAuthnResponseAssertion(X509IncludeOption certificateIncludeOption)
         {
-            if (Status != Schemas.Saml2StatusCodes.Success)
+            if(Status != Schemas.Saml2StatusCodes.Success)
             {
                 return;
             }
@@ -237,7 +240,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validate, detectReplayedTokens);
 
-            if (Status == Schemas.Saml2StatusCodes.Success)
+            if(Status == Schemas.Saml2StatusCodes.Success)
             {
                 var assertionElement = GetAssertionElement();
                 ValidateAssertionExpiration(assertionElement);
@@ -256,7 +259,7 @@ namespace ITfoxtec.Identity.Saml2
         XmlElement assertionElementCache = null;
         protected override XmlElement GetAssertionElement()
         {
-            if (assertionElementCache == null)
+            if(assertionElementCache == null)
             {
 #if NETFULL || NETSTANDARD || NETCORE || NET50 || NET60
                 assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
@@ -270,7 +273,7 @@ namespace ITfoxtec.Identity.Saml2
         private XmlElement GetAssertionElementReference()
         {
             var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
-            if (assertionElements.Count != 1)
+            if(assertionElements.Count != 1)
             {
                 throw new Saml2RequestException("There is not exactly one Assertion element. Maybe the response is encrypted (set the Saml2Configuration.DecryptionCertificate).");
             }
@@ -280,25 +283,25 @@ namespace ITfoxtec.Identity.Saml2
         private void ValidateAssertionExpiration(XmlNode assertionElement)
         {
             var subjectElement = assertionElement[Schemas.Saml2Constants.Message.Subject, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
-            if (subjectElement == null)
+            if(subjectElement == null)
             {
                 throw new Saml2RequestException("Subject Not Found.");
             }
 
             var subjectConfirmationElement = subjectElement[Schemas.Saml2Constants.Message.SubjectConfirmation, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
-            if (subjectConfirmationElement == null)
+            if(subjectConfirmationElement == null)
             {
                 throw new Saml2RequestException("SubjectConfirmationElement Not Found.");
             }
 
             var subjectConfirmationData = subjectConfirmationElement[Schemas.Saml2Constants.Message.SubjectConfirmationData, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
-            if (subjectConfirmationData == null)
+            if(subjectConfirmationData == null)
             {
                 throw new Saml2RequestException("SubjectConfirmationData Not Found.");
             }
 
             var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
-            if (notOnOrAfter < DateTimeOffset.UtcNow)
+            if(notOnOrAfter < DateTimeOffset.UtcNow)
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");
             }
@@ -307,7 +310,7 @@ namespace ITfoxtec.Identity.Saml2
 #if NETFULL
         private Saml2SecurityToken ReadSecurityToken(XmlNode assertionElement)
         {
-            using (var reader = new XmlNodeReader(assertionElement))
+            using(var reader = new XmlNodeReader(assertionElement))
             {
                 return Saml2SecurityTokenHandler.ReadToken(reader) as Saml2SecurityToken;
             }
@@ -331,9 +334,29 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void DecryptMessage()
         {
-            if (DecryptionCertificate != null)
+            if(DecryptionCertificates != null)
             {
-                new Saml2EncryptedXml(XmlDocument, DecryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
+                List<Exception> exceptions = new List<Exception>(DecryptionCertificates.Length);
+
+                for(int i = 0; i < DecryptionCertificates.Length; i++)
+                {
+                    X509Certificate2 certificate = DecryptionCertificates[i];
+                    try
+                    {
+                        new Saml2EncryptedXml(XmlDocument, certificate.GetSamlRSAPrivateKey()).DecryptDocument();
+                        // This is abit of a hack to stop the flow if we decrypt the message on the first try.
+                        return;
+                    }
+                    catch(Exception e)
+                    {
+                        exceptions.Add(e);
+                    }
+                }
+                
+                if(exceptions.Count() == DecryptionCertificates.Length)
+                {
+                    throw new AggregateException("Failed to decrypt message", exceptions);
+                }
 #if DEBUG
                 Debug.WriteLine("Saml2P (Decrypted): " + XmlDocument.OuterXml);
 #endif
@@ -342,7 +365,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected internal void EncryptMessage()
         {
-            if (Status != Schemas.Saml2StatusCodes.Success)
+            if(Status != Schemas.Saml2StatusCodes.Success)
             {
                 return;
             }

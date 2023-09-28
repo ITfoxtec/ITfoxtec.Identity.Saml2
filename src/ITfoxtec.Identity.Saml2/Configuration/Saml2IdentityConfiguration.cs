@@ -27,7 +27,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
 #if !NETFULL
         public X509CertificateValidator CertificateValidator { get; set; }
 
-        public X509Certificate2 DecryptionCertificate { get; set; }
+        public X509Certificate2[] DecryptionCertificates { get; set; }
 #endif
 
         public static Saml2IdentityConfiguration GetIdentityConfiguration(Saml2Configuration config)
@@ -75,7 +75,7 @@ namespace ITfoxtec.Identity.Saml2.Configuration
                 CertificateValidationMode = config.CertificateValidationMode,
                 RevocationMode = config.RevocationMode,
             };
-            configuration.DecryptionCertificate = config.DecryptionCertificate;
+            configuration.DecryptionCertificates = config.DecryptionCertificates;
             SetCustomCertificateValidator(configuration, config);
 #endif
 
