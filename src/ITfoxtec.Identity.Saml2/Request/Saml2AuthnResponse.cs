@@ -240,7 +240,7 @@ namespace ITfoxtec.Identity.Saml2
             if (Status == Schemas.Saml2StatusCodes.Success)
             {
                 var assertionElement = GetAssertionElement();
-                ValidateAssertionExpiration(assertionElement);
+                ValidateAssertionSubject(assertionElement);
 
 #if NETFULL
                 Saml2SecurityToken = ReadSecurityToken(assertionElement);
@@ -277,7 +277,7 @@ namespace ITfoxtec.Identity.Saml2
             return assertionElements[0] as XmlElement;
         }
 
-        private void ValidateAssertionExpiration(XmlNode assertionElement)
+        private void ValidateAssertionSubject(XmlNode assertionElement)
         {
             var subjectElement = assertionElement[Schemas.Saml2Constants.Message.Subject, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             if (subjectElement == null)
@@ -285,6 +285,11 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("Subject Not Found.");
             }
 
+            ValidateSubjectConfirmationExpiration(subjectElement);
+        }
+
+        protected virtual void ValidateSubjectConfirmationExpiration(XmlElement subjectElement)
+        {
             var subjectConfirmationElement = subjectElement[Schemas.Saml2Constants.Message.SubjectConfirmation, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             if (subjectConfirmationElement == null)
             {

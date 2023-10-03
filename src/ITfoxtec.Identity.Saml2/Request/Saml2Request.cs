@@ -171,10 +171,7 @@ namespace ITfoxtec.Identity.Saml2
 
             XmlDocument = xml.ToXmlDocument();
 
-            if (XmlDocument.DocumentElement.NamespaceURI != Schemas.Saml2Constants.ProtocolNamespace.OriginalString)
-            {
-                throw new Saml2RequestException("Not SAML2 Protocol.");
-            }
+            ValidateProtocol();
 
             ValidateElementName();
 
@@ -189,7 +186,7 @@ namespace ITfoxtec.Identity.Saml2
             IssueInstant = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.IssueInstant].GetValueOrNull<DateTimeOffset>();
 
             Issuer = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Issuer, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<string>();
-            if(!string.IsNullOrEmpty(Config.AllowedIssuer) && !Config.AllowedIssuer.Equals(Issuer, StringComparison.Ordinal))
+            if (!string.IsNullOrEmpty(Config.AllowedIssuer) && !Config.AllowedIssuer.Equals(Issuer, StringComparison.Ordinal))
             {
                 throw new Saml2RequestException($"Invalid Issuer. Actually '{Issuer}', allowed '{Config.AllowedIssuer}'");
             }
@@ -209,6 +206,14 @@ namespace ITfoxtec.Identity.Saml2
             if (MustValidateXmlSignature(validate))
             {
                 ValidateXmlSignature(documentValidationResult);
+            }
+        }
+
+        protected virtual void ValidateProtocol()
+        {
+            if (XmlDocument.DocumentElement.NamespaceURI != Schemas.Saml2Constants.ProtocolNamespace.OriginalString)
+            {
+                throw new Saml2RequestException("Not SAML2 Protocol.");
             }
         }
 
