@@ -2,7 +2,9 @@
   <PropertyGroup>
 	<TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1;netstandard2.1;net48;net462</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Anders Revsgaard</Authors>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<IncludeSymbols>true</IncludeSymbols>
+	<Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <AssemblyName>ITfoxtec.Identity.Saml2</AssemblyName>

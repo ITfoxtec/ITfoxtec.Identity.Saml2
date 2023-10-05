@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>net48;net462</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<IncludeSymbols>true</IncludeSymbols>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
