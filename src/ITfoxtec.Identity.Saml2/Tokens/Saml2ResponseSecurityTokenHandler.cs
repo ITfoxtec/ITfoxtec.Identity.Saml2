@@ -135,7 +135,9 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         {
             if (statement?.AuthenticationContext?.DeclarationReference != null)
             {
-                // Remove AuthnContextDeclRef from assertion.
+                // Add AuthnContextDeclRef claim
+                identity.AddClaim(new Claim($"{ClaimTypes.AuthenticationMethod}/declarationreference", statement.AuthenticationContext.DeclarationReference.OriginalString, ClaimValueTypes.String, issuer));
+                // Remove AuthnContextDeclRef
                 statement.AuthenticationContext.DeclarationReference = null;
             }
             base.ProcessAuthenticationStatement(statement, identity, issuer);

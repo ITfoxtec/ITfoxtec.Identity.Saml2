@@ -10,6 +10,7 @@ using ITfoxtec.Identity.Saml2.Util;
 using TestIdPCore.Models;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.Logging;
 
 namespace TestIdPCore
 {
@@ -28,6 +29,8 @@ namespace TestIdPCore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.BindConfig<Settings>(Configuration, "Settings");
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {

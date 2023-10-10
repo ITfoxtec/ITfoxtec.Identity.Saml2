@@ -79,6 +79,11 @@ namespace ITfoxtec.Identity.Saml2
 
             InResponseTo = XmlDocument.DocumentElement.Attributes[Schemas.Saml2Constants.Message.InResponseTo].GetValueOrNull<Saml2Id>();
 
+            ValidateStatus();
+        }
+
+        protected virtual void ValidateStatus()
+        {
             Status = Saml2StatusCodeUtil.ToEnum(XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString][Schemas.Saml2Constants.Message.StatusCode, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].Attributes[Schemas.Saml2Constants.Message.Value].GetValueOrNull<string>());
 
             StatusMessage = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString][Schemas.Saml2Constants.Message.StatusMessage, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using TestIdPCore.Models;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
@@ -171,7 +170,7 @@ namespace TestIdPCore.Controllers
                 //saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single());
                 saml2AuthnResponse.ClaimsIdentity = claimsIdentity;
 
-                var token = saml2AuthnResponse.CreateSecurityToken(relyingParty.Issuer, subjectConfirmationLifetime: 5, issuedTokenLifetime: 60);
+                var token = saml2AuthnResponse.CreateSecurityToken(relyingParty.Issuer, /*declAuthnContext: new Uri("urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified"),*/ subjectConfirmationLifetime: 5, issuedTokenLifetime: 60);
             }
 
             return responsebinding.Bind(saml2AuthnResponse).ToActionResult();
@@ -253,8 +252,8 @@ namespace TestIdPCore.Controllers
 
         private async Task<RelyingParty> ValidateRelyingParty(string issuer)
         {
-            using var cancellationTokenSource = new CancellationTokenSource(3 * 1000); // Cancel after 3 seconds.
-            await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingPartyAsync(rp, cancellationTokenSource)));
+            // Create a cancellation token for each Relying Party call
+            await Task.WhenAll(settings.RelyingParties.Select(rp => LoadRelyingPartyAsync(rp, new CancellationTokenSource(1 * 1000))));
 
             return settings.RelyingParties.Where(rp => rp.Issuer != null && rp.Issuer.Equals(issuer, StringComparison.InvariantCultureIgnoreCase)).Single();
         }
