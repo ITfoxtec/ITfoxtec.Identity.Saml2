@@ -92,10 +92,11 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         /// <param name="appliesToAddress">The address for the AppliesTo property in the RequestSecurityTokenResponse.</param>
         /// <param name="authnContext">The URI reference that identifies an authentication context class that describes the authentication context declaration that follows. [Saml2Core, 2.7.2.2]</param>
+        /// <param name="declAuthnContext">The declaration URI reference of the authentication context class that describes the authentication context declaration. [Saml2Core, 2.7.2.2]</param>
         /// <param name="subjectConfirmationLifetime">The Subject Confirmation Lifetime in minutes.</param>
         /// <param name="issuedTokenLifetime">The Issued Token Lifetime in minutes.</param>
         /// <returns>The SAML 2.0 Security Token.</returns>
-        public Saml2SecurityToken CreateSecurityToken(string appliesToAddress, Uri authnContext = null, int subjectConfirmationLifetime = 5, int issuedTokenLifetime = 60)
+        public Saml2SecurityToken CreateSecurityToken(string appliesToAddress, Uri authnContext = null, Uri declAuthnContext = null, int subjectConfirmationLifetime = 5, int issuedTokenLifetime = 60)
         {
             if (appliesToAddress == null) throw new ArgumentNullException(nameof(appliesToAddress));
             if (ClaimsIdentity == null) throw new ArgumentNullException("ClaimsIdentity property");
@@ -104,7 +105,7 @@ namespace ITfoxtec.Identity.Saml2
             Saml2SecurityToken = Saml2SecurityTokenHandler.CreateToken(tokenDescriptor) as Saml2SecurityToken;
 
             AddNameIdFormat(ClaimsIdentity.Claims);
-            AddAuthenticationStatement(CreateAuthenticationStatement(authnContext));
+            AddAuthenticationStatement(CreateAuthenticationStatement(authnContext, declAuthnContext));
             AddSubjectConfirmation(CreateSubjectConfirmation(subjectConfirmationLifetime));
 
             return Saml2SecurityToken;
@@ -170,9 +171,25 @@ namespace ITfoxtec.Identity.Saml2
             return new Saml2SubjectConfirmation(Schemas.Saml2Constants.Saml2BearerToken, subjectConfirmationData);
         }
 
-        protected virtual Saml2AuthenticationStatement CreateAuthenticationStatement(Uri authnContext)
+        protected virtual Saml2AuthenticationStatement CreateAuthenticationStatement(Uri authnContext, Uri declAuthnContext)
         {
-            var authenticationStatement = new Saml2AuthenticationStatement(new Saml2AuthenticationContext(authnContext ?? Schemas.AuthnContextClassTypes.PasswordProtectedTransport));
+            var saml2AuthenticationContext = new Saml2AuthenticationContext();
+            if (authnContext == null && declAuthnContext == null)
+            {
+                saml2AuthenticationContext.ClassReference = Schemas.AuthnContextClassTypes.PasswordProtectedTransport;
+            }
+            else
+            {
+                if (authnContext != null)
+                {
+                    saml2AuthenticationContext.ClassReference = authnContext;
+                }
+                if (declAuthnContext != null)
+                {
+                    saml2AuthenticationContext.DeclarationReference = declAuthnContext;
+                }
+            }
+            var authenticationStatement = new Saml2AuthenticationStatement(saml2AuthenticationContext);
             authenticationStatement.SessionIndex = SessionIndex;
             return authenticationStatement;
         }

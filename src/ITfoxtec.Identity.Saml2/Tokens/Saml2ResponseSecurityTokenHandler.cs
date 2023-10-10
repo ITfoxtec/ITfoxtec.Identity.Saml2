@@ -46,10 +46,7 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             handler.SamlSecurityTokenRequirement.NameClaimType = ClaimTypes.NameIdentifier;
 #else
             handler.TokenValidationParameters = configuration;
-            if (configuration.DecryptionCertificate != null)
-            {
-                handler.Serializer = new Saml2TokenSerializer(configuration.DecryptionCertificate);
-            }
+            handler.Serializer = new Saml2TokenSerializer(configuration.DecryptionCertificate);
 #endif
             return handler;
         }
@@ -135,7 +132,9 @@ namespace ITfoxtec.Identity.Saml2.Tokens
         {
             if (statement?.AuthenticationContext?.DeclarationReference != null)
             {
-                // Remove AuthnContextDeclRef from assertion.
+                // Add AuthnContextDeclRef claim
+                identity.AddClaim(new Claim($"{ClaimTypes.AuthenticationMethod}/declarationreference", statement.AuthenticationContext.DeclarationReference.OriginalString, ClaimValueTypes.String, issuer));
+                // Remove AuthnContextDeclRef
                 statement.AuthenticationContext.DeclarationReference = null;
             }
             base.ProcessAuthenticationStatement(statement, identity, issuer);
