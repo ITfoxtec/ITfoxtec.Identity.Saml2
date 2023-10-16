@@ -243,8 +243,11 @@ namespace TestIdPCore.Controllers
 
             if (relyingParty != null) 
             {
-                rpConfig.SignatureValidationCertificates.Add(relyingParty.SignatureValidationCertificate);
-                rpConfig.EncryptionCertificate = relyingParty.EncryptionCertificate;
+                rpConfig.SignatureValidationCertificates.AddRange(relyingParty.SignatureValidationCertificates);
+                if (relyingParty.EecryptionCertificates?.Count() > 0)
+                {
+                    rpConfig.EncryptionCertificate = relyingParty.EecryptionCertificates.LastOrDefault();
+                }
             }
 
             return rpConfig;
@@ -273,7 +276,8 @@ namespace TestIdPCore.Controllers
                         rp.AcsDestination = entityDescriptor.SPSsoDescriptor.AssertionConsumerServices.Where(a => a.IsDefault).OrderBy(a => a.Index).First().Location;
                         var singleLogoutService = entityDescriptor.SPSsoDescriptor.SingleLogoutServices.First();
                         rp.SingleLogoutDestination = singleLogoutService.ResponseLocation ?? singleLogoutService.Location;
-                        rp.SignatureValidationCertificate = entityDescriptor.SPSsoDescriptor.SigningCertificates.First();
+                        rp.SignatureValidationCertificates = entityDescriptor.SPSsoDescriptor.SigningCertificates;
+                        rp.EecryptionCertificates = entityDescriptor.SPSsoDescriptor.EncryptionCertificates;
                     }
                     else
                     {

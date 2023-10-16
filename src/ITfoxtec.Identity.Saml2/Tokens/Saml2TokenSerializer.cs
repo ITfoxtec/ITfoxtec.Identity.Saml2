@@ -3,6 +3,8 @@ using ITfoxtec.Identity.Saml2.Cryptography;
 using Microsoft.IdentityModel.Tokens.Saml2;
 using Microsoft.IdentityModel.Xml;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 
@@ -10,23 +12,35 @@ namespace ITfoxtec.Identity.Saml2.Tokens
 {
     internal class Saml2TokenSerializer : Saml2Serializer
     {
-        private readonly X509Certificate2 decryptionCertificate;
+        private readonly IEnumerable<X509Certificate2> decryptionCertificates;
 
-        public Saml2TokenSerializer(X509Certificate2 decryptionCertificate) : base() 
+        public Saml2TokenSerializer(IEnumerable<X509Certificate2> decryptionCertificates) : base() 
         {
-            this.decryptionCertificate = decryptionCertificate;
+            this.decryptionCertificates = decryptionCertificates;
         }
 
         protected override Saml2NameIdentifier ReadEncryptedId(XmlDictionaryReader reader)
         {
-            if (decryptionCertificate != null)
+            if (decryptionCertificates?.Count() > 0)
             {
                 var xmlDocument = reader.ReadOuterXml().ToXmlDocument();
 
-                new Saml2EncryptedXml(xmlDocument, decryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
-
-                var decryptedReader = XmlDictionaryReader.CreateDictionaryReader(new XmlNodeReader(xmlDocument.DocumentElement.FirstChild));
-                return ReadNameIdentifier(decryptedReader, null);
+                var exceptions = new List<Exception>();
+                foreach (var decryptionCertificate in decryptionCertificates)
+                {
+                    try
+                    {
+                        new Saml2EncryptedXml(xmlDocument, decryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
+                        // Stop the look when the message successfully decrypted.
+                        var decryptedReader = XmlDictionaryReader.CreateDictionaryReader(new XmlNodeReader(xmlDocument.DocumentElement.FirstChild));
+                        return ReadNameIdentifier(decryptedReader, null);
+                    }
+                    catch (Exception e)
+                    {
+                        exceptions.Add(e);
+                    }
+                }
+                throw new AggregateException("Failed to decrypt message", exceptions);
             }
             else
             {

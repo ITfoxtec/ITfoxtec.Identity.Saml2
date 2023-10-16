@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel.Security;
 using System.IdentityModel.Selectors;
 using System.Security.Cryptography.Xml;
+using System.Linq;
 #if NETFULL
 using System.IdentityModel.Configuration;
 #else
@@ -32,7 +33,13 @@ namespace ITfoxtec.Identity.Saml2
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
 
         public X509Certificate2 SigningCertificate { get; set; }
-        public X509Certificate2 DecryptionCertificate { get; set; }
+        [Obsolete("DecryptionCertificate are obsolete to support multiple decryption certificates. Use DecryptionCertificates instead.")]
+        public X509Certificate2 DecryptionCertificate
+        {
+            get { return DecryptionCertificates?.FirstOrDefault(); }
+            set { DecryptionCertificates = new List<X509Certificate2> { value }; }
+        }
+        public List<X509Certificate2> DecryptionCertificates { get; set; } = new List<X509Certificate2>();
         /// <summary>
         /// If set the authn responses created by the library is encrypt.
         /// </summary>

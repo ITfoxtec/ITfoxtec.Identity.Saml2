@@ -31,10 +31,7 @@ namespace TestWebApp.Controllers
                 {
                     config.SigningCertificate
                 },
-                //EncryptionCertificates = new X509Certificate2[]
-                //{
-                //    config.DecryptionCertificate
-                //},
+                //EncryptionCertificates = config.DecryptionCertificates,
                 SingleSignOnServices = new SingleSignOnService[]
                 {
                     new SingleSignOnService { Binding = ProtocolBindings.HttpRedirect, Location = config.SingleSignOnDestination }

@@ -26,7 +26,7 @@ namespace ITfoxtec.Identity.Saml2
     {
         public override string ElementName => Schemas.Saml2Constants.Message.AuthnResponse;
 
-        internal X509Certificate2 DecryptionCertificate { get; private set; }
+        internal IEnumerable<X509Certificate2> DecryptionCertificates { get; private set; }
         internal X509Certificate2 EncryptionCertificate { get; private set; }
 
         /// <summary>
@@ -60,12 +60,12 @@ namespace ITfoxtec.Identity.Saml2
 
             Destination = config.SingleSignOnDestination;
 
-            if (config.DecryptionCertificate != null)
+            if (config.DecryptionCertificates?.Count() > 0)
             {
-                DecryptionCertificate = config.DecryptionCertificate;
-                if (config.DecryptionCertificate.GetSamlRSAPrivateKey() == null)
+                DecryptionCertificates = config.DecryptionCertificates.Where(c => c.GetSamlRSAPrivateKey() != null);
+                if (!(DecryptionCertificates?.Count() > 0))
                 {
-                    throw new ArgumentException("No RSA Private Key present in Decryption Certificate or missing private key read credentials.");
+                    throw new ArgumentException("No RSA Private Key present in Decryption Certificates or missing private key read credentials.");
                 }
             }
             if(config.EncryptionCertificate != null)
@@ -353,9 +353,23 @@ namespace ITfoxtec.Identity.Saml2
 
         protected override void DecryptMessage()
         {
-            if (DecryptionCertificate != null)
+            if (DecryptionCertificates?.Count() > 0)
             {
-                new Saml2EncryptedXml(XmlDocument, DecryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
+                var exceptions = new List<Exception>();
+                foreach(var decryptionCertificate in DecryptionCertificates)
+                {
+                    try
+                    {
+                        new Saml2EncryptedXml(XmlDocument, decryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
+                        // Stop the look when the message successfully decrypted.
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        exceptions.Add(e);
+                    }
+                }
+                throw new AggregateException("Failed to decrypt message", exceptions);
 #if DEBUG
                 Debug.WriteLine("Saml2P (Decrypted): " + XmlDocument.OuterXml);
 #endif

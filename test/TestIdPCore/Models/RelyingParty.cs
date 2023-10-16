@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 namespace TestIdPCore.Models
@@ -15,8 +16,8 @@ namespace TestIdPCore.Models
 
         public Uri SingleLogoutDestination { get; set; }
 
-        public X509Certificate2 SignatureValidationCertificate { get; set; }
+        public IEnumerable<X509Certificate2> SignatureValidationCertificates { get; set; }
 
-        public X509Certificate2 EncryptionCertificate { get; set; }
+        public IEnumerable<X509Certificate2> EecryptionCertificates { get; set; }
     }
 }

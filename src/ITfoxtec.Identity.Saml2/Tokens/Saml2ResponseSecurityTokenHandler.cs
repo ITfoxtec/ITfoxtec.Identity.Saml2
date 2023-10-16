@@ -46,7 +46,7 @@ namespace ITfoxtec.Identity.Saml2.Tokens
             handler.SamlSecurityTokenRequirement.NameClaimType = ClaimTypes.NameIdentifier;
 #else
             handler.TokenValidationParameters = configuration;
-            handler.Serializer = new Saml2TokenSerializer(configuration.DecryptionCertificate);
+            handler.Serializer = new Saml2TokenSerializer(configuration.DecryptionCertificates);
 #endif
             return handler;
         }

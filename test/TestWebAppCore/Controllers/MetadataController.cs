@@ -35,10 +35,7 @@ namespace TestWebApp.Controllers
                 {
                     config.SigningCertificate
                 },
-                //EncryptionCertificates = new X509Certificate2[]
-                //{
-                //    config.DecryptionCertificate
-                //},
+                //EncryptionCertificates = config.DecryptionCertificates,
                 SingleLogoutServices = new SingleLogoutService[]
                 {
                     new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/SingleLogout"), ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut") }
