@@ -47,7 +47,7 @@ namespace TestIdPCore.Controllers
             var saml2AuthnRequest = new Saml2AuthnRequest(GetRpSaml2Configuration(relyingParty));
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(), saml2AuthnRequest);
+                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2AuthnRequest);
 
                 // ****  Handle user login e.g. in GUI ****
                 // Test user with session index and claims
@@ -108,7 +108,7 @@ namespace TestIdPCore.Controllers
             var saml2LogoutRequest = new Saml2LogoutRequest(GetRpSaml2Configuration(relyingParty));
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(), saml2LogoutRequest);
+                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2LogoutRequest);
 
                 // **** Delete user session ****
 
@@ -125,12 +125,12 @@ namespace TestIdPCore.Controllers
 
         private string ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
         {
-            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2AuthnRequest(GetRpSaml2Configuration()))?.Issuer;
+            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(validate: true), new Saml2AuthnRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
         private string ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
         {
-            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(), new Saml2LogoutRequest(GetRpSaml2Configuration()))?.Issuer;
+            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(validate: true), new Saml2LogoutRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
         private string ReadRelyingPartyFromSoapEnvelopeRequest<T>(ITfoxtec.Identity.Saml2.Http.HttpRequest httpRequest, Saml2Binding<T> binding)

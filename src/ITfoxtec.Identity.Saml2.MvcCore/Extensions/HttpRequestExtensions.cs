@@ -6,6 +6,7 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using ITfoxtec.Identity.Saml2.Schemas;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore
 {
@@ -17,29 +18,66 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
         /// <summary>
         /// Converts a Microsoft.AspNet.Http.HttpRequest to ITfoxtec.Identity.Saml2.Http.HttpRequest.
         /// </summary>
-        public static Http.HttpRequest ToGenericHttpRequest(this HttpRequest request)
+        public static Http.HttpRequest ToGenericHttpRequest(this HttpRequest request, bool validate = false)
         {
-            return new Http.HttpRequest
+            var samlHttpRequest = new Http.HttpRequest
             {
                 Method = request.Method,
                 QueryString = request.QueryString.Value,
                 Query = ToNameValueCollection(request.Query),
                 Form = "POST".Equals(request.Method, StringComparison.InvariantCultureIgnoreCase) ? ToNameValueCollection(request.Form) : null
             };
+
+            if (validate)
+            {
+                var length = 0;
+                if (!string.IsNullOrEmpty(samlHttpRequest.QueryString))
+                {
+                    length += samlHttpRequest.QueryString.Length;
+                }
+                if (samlHttpRequest.Form != null)
+                {
+                    foreach (string item in samlHttpRequest.Form)
+                    {
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            length += item.Length;
+                        }
+                    }
+                }
+                if (length > Saml2Constants.RequestResponseMaxLength)
+                {
+                    throw new Saml2RequestException($"Invalid SAML 2.0 request/response with a length of {length}, max length {Saml2Constants.RequestResponseMaxLength}.");
+                }
+            }
+            return samlHttpRequest;
         }
 
         /// <summary>
         /// Converts a Microsoft.AspNet.Http.HttpRequest to ITfoxtec.Identity.Saml2.Http.HttpRequest.
         /// </summary>
-        public static async Task<Http.HttpRequest> ToGenericHttpRequestAsync(this HttpRequest request, bool readBodyAsString = false)
+        public static async Task<Http.HttpRequest> ToGenericHttpRequestAsync(this HttpRequest request, bool readBodyAsString = false, bool validate = false)
         {
             if (readBodyAsString)
             {
-                return new Http.HttpRequest
+                var samlHttpRequest = new Http.HttpRequest
                 {
                     Method = request.Method,
                     Body = await ReadBodyStringAsync(request)
                 };
+
+                if (validate)
+                {
+                    if (!string.IsNullOrEmpty(samlHttpRequest.Body))
+                    {
+                        var length = samlHttpRequest.Body.Length;
+                        if (length > Saml2Constants.RequestResponseMaxLength)
+                        {
+                            throw new Saml2RequestException($"Invalid SAML 2.0 request/response with a length of {length}, max length {Saml2Constants.RequestResponseMaxLength}.");
+                        }
+                    }
+                }
+                return samlHttpRequest;
             }
             else
             {

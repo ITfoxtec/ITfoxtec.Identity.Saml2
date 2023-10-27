@@ -52,7 +52,7 @@ namespace TestWebAppCoreArtifact.Controllers
         {
             var binding = new Saml2ArtifactBinding();
             var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
-            binding.Unbind(Request.ToGenericHttpRequest(), saml2ArtifactResolve);
+            binding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2ArtifactResolve);
 
             var soapEnvelope = new Saml2SoapEnvelope();
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
@@ -87,7 +87,7 @@ namespace TestWebAppCoreArtifact.Controllers
         public IActionResult LoggedOut()
         {
             var binding = new Saml2PostBinding();
-            binding.Unbind(Request.ToGenericHttpRequest(), new Saml2LogoutResponse(config));
+            binding.Unbind(Request.ToGenericHttpRequest(validate: true), new Saml2LogoutResponse(config));
 
             return Redirect(Url.Content("~/"));
         }
@@ -100,7 +100,7 @@ namespace TestWebAppCoreArtifact.Controllers
             var logoutRequest = new Saml2LogoutRequest(config, User);
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(), logoutRequest);
+                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), logoutRequest);
                 status = Saml2StatusCodes.Success;
                 await logoutRequest.DeleteSession(HttpContext);
             }

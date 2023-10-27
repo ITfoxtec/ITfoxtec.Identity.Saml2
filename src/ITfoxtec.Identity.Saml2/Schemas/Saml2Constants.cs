@@ -6,6 +6,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas
     public static class Saml2Constants
     {
         /// <summary>
+        /// SAML 2.0 request / response max length.
+        /// </summary>
+        public const int RequestResponseMaxLength = 100000;
+
+        /// <summary>
         /// SAML 2.0 Authentication Type.
         /// </summary>
         public const string AuthenticationScheme = "saml2";
