@@ -263,12 +263,13 @@ namespace ITfoxtec.Identity.Saml2
 
             foreach (var signatureValidationCertificate in SignatureValidationCertificates)
             {
-                IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
-
                 var signedXml = new Saml2SignedXml(xmlElement, signatureValidationCertificate, SignatureAlgorithm, XmlCanonicalizationMethod);
                 signedXml.LoadXml(xmlSignatures[0] as XmlElement);
                 if (signedXml.CheckSignature())
                 {
+                    // Check if certificate used to sign is valid
+                    IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
+                    
                     // Signature is valid.
                     return SignatureValidation.Valid;
                 }
