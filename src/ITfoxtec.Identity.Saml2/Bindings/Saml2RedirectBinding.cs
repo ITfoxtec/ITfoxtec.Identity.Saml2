@@ -171,11 +171,12 @@ namespace ITfoxtec.Identity.Saml2
         {
             foreach (var signatureValidationCertificate in signatureValidationCertificates)
             {
-                saml2RequestResponse.IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
-
                 var saml2Sign = new Saml2SignedText(signatureValidationCertificate, SignatureAlgorithm);
                 if (saml2Sign.CheckSignature(Encoding.UTF8.GetBytes(new RawSaml2QueryString(queryString, messageName).SignedQueryString), signatureValue))
                 {
+                    // Check if certificate used to sign is valid
+                    saml2RequestResponse.IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
+                    
                     // Signature is valid.
                     return;
                 }
