@@ -1,5 +1,4 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas;
-using System;
+﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
@@ -8,7 +7,7 @@ namespace ITfoxtec.Identity.Saml2
 {
     public class Saml2ArtifactResponse : Saml2Response
     {
-        public override string ElementName => Saml2Constants.Message.ArtifactResponse;
+        public override string ElementName => Schemas.Saml2Constants.Message.ArtifactResponse;
 
         /// <summary>
         /// [Optional]
@@ -30,12 +29,12 @@ namespace ITfoxtec.Identity.Saml2
 
         public override XmlDocument ToXml()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + ElementName);
+            var envelope = new XElement(Schemas.Saml2Constants.ProtocolNamespaceX + ElementName);
             envelope.Add(base.GetXContent());
             XmlDocument = envelope.ToXmlDocument();
 
             var innerRequestXml = InnerRequest.ToXml();
-            var status = XmlDocument.DocumentElement[Saml2Constants.Message.Status, Saml2Constants.ProtocolNamespace.OriginalString];
+            var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
             XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(innerRequestXml.DocumentElement, true), status);
             
             if (Config.SigningCertificate != null)
@@ -64,7 +63,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validate, detectReplayedTokens);
 
-            if (Status == Saml2StatusCodes.Success)
+            if (Status == Schemas.Saml2StatusCodes.Success)
             {
                 InnerRequest.Read(GetInnerArtifactResponseXml(InnerRequest.ElementName), false, false);
             }
