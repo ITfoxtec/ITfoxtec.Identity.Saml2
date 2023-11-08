@@ -54,7 +54,7 @@ namespace ITfoxtec.Identity.Saml2
             throw new NotSupportedException();
         }
 
-        public virtual async Task ResolveAsync(
+        public virtual async Task<Saml2ArtifactResponse> ResolveAsync(
 #if NET || NETCORE
             IHttpClientFactory httpClientFactory,
 #else
@@ -92,10 +92,18 @@ namespace ITfoxtec.Identity.Saml2
 #endif
 
                         var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
-                        SetSignatureValidationCertificates(ares);                        
-                        ares.Read(FromSoapXml(result), ares.SignatureValidationCertificates?.Count() > 0, true);
-                        ares.Status = Saml2StatusCodes.Success;
-                        break;
+                        SetSignatureValidationCertificates(ares);
+                        var xml = FromSoapXml(result);
+                        ares.Read(xml, false, false); 
+                        if(ares.Status == Saml2StatusCodes.Success)
+                        {
+                            ares.Read(xml, ares.SignatureValidationCertificates?.Count() > 0, true);
+                        }
+                        if(saml2Request is Saml2AuthnResponse sar)
+                        {
+                            sar.Status = ares.Status;
+                        }
+                        return ares;
 
                     default:
                         throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{artifactDestination?.OriginalString}'.");

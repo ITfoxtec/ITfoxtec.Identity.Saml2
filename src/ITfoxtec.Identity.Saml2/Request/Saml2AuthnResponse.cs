@@ -271,7 +271,7 @@ namespace ITfoxtec.Identity.Saml2
         }
 
         XmlElement assertionElementCache = null;
-        protected override XmlElement GetAssertionElement()
+        public override XmlElement GetAssertionElement()
         {
             if (assertionElementCache == null)
             {

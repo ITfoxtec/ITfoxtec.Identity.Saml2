@@ -222,7 +222,7 @@ namespace ITfoxtec.Identity.Saml2
         protected virtual void DecryptMessage()
         { }
 
-        protected virtual XmlElement GetAssertionElement()
+        public virtual XmlElement GetAssertionElement()
         {
             return null;
         }
