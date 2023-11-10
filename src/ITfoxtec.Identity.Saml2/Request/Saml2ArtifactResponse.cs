@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -66,49 +65,51 @@ namespace ITfoxtec.Identity.Saml2
 
             if (Status == Schemas.Saml2StatusCodes.Success)
             {
-                ReadInnerRequest();
+                InnerRequest.Read(GetInnerArtifactElementXml().OuterXml, false, false);
             }
         }
 
         XmlElement assertionElementCache = null;
-        public override XmlElement GetAssertionElement()
+        protected override XmlElement GetAssertionElement()
         {
             if (assertionElementCache == null)
             {
-                if (Status == Schemas.Saml2StatusCodes.Success && InnerRequest is Saml2AuthnResponse sar)
+                if (Status == Schemas.Saml2StatusCodes.Success && InnerRequest is Saml2AuthnResponse)
                 {
-                    ReadInnerRequest();
-                    assertionElementCache = sar.GetAssertionElement();
+#if NETFULL || NETSTANDARD || NETCORE || NET50 || NET60
+                    assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
+#else
+                    assertionElementCache = GetAssertionElementReference();
+#endif
                 }
             }
             return assertionElementCache;
         }
 
-        bool hasReadInnerRequest = false;
-        private void ReadInnerRequest()
+        private XmlElement GetAssertionElementReference()
         {
-            if(!hasReadInnerRequest)
+            var assertionElements = GetInnerArtifactElementXml().SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
+            if (assertionElements.Count != 1)
             {
-                InnerRequest.Read(GetInnerArtifactResponseXml(InnerRequest.ElementName), false, false);
-                hasReadInnerRequest = true;
+                throw new Saml2RequestException("There is not exactly one Assertion element in the inner Artifact element.");
             }
+            return assertionElements[0] as XmlElement;
         }
 
-        private string GetInnerArtifactResponseXml(string innerElementName, bool returnNull = false)
+        XmlNode innerArtifactElementCache = null;
+        private XmlNode GetInnerArtifactElementXml()
         {
-            var innerElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", innerElementName));
-            if (innerElements?.Count != 1)
+            if (innerArtifactElementCache == null)
             {
-                if (returnNull)
+                var innerElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", InnerRequest.ElementName));
+                if (innerElements?.Count != 1)
                 {
-                    return null;
+                    throw new Saml2RequestException("There is not exactly one inner artifact element.");
                 }
-                else
-                {
-                    throw new Saml2RequestException("There is not exactly one inner artifact response element.");
-                }
+                innerArtifactElementCache = innerElements[0];
             }
-            return innerElements[0].OuterXml;
+
+            return innerArtifactElementCache;
         }
     }
 }
