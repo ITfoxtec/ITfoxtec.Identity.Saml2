@@ -56,10 +56,10 @@ namespace TestWebAppCoreArtifact.Controllers
 
             var soapEnvelope = new Saml2SoapEnvelope();
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
-            await soapEnvelope.ResolveAsync(httpClientFactory, saml2ArtifactResolve, saml2AuthnResponse);
-            if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
+            var saml2ArtifactResponse = await soapEnvelope.ResolveAsync(httpClientFactory, saml2ArtifactResolve, saml2AuthnResponse);
+            if (saml2ArtifactResponse.Status != Saml2StatusCodes.Success || saml2AuthnResponse.Status != Saml2StatusCodes.Success)
             {
-                throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
+                throw new AuthenticationException($"SAML Artifact Response status '{saml2ArtifactResponse.Status}' and SAML Response status '{saml2AuthnResponse.Status}'");
             }
 
             await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
