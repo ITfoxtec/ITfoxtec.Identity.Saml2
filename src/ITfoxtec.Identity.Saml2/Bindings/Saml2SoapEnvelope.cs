@@ -91,20 +91,16 @@ namespace ITfoxtec.Identity.Saml2
 #else
                         var result = await response.Content.ReadAsStringAsync();
 #endif
-
-                        var artifactResponse = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
-                        SetSignatureValidationCertificates(artifactResponse);
+                        var saml2ArtifactResponse = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
+                        SetSignatureValidationCertificates(saml2ArtifactResponse);
                         var xml = FromSoapXml(result);
-                        artifactResponse.Read(xml, false, false);
-                        if (artifactResponse.Status == Saml2StatusCodes.Success)
+                        saml2ArtifactResponse.Read(xml, false, false);
+                        if (saml2ArtifactResponse.Status == Saml2StatusCodes.Success &&
+                            (saml2Request is Saml2AuthnResponse saml2AuthnResponse ? saml2AuthnResponse.Status == Saml2StatusCodes.Success : true))
                         {
-                            artifactResponse.Read(xml, artifactResponse.SignatureValidationCertificates?.Count() > 0, true);
+                            saml2ArtifactResponse.Read(xml, saml2ArtifactResponse.SignatureValidationCertificates?.Count() > 0, true);
                         }
-                        if (saml2Request is Saml2AuthnResponse sar)
-                        {
-                            sar.Status = artifactResponse.Status;
-                        }
-                        return artifactResponse;
+                        return saml2ArtifactResponse;
 
                     default:
                         throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{artifactDestination?.OriginalString}'.");
