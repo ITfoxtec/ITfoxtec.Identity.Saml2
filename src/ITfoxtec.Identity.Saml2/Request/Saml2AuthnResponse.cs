@@ -1,13 +1,17 @@
 ﻿using ITfoxtec.Identity.Saml2.Tokens;
+
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Xml;
 using System.Security.Cryptography.X509Certificates;
+
 using ITfoxtec.Identity.Saml2.Cryptography;
+
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml.Linq;
+
 #if NETFULL
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Protocols.WSTrust;
@@ -56,7 +60,8 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2AuthnResponse(Saml2Configuration config) : base(config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
 
             Destination = config.SingleSignOnDestination;
 
@@ -68,7 +73,7 @@ namespace ITfoxtec.Identity.Saml2
                     throw new ArgumentException("No RSA Private Key present in Decryption Certificates or missing private key read credentials.");
                 }
             }
-            if(config.EncryptionCertificate != null)
+            if (config.EncryptionCertificate != null)
             {
                 EncryptionCertificate = config.EncryptionCertificate;
                 if (config.EncryptionCertificate.GetRSAPublicKey() == null)
@@ -135,7 +140,8 @@ namespace ITfoxtec.Identity.Saml2
 
         protected virtual SecurityTokenDescriptor CreateTokenDescriptor(IEnumerable<Claim> claims, string appliesToAddress, int issuedTokenLifetime)
         {
-            if (string.IsNullOrEmpty(Issuer)) throw new ArgumentNullException("Issuer property");
+            if (string.IsNullOrEmpty(Issuer))
+                throw new ArgumentNullException("Issuer property");
 
             var now = DateTimeOffset.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor();
@@ -155,7 +161,8 @@ namespace ITfoxtec.Identity.Saml2
 
         protected virtual Saml2SubjectConfirmation CreateSubjectConfirmation(int subjectConfirmationLifetime)
         {
-            if (Destination == null) throw new ArgumentNullException("Destination property");
+            if (Destination == null)
+                throw new ArgumentNullException("Destination property");
 
             var subjectConfirmationData = new Saml2SubjectConfirmationData
             {
@@ -291,6 +298,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 throw new Saml2RequestException("There is not exactly one Assertion element. Maybe the response is encrypted (set the Saml2Configuration.DecryptionCertificate).");
             }
+
             return assertionElements[0] as XmlElement;
         }
 
@@ -356,7 +364,7 @@ namespace ITfoxtec.Identity.Saml2
             if (DecryptionCertificates?.Count() > 0)
             {
                 var exceptions = new List<Exception>();
-                foreach(var decryptionCertificate in DecryptionCertificates)
+                foreach (var decryptionCertificate in DecryptionCertificates)
                 {
                     try
                     {

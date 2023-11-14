@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using ITfoxtec.Identity.Saml2.Configuration;
+using ITfoxtec.Identity.Saml2.Schemas;
+using ITfoxtec.Identity.Saml2.Util;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
-using ITfoxtec.Identity.Saml2.Schemas;
-using System;
-using System.Security.Cryptography.X509Certificates;
-using ITfoxtec.Identity.Saml2.Configuration;
-using System.Linq;
-using ITfoxtec.Identity.Saml2.Util;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -36,7 +37,7 @@ namespace ITfoxtec.Identity.Saml2
 
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
 
-            Destination = config.SingleSignOnDestination;  
+            Destination = config.SingleSignOnDestination;
         }
 
         /// <summary>
@@ -50,9 +51,10 @@ namespace ITfoxtec.Identity.Saml2
             artifactBytes[2] = (byte)(Config.ArtifactResolutionService.Index >> 8);
             artifactBytes[3] = (byte)Config.ArtifactResolutionService.Index;
 
-            if (string.IsNullOrEmpty(Issuer)) throw new ArgumentNullException("Issuer property");
-            Array.Copy(Issuer.ComputeSha1Hash(), 0, artifactBytes, 4, 20);
+            if (string.IsNullOrEmpty(Issuer))
+                throw new ArgumentNullException("Issuer property");
 
+            Array.Copy(Issuer.ComputeSha1Hash(), 0, artifactBytes, 4, 20);
             Array.Copy(RandomGenerator.GenerateArtifactMessageHandle(), 0, artifactBytes, 24, 20);
 
             Artifact = Convert.ToBase64String(artifactBytes);
@@ -76,6 +78,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     throw new Saml2ConfigurationException("Unable to validate Artifact SourceId/Issuer. AllowedIssuer not configured.");
                 }
+
                 var sourceIdBytes = new byte[20];
                 Array.Copy(artifactBytes, 4, sourceIdBytes, 0, 20);
                 if (!sourceIdBytes.SequenceEqual(Config.AllowedIssuer.ComputeSha1Hash()))
@@ -102,6 +105,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 SignArtifactResolve();
             }
+
             return XmlDocument;
         }
 
@@ -121,7 +125,7 @@ namespace ITfoxtec.Identity.Saml2
         {
             base.Read(xml, validate, detectReplayedTokens);
 
-            Artifact = XmlDocument.DocumentElement[Saml2Constants.Message.Artifact, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();            
+            Artifact = XmlDocument.DocumentElement[Saml2Constants.Message.Artifact, Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
         }
 
         protected override void ValidateElementName()

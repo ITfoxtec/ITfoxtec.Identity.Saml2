@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ITfoxtec.Identity.Saml2.Http;
+using ITfoxtec.Identity.Saml2.Schemas;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Http;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2ArtifactBinding : Saml2Binding<Saml2ArtifactBinding> 
+    public class Saml2ArtifactBinding : Saml2Binding<Saml2ArtifactBinding>
     {
         /// <summary>
         /// [Optional]

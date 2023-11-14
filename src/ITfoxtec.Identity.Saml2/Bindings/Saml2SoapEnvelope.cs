@@ -1,6 +1,7 @@
 ﻿using ITfoxtec.Identity.Saml2.Configuration;
 using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace ITfoxtec.Identity.Saml2
 # endif
             Saml2ArtifactResolve saml2ArtifactResolve, Saml2Request saml2Request, CancellationToken? cancellationToken = null
 #if NET || NETCORE
-            , string httpClientName = null) 
+            , string httpClientName = null)
         {
             var httpClient = string.IsNullOrEmpty(httpClientName) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(httpClientName);
 #else
@@ -91,19 +92,19 @@ namespace ITfoxtec.Identity.Saml2
                         var result = await response.Content.ReadAsStringAsync();
 #endif
 
-                        var ares = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
-                        SetSignatureValidationCertificates(ares);
+                        var artifactResponse = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
+                        SetSignatureValidationCertificates(artifactResponse);
                         var xml = FromSoapXml(result);
-                        ares.Read(xml, false, false); 
-                        if(ares.Status == Saml2StatusCodes.Success)
+                        artifactResponse.Read(xml, false, false);
+                        if (artifactResponse.Status == Saml2StatusCodes.Success)
                         {
-                            ares.Read(xml, ares.SignatureValidationCertificates?.Count() > 0, true);
+                            artifactResponse.Read(xml, artifactResponse.SignatureValidationCertificates?.Count() > 0, true);
                         }
-                        if(saml2Request is Saml2AuthnResponse sar)
+                        if (saml2Request is Saml2AuthnResponse sar)
                         {
-                            sar.Status = ares.Status;
+                            sar.Status = artifactResponse.Status;
                         }
-                        return ares;
+                        return artifactResponse;
 
                     default:
                         throw new Exception($"Error, Status Code OK expected. StatusCode '{response.StatusCode}'. Artifact resolve destination '{artifactDestination?.OriginalString}'.");
@@ -130,29 +131,29 @@ namespace ITfoxtec.Identity.Saml2
         {
             var xmlDoc = xml.ToXmlDocument();
 
-            var bodyList = GetNodesByLocalname(xmlDoc.DocumentElement, "Body");
+            var bodyList = GetNodesByLocalName(xmlDoc.DocumentElement, "Body");
             if (bodyList.Count != 1)
             {
                 throw new Exception("There is not exactly one Body element.");
             }
 
-            var faultBody = GetNodeByLocalname(bodyList[0], "Fault");
+            var faultBody = GetNodeByLocalName(bodyList[0], "Fault");
             if (faultBody != null)
             {
-                var faultcode = GetNodeByLocalname(faultBody, "faultcode");
-                var faultstring = GetNodeByLocalname(faultBody, "faultstring");
-                throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultcode + "\n" + faultstring);
+                var faultCode = GetNodeByLocalName(faultBody, "faultcode");
+                var faultString = GetNodeByLocalName(faultBody, "faultstring");
+                throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultCode + "\n" + faultString);
             }
 
             return bodyList[0].InnerXml;
         }
 
-        private XmlNodeList GetNodesByLocalname(XmlNode xe, string localName)
+        private XmlNodeList GetNodesByLocalName(XmlNode xe, string localName)
         {
             return xe.SelectNodes(string.Format("//*[local-name()='{0}']", localName));
         }
 
-        private XmlNode GetNodeByLocalname(XmlNode xe, string localName)
+        private XmlNode GetNodeByLocalName(XmlNode xe, string localName)
         {
             return xe.SelectSingleNode(string.Format("//*[local-name()='{0}']", localName));
         }

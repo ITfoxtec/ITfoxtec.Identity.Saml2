@@ -19,7 +19,8 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2ArtifactResponse(Saml2Configuration config, Saml2Request request) : base(config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
 
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
 
@@ -36,11 +37,12 @@ namespace ITfoxtec.Identity.Saml2
             var innerRequestXml = InnerRequest.ToXml();
             var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
             XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(innerRequestXml.DocumentElement, true), status);
-            
+
             if (Config.SigningCertificate != null)
             {
                 SignArtifactResponse();
             }
+
             return XmlDocument;
         }
 
@@ -83,6 +85,7 @@ namespace ITfoxtec.Identity.Saml2
 #endif
                 }
             }
+
             return assertionElementCache;
         }
 
@@ -93,6 +96,7 @@ namespace ITfoxtec.Identity.Saml2
             {
                 throw new Saml2RequestException("There is not exactly one Assertion element in the inner Artifact element.");
             }
+
             return assertionElements[0] as XmlElement;
         }
 

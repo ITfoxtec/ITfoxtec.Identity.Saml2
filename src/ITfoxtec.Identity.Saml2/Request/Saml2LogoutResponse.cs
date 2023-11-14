@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Xml.Linq;
+
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -18,7 +19,8 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2LogoutResponse(Saml2Configuration config) : base(config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
 
             Destination = config.SingleLogoutDestination;
         }

@@ -13,5 +13,4 @@ namespace ITfoxtec.Identity.Saml2
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
     }
-
 }

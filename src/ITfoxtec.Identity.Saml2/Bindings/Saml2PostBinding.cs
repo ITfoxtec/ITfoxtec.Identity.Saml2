@@ -1,12 +1,13 @@
-﻿using System;
+﻿using ITfoxtec.Identity.Saml2.Http;
+using ITfoxtec.Identity.Saml2.Schemas;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
-using ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Http;
-using System.Net;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -38,6 +39,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     (saml2RequestResponse as Saml2AuthnResponse).SignAuthnResponseAssertion(CertificateIncludeOption);
                 }
+
                 if (saml2RequestResponse.Config.EncryptionCertificate != null)
                 {
                     (saml2RequestResponse as Saml2AuthnResponse).EncryptMessage();
@@ -50,7 +52,8 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
                     Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(saml2RequestResponse.Config.XmlCanonicalizationMethod);
-                    XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, saml2RequestResponse.Config.XmlCanonicalizationMethod, CertificateIncludeOption, saml2RequestResponse.IdAsString);
+                    XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm,
+                        saml2RequestResponse.Config.XmlCanonicalizationMethod, CertificateIncludeOption, saml2RequestResponse.IdAsString);
                 }
             }
 
@@ -61,42 +64,41 @@ namespace ITfoxtec.Identity.Saml2
         private IEnumerable<string> HtmlPostPage(Uri destination, string messageName)
         {
             yield return string.Format(
-@"<!DOCTYPE html>
-<html lang=""en"">
-<head>
-    <meta charset=""utf-8"" />
-    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
-    <title>SAML 2.0</title>
-</head>
-<body onload=""document.forms[0].submit()"">
-    <noscript>
-        <p>
-            <strong>Note:</strong> Since your browser does not support JavaScript, 
-            you must press the Continue button once to proceed.
-        </p>
-    </noscript>
-    <form action=""{0}"" method=""post"">
-        <div>", destination);
+        @"<!DOCTYPE html>
+                <html lang=""en"">
+                <head>
+                    <meta charset=""utf-8"" />
+                    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
+                    <title>SAML 2.0</title>
+                </head>
+                <body onload=""document.forms[0].submit()"">
+                    <noscript>
+                        <p>
+                            <strong>Note:</strong> Since your browser does not support JavaScript, 
+                            you must press the Continue button once to proceed.
+                        </p>
+                    </noscript>
+                    <form action=""{0}"" method=""post"">
+                        <div>", destination);
 
             yield return string.Format(
-@"<input type=""hidden"" name=""{0}"" value=""{1}""/>", messageName, Convert.ToBase64String(Encoding.UTF8.GetBytes(XmlDocument.OuterXml)));
+            @"<input type=""hidden"" name=""{0}"" value=""{1}""/>", messageName, Convert.ToBase64String(Encoding.UTF8.GetBytes(XmlDocument.OuterXml)));
 
             if (!string.IsNullOrWhiteSpace(RelayState))
             {
-                yield return string.Format(
-@"<input type=""hidden"" name=""{0}"" value=""{1}""/>", Saml2Constants.Message.RelayState, WebUtility.HtmlEncode(RelayState));
+                yield return string.Format(@"<input type=""hidden"" name=""{0}"" value=""{1}""/>", Saml2Constants.Message.RelayState, WebUtility.HtmlEncode(RelayState));
             }
 
             yield return
-@"</div>
-        <noscript>
-            <div>
-                <input type=""submit"" value=""Continue""/>
-            </div>
-        </noscript>
-    </form>
-</body>
-</html>";
+                @"</div>
+                        <noscript>
+                            <div>
+                                <input type=""submit"" value=""Continue""/>
+                            </div>
+                        </noscript>
+                    </form>
+                </body>
+                </html>";
         }
 
         protected override Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2RequestResponse, string messageName)

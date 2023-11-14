@@ -1,7 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
+using ITfoxtec.Identity.Saml2.Schemas;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using ITfoxtec.Identity.Saml2.Schemas;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
 {
@@ -24,16 +25,20 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
                 {
                     o.LoginPath = new PathString(loginPath);
                     o.SlidingExpiration = slidingExpiration;
-                    if(!string.IsNullOrEmpty(accessDeniedPath))
+
+                    if (!string.IsNullOrEmpty(accessDeniedPath))
                     {
                         o.AccessDeniedPath = new PathString(accessDeniedPath);
                     }
+
                     if (sessionStore != null)
                     {
                         o.SessionStore = sessionStore;
                     }
+
                     o.Cookie.SameSite = cookieSameSite;
                     o.Cookie.SecurePolicy = cookieSecurePolicy;
+
                     if (!string.IsNullOrEmpty(cookieDomain))
                     {
                         o.Cookie.Domain = cookieDomain;
@@ -41,6 +46,6 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
                 });
 
             return services;
-        }   
+        }
     }
 }

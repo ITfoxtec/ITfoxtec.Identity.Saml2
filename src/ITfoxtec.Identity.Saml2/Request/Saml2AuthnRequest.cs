@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using ITfoxtec.Identity.Saml2.Schemas;
+
+using System;
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using ITfoxtec.Identity.Saml2.Schemas;
-using System;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -11,7 +12,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2AuthnRequest : Saml2Request
     {
-        public override string ElementName => Saml2Constants.Message.AuthnRequest;        
+        public override string ElementName => Saml2Constants.Message.AuthnRequest;
 
         ///<summary>
         /// [Optional]
@@ -118,7 +119,8 @@ namespace ITfoxtec.Identity.Saml2
 
         public Saml2AuthnRequest(Saml2Configuration config) : base(config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
 
             Destination = config.SingleSignOnDestination;
         }

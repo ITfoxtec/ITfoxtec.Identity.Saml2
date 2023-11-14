@@ -1,9 +1,11 @@
 ﻿using ITfoxtec.Identity.Saml2.Schemas;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore
 {
@@ -33,12 +35,12 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
                 throw new InvalidOperationException("No Claims Identity created from SAML2 Response.");
             }
 
-            if(claimsTransform != null)
+            if (claimsTransform != null)
             {
                 principal = claimsTransform(principal);
             }
 
-            await httpContext.SignInAsync(Saml2Constants.AuthenticationScheme, principal, 
+            await httpContext.SignInAsync(Saml2Constants.AuthenticationScheme, principal,
                 new AuthenticationProperties
                 {
                     AllowRefresh = true,

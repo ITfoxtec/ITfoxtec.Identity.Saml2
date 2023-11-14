@@ -1,6 +1,7 @@
 ﻿#if NET || NETCORE
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using System;
 
 namespace ITfoxtec.Identity.Saml2.MvcCore
@@ -18,7 +19,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             }
             else
             {
-                services.AddSingleton((serviceProvider) => 
+                services.AddSingleton((serviceProvider) =>
                 {
                     return implementationFactory(serviceProvider, settings);
                 });

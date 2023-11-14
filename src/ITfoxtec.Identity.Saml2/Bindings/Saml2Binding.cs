@@ -1,5 +1,6 @@
 ﻿using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
+
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -95,7 +96,7 @@ namespace ITfoxtec.Identity.Saml2
 
             if (saml2RequestResponse.Config == null)
                 throw new ArgumentNullException("saml2RequestResponse.Config");
-            
+
             SetSignatureValidationCertificates(saml2RequestResponse);
 
             return saml2RequestResponse;
@@ -103,7 +104,7 @@ namespace ITfoxtec.Identity.Saml2
 
         protected void SetSignatureValidationCertificates(Saml2Request saml2RequestResponse)
         {
-            if (saml2RequestResponse.SignatureValidationCertificates == null || saml2RequestResponse.SignatureValidationCertificates.Count() < 1)
+            if (saml2RequestResponse.SignatureValidationCertificates == null || !saml2RequestResponse.SignatureValidationCertificates.Any())
                 saml2RequestResponse.SignatureValidationCertificates = saml2RequestResponse.Config.SignatureValidationCertificates;
             if (saml2RequestResponse.SignatureAlgorithm == null)
                 saml2RequestResponse.SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;

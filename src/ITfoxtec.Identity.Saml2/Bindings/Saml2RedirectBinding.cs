@@ -1,15 +1,16 @@
-﻿using System;
+﻿using ITfoxtec.Identity.Saml2.Cryptography;
+using ITfoxtec.Identity.Saml2.Http;
+using ITfoxtec.Identity.Saml2.Schemas;
+using ITfoxtec.Identity.Saml2.Util;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
-using ITfoxtec.Identity.Saml2.Schemas;
-using ITfoxtec.Identity.Saml2.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using ITfoxtec.Identity.Saml2.Util;
-using ITfoxtec.Identity.Saml2.Http;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -26,13 +27,10 @@ namespace ITfoxtec.Identity.Saml2
             if (saml2RequestResponse is Saml2AuthnResponse)
             {
                 if (saml2RequestResponse.Config.AuthnResponseSignType != Saml2AuthnResponseSignTypes.SignResponse)
-                {
                     throw new InvalidSaml2BindingException($"Redirect binding do not support {saml2RequestResponse.Config.AuthnResponseSignType}, only {nameof(Saml2AuthnResponseSignTypes.SignResponse)} is supported.");
-                }
-                if(saml2RequestResponse.Config.EncryptionCertificate != null)
-                {
+
+                if (saml2RequestResponse.Config.EncryptionCertificate != null)
                     throw new InvalidSaml2BindingException("Redirect binding do not support authn response encryption, only supported by post binding.");
-                }
             }
 
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) && saml2RequestResponse.Config.SigningCertificate != null)
@@ -119,19 +117,21 @@ namespace ITfoxtec.Identity.Saml2
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
                 saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
-                var actualAignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
+                var actualSignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
                 if (saml2RequestResponse.SignatureAlgorithm == null)
                 {
-                    saml2RequestResponse.SignatureAlgorithm = actualAignatureAlgorithm;
+                    saml2RequestResponse.SignatureAlgorithm = actualSignatureAlgorithm;
                 }
-                else if (!saml2RequestResponse.SignatureAlgorithm.Equals(actualAignatureAlgorithm, StringComparison.InvariantCulture))
+                else if (!saml2RequestResponse.SignatureAlgorithm.Equals(actualSignatureAlgorithm, StringComparison.InvariantCulture))
                 {
-                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualAignatureAlgorithm}");
+                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualSignatureAlgorithm}");
                 }
+
                 if (saml2RequestResponse.XmlCanonicalizationMethod == null)
                 {
                     saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
                 }
+
                 Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.SignatureAlgorithm);
                 Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(saml2RequestResponse.XmlCanonicalizationMethod);
                 SignatureAlgorithm = saml2RequestResponse.SignatureAlgorithm;
@@ -176,7 +176,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     // Check if certificate used to sign is valid
                     saml2RequestResponse.IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
-                    
+
                     // Signature is valid.
                     return;
                 }

@@ -1,4 +1,5 @@
 ﻿using ITfoxtec.Identity.Saml2.Claims;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Xml;
 using System.Xml.Linq;
+
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -32,11 +34,12 @@ namespace ITfoxtec.Identity.Saml2
         /// [Optional]
         /// An indication of the reason for the logout, in the form of a URI reference.
         /// </summary>
-        public Uri Reason { get; set; }        
+        public Uri Reason { get; set; }
 
         public Saml2LogoutRequest(Saml2Configuration config) : base(config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
 
             Destination = config.SingleLogoutDestination;
             NotOnOrAfter = DateTimeOffset.UtcNow.AddMinutes(10);
@@ -48,7 +51,7 @@ namespace ITfoxtec.Identity.Saml2
             if (identity.IsAuthenticated)
             {
                 var nameIdFormat = ReadClaimValue(identity, Saml2ClaimTypes.NameIdFormat, false);
-                if (string.IsNullOrEmpty(nameIdFormat)) 
+                if (string.IsNullOrEmpty(nameIdFormat))
                 {
                     NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId));
                 }
@@ -58,7 +61,7 @@ namespace ITfoxtec.Identity.Saml2
 
                 }
                 SessionIndex = ReadClaimValue(identity, Saml2ClaimTypes.SessionIndex, false);
-            }           
+            }
         }
 
         private static string ReadClaimValue(ClaimsIdentity identity, string claimType, bool required = true)
@@ -66,7 +69,7 @@ namespace ITfoxtec.Identity.Saml2
             var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType);
             if (claim == null)
             {
-                if(required)
+                if (required)
                 {
                     throw new InvalidOperationException($"Claim Type '{claimType}' is required to do logout.");
                 }
@@ -112,6 +115,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     nameIdContent = new object[] { NameId.Value };
                 }
+
                 yield return new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.NameId, nameIdContent);
             }
 
