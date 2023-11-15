@@ -24,7 +24,7 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
                 {
                     o.LoginPath = new PathString(loginPath);
                     o.SlidingExpiration = slidingExpiration;
-                    if(!string.IsNullOrEmpty(accessDeniedPath))
+                    if (!string.IsNullOrEmpty(accessDeniedPath))
                     {
                         o.AccessDeniedPath = new PathString(accessDeniedPath);
                     }

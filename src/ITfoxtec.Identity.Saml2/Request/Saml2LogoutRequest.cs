@@ -32,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2
         /// [Optional]
         /// An indication of the reason for the logout, in the form of a URI reference.
         /// </summary>
-        public Uri Reason { get; set; }        
+        public Uri Reason { get; set; }
 
         public Saml2LogoutRequest(Saml2Configuration config) : base(config)
         {
@@ -58,7 +58,7 @@ namespace ITfoxtec.Identity.Saml2
 
                 }
                 SessionIndex = ReadClaimValue(identity, Saml2ClaimTypes.SessionIndex, false);
-            }           
+            }
         }
 
         private static string ReadClaimValue(ClaimsIdentity identity, string claimType, bool required = true)
@@ -66,7 +66,7 @@ namespace ITfoxtec.Identity.Saml2
             var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType);
             if (claim == null)
             {
-                if(required)
+                if (required)
                 {
                     throw new InvalidOperationException($"Claim Type '{claimType}' is required to do logout.");
                 }

@@ -33,12 +33,12 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
                 throw new InvalidOperationException("No Claims Identity created from SAML2 Response.");
             }
 
-            if(claimsTransform != null)
+            if (claimsTransform != null)
             {
                 principal = claimsTransform(principal);
             }
 
-            await httpContext.SignInAsync(Saml2Constants.AuthenticationScheme, principal, 
+            await httpContext.SignInAsync(Saml2Constants.AuthenticationScheme, principal,
                 new AuthenticationProperties
                 {
                     AllowRefresh = true,

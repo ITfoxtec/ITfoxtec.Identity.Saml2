@@ -68,7 +68,7 @@ namespace ITfoxtec.Identity.Saml2
                     throw new ArgumentException("No RSA Private Key present in Decryption Certificates or missing private key read credentials.");
                 }
             }
-            if(config.EncryptionCertificate != null)
+            if (config.EncryptionCertificate != null)
             {
                 EncryptionCertificate = config.EncryptionCertificate;
                 if (config.EncryptionCertificate.GetRSAPublicKey() == null)
@@ -356,7 +356,7 @@ namespace ITfoxtec.Identity.Saml2
             if (DecryptionCertificates?.Count() > 0)
             {
                 var exceptions = new List<Exception>();
-                foreach(var decryptionCertificate in DecryptionCertificates)
+                foreach (var decryptionCertificate in DecryptionCertificates)
                 {
                     try
                     {

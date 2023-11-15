@@ -94,7 +94,7 @@ namespace ITfoxtec.Identity.Saml2
                         SetSignatureValidationCertificates(saml2ArtifactResponse);
                         var xml = FromSoapXml(result);
                         saml2ArtifactResponse.Read(xml, false, false); 
-                        if(saml2ArtifactResponse.Status == Saml2StatusCodes.Success && 
+                        if (saml2ArtifactResponse.Status == Saml2StatusCodes.Success && 
                             (saml2Request is Saml2AuthnResponse saml2AuthnResponse ? saml2AuthnResponse.Status == Saml2StatusCodes.Success : true))
                         {
                             saml2ArtifactResponse.Read(xml, saml2ArtifactResponse.SignatureValidationCertificates?.Count() > 0, true);
@@ -126,29 +126,29 @@ namespace ITfoxtec.Identity.Saml2
         {
             var xmlDoc = xml.ToXmlDocument();
 
-            var bodyList = GetNodesByLocalname(xmlDoc.DocumentElement, "Body");
+            var bodyList = GetNodesByLocalName(xmlDoc.DocumentElement, "Body");
             if (bodyList.Count != 1)
             {
                 throw new Exception("There is not exactly one Body element.");
             }
 
-            var faultBody = GetNodeByLocalname(bodyList[0], "Fault");
+            var faultBody = GetNodeByLocalName(bodyList[0], "Fault");
             if (faultBody != null)
             {
-                var faultcode = GetNodeByLocalname(faultBody, "faultcode");
-                var faultstring = GetNodeByLocalname(faultBody, "faultstring");
-                throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultcode + "\n" + faultstring);
+                var faultCode = GetNodeByLocalName(faultBody, "faultcode");
+                var faultString = GetNodeByLocalName(faultBody, "faultstring");
+                throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultCode + "\n" + faultString);
             }
 
             return bodyList[0].InnerXml;
         }
 
-        private XmlNodeList GetNodesByLocalname(XmlNode xe, string localName)
+        private XmlNodeList GetNodesByLocalName(XmlNode xe, string localName)
         {
             return xe.SelectNodes(string.Format("//*[local-name()='{0}']", localName));
         }
 
-        private XmlNode GetNodeByLocalname(XmlNode xe, string localName)
+        private XmlNode GetNodeByLocalName(XmlNode xe, string localName)
         {
             return xe.SelectSingleNode(string.Format("//*[local-name()='{0}']", localName));
         }

@@ -119,14 +119,14 @@ namespace ITfoxtec.Identity.Saml2
             if ((!(saml2RequestResponse is Saml2AuthnRequest) || saml2RequestResponse.Config.SignAuthnRequest) &&
                 saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
-                var actualAignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
+                var actualSignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
                 if (saml2RequestResponse.SignatureAlgorithm == null)
                 {
-                    saml2RequestResponse.SignatureAlgorithm = actualAignatureAlgorithm;
+                    saml2RequestResponse.SignatureAlgorithm = actualSignatureAlgorithm;
                 }
-                else if (!saml2RequestResponse.SignatureAlgorithm.Equals(actualAignatureAlgorithm, StringComparison.InvariantCulture))
+                else if (!saml2RequestResponse.SignatureAlgorithm.Equals(actualSignatureAlgorithm, StringComparison.InvariantCulture))
                 {
-                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualAignatureAlgorithm}");
+                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualSignatureAlgorithm}");
                 }
                 if (saml2RequestResponse.XmlCanonicalizationMethod == null)
                 {
@@ -176,7 +176,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     // Check if certificate used to sign is valid
                     saml2RequestResponse.IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
-                    
+
                     // Signature is valid.
                     return;
                 }

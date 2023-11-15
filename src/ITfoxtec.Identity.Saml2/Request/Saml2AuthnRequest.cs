@@ -11,7 +11,7 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2AuthnRequest : Saml2Request
     {
-        public override string ElementName => Saml2Constants.Message.AuthnRequest;        
+        public override string ElementName => Saml2Constants.Message.AuthnRequest;
 
         ///<summary>
         /// [Optional]

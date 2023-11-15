@@ -11,8 +11,8 @@ namespace ITfoxtec.Identity.Saml2
         public static T GetValueOrNull<T>(this XmlElement xmlElement)
         {
             return GenericTypeConverter.ConvertValue<T>(xmlElement?.InnerText?.Trim(), xmlElement);
-        }        
-        
+        }
+
         public static T GetElementOrNull<T>(this XmlElement xmlElement)
         {
             return GenericTypeConverter.ConvertElement<T>(xmlElement);

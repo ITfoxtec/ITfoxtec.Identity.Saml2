@@ -35,7 +35,7 @@ namespace ITfoxtec.Identity.Saml2
         public static Dictionary<string, string> GetRelayStateQuery<T>(this Saml2Binding<T> saml2Binding)
         {
             Dictionary<string, string> elements = new Dictionary<string,string>();
-            if(string.IsNullOrWhiteSpace(saml2Binding.RelayState))
+            if (string.IsNullOrWhiteSpace(saml2Binding.RelayState))
             {
                 return elements;
             }

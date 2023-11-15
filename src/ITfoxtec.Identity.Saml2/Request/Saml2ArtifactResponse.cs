@@ -36,7 +36,7 @@ namespace ITfoxtec.Identity.Saml2
             var innerRequestXml = InnerRequest.ToXml();
             var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
             XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(innerRequestXml.DocumentElement, true), status);
-            
+
             if (Config.SigningCertificate != null)
             {
                 SignArtifactResponse();

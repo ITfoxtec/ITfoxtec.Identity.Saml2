@@ -7,7 +7,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
 using System.Security.Cryptography.Xml;
-using System.Diagnostics;
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -20,7 +19,7 @@ namespace ITfoxtec.Identity.Saml2
     /// Generic Saml2 Request.
     /// </summary>
     public abstract class Saml2Request
-    {        
+    {
         public abstract string ElementName { get; }
 
         public Saml2Configuration Config { get; protected set; }
@@ -158,7 +157,7 @@ namespace ITfoxtec.Identity.Saml2
             if (Extensions != null)
             {
                 yield return Extensions.ToXElement();
-            }            
+            }
         }
 
         public abstract XmlDocument ToXml();
@@ -238,21 +237,21 @@ namespace ITfoxtec.Identity.Saml2
             if(assertionElement == null)
             {
                 if (documentValidationResult != SignatureValidation.Valid)
-                    throw new InvalidSignatureException("Signature is invalid.");                
+                    throw new InvalidSignatureException("Signature is invalid.");
             }
             else
-            {                
+            {
                 var assertionValidationResult = ValidateXmlSignature(assertionElement);
                 if (documentValidationResult == SignatureValidation.Invalid || assertionValidationResult == SignatureValidation.Invalid || 
                     !(documentValidationResult == SignatureValidation.Valid || assertionValidationResult == SignatureValidation.Valid))
                     throw new InvalidSignatureException("Signature is invalid.");
-            }            
+            }
         }
 
         protected SignatureValidation ValidateXmlSignature(XmlElement xmlElement)
         {
             var xmlSignatures = xmlElement.SelectNodes($"*[local-name()='{Schemas.Saml2Constants.Message.Signature}' and namespace-uri()='{SignedXml.XmlDsigNamespaceUrl}']");
-            if(xmlSignatures.Count == 0)
+            if (xmlSignatures.Count == 0)
             {
                 return SignatureValidation.NotPresent;
             }
@@ -269,7 +268,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     // Check if certificate used to sign is valid
                     IdentityConfiguration.CertificateValidator.Validate(signatureValidationCertificate);
-                    
+
                     // Signature is valid.
                     return SignatureValidation.Valid;
                 }
