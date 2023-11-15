@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1;netstandard2.1;net48;net462</TargetFrameworks>
+	<TargetFrameworks>net8.0;net7.0;net6.0;net5.0;netcoreapp3.1;netstandard2.1;net48;net462</TargetFrameworks>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<IncludeSymbols>true</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -12,7 +12,8 @@
     <Title>ITfoxtec Identity SAML 2.0</Title>
     <Description>The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) on top of the SAML 2.0 functionality implemented in .NET.
 
-      Support .NET 7.0
+      Support .NET 8.0
+	  Support .NET 7.0
       Support .NET 6.0
       Support .NET 5.0
       Support .NET Core 3.1 
@@ -42,12 +43,33 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
+    <DefineConstants>NET80;NET</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.10.2" />
+	  <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.0.3" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+	  <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <DefineConstants>NET70;NET</DefineConstants>

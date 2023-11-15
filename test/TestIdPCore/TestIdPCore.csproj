@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>TestIdPCore</AssemblyName>
     <PackageId>TestIdPCore</PackageId>
-    <Version>7.0.0</Version>
+    <Version>8.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>Copyright © 2019</Copyright>
