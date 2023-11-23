@@ -41,6 +41,11 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public new bool CheckSignature()
         {
+            if (SignedInfo.References.Count != 1)
+            {
+                throw new InvalidSignatureException("Invalid XML signature reference.");
+            }
+
             if (SignedInfo.CanonicalizationMethod != CanonicalizationMethod)
             {
                 throw new InvalidSignatureException($"Illegal canonicalization method {SignedInfo.CanonicalizationMethod} used in signature.");
@@ -49,11 +54,6 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             if (SignedInfo.SignatureMethod != Saml2Signer.SignatureAlgorithm)
             {
                 throw new InvalidSignatureException($"Illegal signature method {SignedInfo.SignatureMethod} used in signature.");
-            }
-
-            if (SignedInfo.References.Count != 1)
-            {
-                throw new InvalidSignatureException("Invalid XML signature reference.");
             }
 
             var reference = SignedInfo.References[0] as Reference;
@@ -69,6 +69,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 throw new InvalidSignatureException("XML signature reference do not refer to the root element.");
             }
+
             AssertTransformChainValid(reference.TransformChain);
         }
 
