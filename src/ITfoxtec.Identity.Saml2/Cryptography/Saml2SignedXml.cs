@@ -43,8 +43,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         {
             if (SignedInfo.CanonicalizationMethod != CanonicalizationMethod)
             {
-                throw new InvalidSignatureException(
-                    $"Illegal canonicalization method {SignedInfo.CanonicalizationMethod} used in signature.");
+                throw new InvalidSignatureException($"Illegal canonicalization method {SignedInfo.CanonicalizationMethod} used in signature.");
             }
 
             if (SignedInfo.SignatureMethod != Saml2Signer.SignatureAlgorithm)

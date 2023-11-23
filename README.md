@@ -15,10 +15,11 @@ Message signing and validation as well as decryption is supported. The package s
 logout and metadata. Both SP Initiated and IdP Initiated sign on is supported.  
 The package supports redirect binding, post binding and artifact binding.
 
-> ## Do you prefer to use OpenID Connect?
->You can use the [open-source](https://github.com/ITfoxtec/FoxIDs) and free [FoxIDs](https://www.foxids.com) Identity Services to translate from [SAML 2.0](https://www.foxids.com/docs/up-party-saml-2.0) to [OpenID Connect](https://www.foxids.com/docs/down-party-oidc). Then FoxIDs handles the SAML 2.0 traffic to the Identity Provider (IdP) and your application connects to FoxIDs with OpenID Connect ([FoxIDs samples](https://github.com/ITfoxtec/FoxIDs.Samples)).  
-> *SAML 2.0 is an old standard with its shortcomings, and therefore it is often a better choice to use OpenID Connect in the application.*  
->You can likewise use FoxIDs to translate from the Danish [NemLog-in3 (MitID)](https://www.foxids.com/docs/up-party-howto-saml-2.0-nemlogin) and [Context Handler](https://www.foxids.com/docs/howto-saml-2.0-context-handler) to OpenID Connect.
+> ## SAML 2.0 to OpenID Connect 1.0 bridge
+> You can create a tenant on <a href="https://www.foxids.com">FoxIDs</a> and translate from SAML 2.0 to OpenID Connect. 
+> FoxIDs handles the [SAML 2.0](https://www.foxids.com/docs/up-party-saml-2.0) traffic to the Identity Provider (IdP) and your application connects to FoxIDs with [OpenID Connect](https://www.foxids.com/docs/down-party-oidc).  
+> *SAML 2.0 is an old standard with its shortcomings, and therefore it is often a better choice to use OpenID Connect in an application.*  
+> You can likewise use FoxIDs to translate from the Danish [NemLog-in3 (MitID)](https://www.foxids.com/docs/up-party-howto-saml-2.0-nemlogin) and [Context Handler](https://www.foxids.com/docs/howto-saml-2.0-context-handler) to OpenID Connect.
 
 The ITfoxtec Identity Saml2 package supports signing/encryption certificates in Azure Key Vault. 
 Please see the [TestWebAppCoreAzureKeyVault](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreAzureKeyVault) sample. 
