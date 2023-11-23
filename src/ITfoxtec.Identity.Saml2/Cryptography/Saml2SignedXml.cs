@@ -65,16 +65,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
             AssertTransformChainValid(reference.TransformChain);
 
-            var canonicalizationMethodValid = SignedInfo.CanonicalizationMethod == CanonicalizationMethod;
-            var signatureMethodValid = SignedInfo.SignatureMethod == Saml2Signer.SignatureAlgorithm;
-            if (!(canonicalizationMethodValid && signatureMethodValid))
-            {
-                return false;
-            }
-            else
-            {                        
-                return CheckSignature(Saml2Signer.Certificate.GetRSAPublicKey());
-            }
+            return CheckSignature(Saml2Signer.Certificate.GetRSAPublicKey());
         }
 
         private void AssertTransformChainValid(TransformChain transformChain)
