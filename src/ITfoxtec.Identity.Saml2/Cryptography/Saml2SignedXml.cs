@@ -57,15 +57,19 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             }
 
             var reference = SignedInfo.References[0] as Reference;
+            AssertReferenceValid(reference);
+
+            return CheckSignature(Saml2Signer.Certificate.GetRSAPublicKey());
+        }
+
+        private void AssertReferenceValid(Reference reference)
+        {
             var referenceId = reference.Uri.Substring(1);
             if (Element != GetIdElement(Element.OwnerDocument, referenceId))
             {
                 throw new InvalidSignatureException("XML signature reference do not refer to the root element.");
             }
-
             AssertTransformChainValid(reference.TransformChain);
-
-            return CheckSignature(Saml2Signer.Certificate.GetRSAPublicKey());
         }
 
         private void AssertTransformChainValid(TransformChain transformChain)
