@@ -10,7 +10,7 @@ using System.Net;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2PostBinding : Saml2Binding<Saml2PostBinding>
+    public class Saml2PostBinding : Saml2Binding
     {
         /// <summary>
         /// [Optional]
@@ -28,7 +28,7 @@ namespace ITfoxtec.Identity.Saml2
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
         }
 
-        protected override Saml2PostBinding BindInternal(Saml2Request saml2RequestResponse, string messageName)
+        protected internal override void BindInternal(Saml2Request saml2RequestResponse, string messageName)
         {
             BindInternal(saml2RequestResponse);
 
@@ -55,7 +55,6 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             PostContent = string.Concat(HtmlPostPage(saml2RequestResponse.Destination, messageName));
-            return this;
         }
 
         private IEnumerable<string> HtmlPostPage(Uri destination, string messageName)

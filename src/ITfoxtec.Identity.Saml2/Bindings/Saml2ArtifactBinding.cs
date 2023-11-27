@@ -7,7 +7,7 @@ using ITfoxtec.Identity.Saml2.Http;
 
 namespace ITfoxtec.Identity.Saml2
 {
-    public class Saml2ArtifactBinding : Saml2Binding<Saml2ArtifactBinding> 
+    public class Saml2ArtifactBinding : Saml2Binding
     {
         /// <summary>
         /// [Optional]
@@ -22,7 +22,7 @@ namespace ITfoxtec.Identity.Saml2
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
         }
 
-        protected override Saml2ArtifactBinding BindInternal(Saml2Request saml2Request, string messageName)
+        protected internal override void BindInternal(Saml2Request saml2Request, string messageName)
         {
             if (!(saml2Request is Saml2ArtifactResolve saml2ArtifactResolve))
                 throw new ArgumentException("Only Saml2ArtifactResolve is supported");
@@ -33,8 +33,6 @@ namespace ITfoxtec.Identity.Saml2
 
             var requestQueryString = string.Join("&", RequestQueryString(saml2ArtifactResolve, messageName));
             RedirectLocation = new Uri(string.Join(saml2ArtifactResolve.Destination.OriginalString.Contains('?') ? "&" : "?", saml2ArtifactResolve.Destination.OriginalString, requestQueryString));
-
-            return this;
         }
 
         private IEnumerable<string> RequestQueryString(Saml2ArtifactResolve saml2ArtifactResolve, string messageName)

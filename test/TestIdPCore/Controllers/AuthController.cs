@@ -123,17 +123,17 @@ namespace TestIdPCore.Controllers
             }
         }
 
-        private string ReadRelyingPartyFromLoginRequest<T>(Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromLoginRequest(Saml2Binding binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(validate: true), new Saml2AuthnRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
-        private string ReadRelyingPartyFromLogoutRequest<T>(Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromLogoutRequest(Saml2Binding binding)
         {
             return binding.ReadSamlRequest(Request.ToGenericHttpRequest(validate: true), new Saml2LogoutRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
-        private string ReadRelyingPartyFromSoapEnvelopeRequest<T>(ITfoxtec.Identity.Saml2.Http.HttpRequest httpRequest, Saml2Binding<T> binding)
+        private string ReadRelyingPartyFromSoapEnvelopeRequest(ITfoxtec.Identity.Saml2.Http.HttpRequest httpRequest, Saml2Binding binding)
         {
             return binding.ReadSamlRequest(httpRequest, new Saml2ArtifactResolve(GetRpSaml2Configuration()))?.Issuer;
         }
@@ -172,7 +172,7 @@ namespace TestIdPCore.Controllers
 
                 var token = saml2AuthnResponse.CreateSecurityToken(relyingParty.Issuer, /*declAuthnContext: new Uri("urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified"),*/ subjectConfirmationLifetime: 5, issuedTokenLifetime: 60);
             }
-
+            
             return responsebinding.Bind(saml2AuthnResponse).ToActionResult();
         }
 
