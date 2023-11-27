@@ -50,9 +50,9 @@ namespace TestWebAppCoreArtifact.Controllers
         [Route("AssertionConsumerService")]
         public async Task<IActionResult> AssertionConsumerService()
         {
-            var binding = new Saml2ArtifactBinding();
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
             var saml2ArtifactResolve = new Saml2ArtifactResolve(config);
-            binding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2ArtifactResolve);
+            httpRequest.Binding.Unbind(httpRequest, saml2ArtifactResolve);
 
             var soapEnvelope = new Saml2SoapEnvelope();
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
@@ -64,7 +64,7 @@ namespace TestWebAppCoreArtifact.Controllers
 
             await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
 
-            var relayStateQuery = binding.GetRelayStateQuery();
+            var relayStateQuery = httpRequest.Binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
             return Redirect(returnUrl);
         }
@@ -86,8 +86,8 @@ namespace TestWebAppCoreArtifact.Controllers
         [Route("LoggedOut")]
         public IActionResult LoggedOut()
         {
-            var binding = new Saml2PostBinding();
-            binding.Unbind(Request.ToGenericHttpRequest(validate: true), new Saml2LogoutResponse(config));
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
+            httpRequest.Binding.Unbind(httpRequest, new Saml2LogoutResponse(config));
 
             return Redirect(Url.Content("~/"));
         }
@@ -96,11 +96,11 @@ namespace TestWebAppCoreArtifact.Controllers
         public async Task<IActionResult> SingleLogout()
         {
             Saml2StatusCodes status;
-            var requestBinding = new Saml2PostBinding();
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
             var logoutRequest = new Saml2LogoutRequest(config, User);
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), logoutRequest);
+                httpRequest.Binding.Unbind(httpRequest, logoutRequest);
                 status = Saml2StatusCodes.Success;
                 await logoutRequest.DeleteSession(HttpContext);
             }
@@ -112,7 +112,7 @@ namespace TestWebAppCoreArtifact.Controllers
             }
 
             var responsebinding = new Saml2PostBinding();
-            responsebinding.RelayState = requestBinding.RelayState;
+            responsebinding.RelayState = httpRequest.Binding.RelayState;
             var saml2LogoutResponse = new Saml2LogoutResponse(config)
             {
                 InResponseToAsString = logoutRequest.IdAsString,

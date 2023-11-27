@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Concurrent;
+using Saml2Http = ITfoxtec.Identity.Saml2.Http;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -41,27 +42,27 @@ namespace TestIdPCore.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login()
         {
-            var requestBinding = new Saml2RedirectBinding();
-            var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(requestBinding));
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
+            var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLoginRequest(httpRequest));
 
             var saml2AuthnRequest = new Saml2AuthnRequest(GetRpSaml2Configuration(relyingParty));
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2AuthnRequest);
+                httpRequest.Binding.Unbind(httpRequest, saml2AuthnRequest);
 
                 // ****  Handle user login e.g. in GUI ****
                 // Test user with session index and claims
                 var sessionIndex = Guid.NewGuid().ToString();
                 var claims = CreateTestUserClaims(saml2AuthnRequest.Subject?.NameID?.ID);
 
-                return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Success, requestBinding.RelayState, relyingParty, sessionIndex, claims);
+                return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Success, httpRequest.Binding.RelayState, relyingParty, sessionIndex, claims);
             }
             catch (Exception exc)
             {
 #if DEBUG
                 Debug.WriteLine($"Saml 2.0 Authn Request error: {exc.ToString()}\nSaml Auth Request: '{saml2AuthnRequest.XmlDocument?.OuterXml}'\nQuery String: {Request.QueryString}");
 #endif
-                return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Responder, requestBinding.RelayState, relyingParty);
+                return LoginResponse(saml2AuthnRequest.Id, Saml2StatusCodes.Responder, httpRequest.Binding.RelayState, relyingParty);
             }
         }
         
@@ -102,35 +103,35 @@ namespace TestIdPCore.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            var requestBinding = new Saml2PostBinding();
-            var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest(requestBinding));
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
+            var relyingParty = await ValidateRelyingParty(ReadRelyingPartyFromLogoutRequest(httpRequest));
 
             var saml2LogoutRequest = new Saml2LogoutRequest(GetRpSaml2Configuration(relyingParty));
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2LogoutRequest);
+                httpRequest.Binding.Unbind(httpRequest, saml2LogoutRequest);
 
                 // **** Delete user session ****
 
-                return LogoutResponse(saml2LogoutRequest.Id, Saml2StatusCodes.Success, requestBinding.RelayState, saml2LogoutRequest.SessionIndex, relyingParty);
+                return LogoutResponse(saml2LogoutRequest.Id, Saml2StatusCodes.Success, httpRequest.Binding.RelayState, saml2LogoutRequest.SessionIndex, relyingParty);
             }
             catch (Exception exc)
             {
 #if DEBUG
                 Debug.WriteLine($"Saml 2.0 Logout Request error: {exc.ToString()}\nSaml Logout Request: '{saml2LogoutRequest.XmlDocument?.OuterXml}'");
 #endif
-                return LogoutResponse(saml2LogoutRequest.Id, Saml2StatusCodes.Responder, requestBinding.RelayState, saml2LogoutRequest.SessionIndex, relyingParty);
+                return LogoutResponse(saml2LogoutRequest.Id, Saml2StatusCodes.Responder, httpRequest.Binding.RelayState, saml2LogoutRequest.SessionIndex, relyingParty);
             }
         }
 
-        private string ReadRelyingPartyFromLoginRequest(Saml2Binding binding)
+        private string ReadRelyingPartyFromLoginRequest(Saml2Http.HttpRequest httpRequest)
         {
-            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(validate: true), new Saml2AuthnRequest(GetRpSaml2Configuration()))?.Issuer;
+            return httpRequest.Binding.ReadSamlRequest(httpRequest, new Saml2AuthnRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
-        private string ReadRelyingPartyFromLogoutRequest(Saml2Binding binding)
+        private string ReadRelyingPartyFromLogoutRequest(Saml2Http.HttpRequest httpRequest)
         {
-            return binding.ReadSamlRequest(Request.ToGenericHttpRequest(validate: true), new Saml2LogoutRequest(GetRpSaml2Configuration()))?.Issuer;
+            return httpRequest.Binding.ReadSamlRequest(httpRequest, new Saml2LogoutRequest(GetRpSaml2Configuration()))?.Issuer;
         }
 
         private string ReadRelyingPartyFromSoapEnvelopeRequest(ITfoxtec.Identity.Saml2.Http.HttpRequest httpRequest, Saml2Binding binding)

@@ -34,7 +34,14 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             }
             else
             {
-                samlHttpRequest.Binding = new Saml2RedirectBinding();
+                if (samlHttpRequest.Query.AllKeys.Contains(Saml2Constants.Message.SamlArt))
+                {
+                    samlHttpRequest.Binding = new Saml2ArtifactBinding();
+                }
+                else
+                {
+                    samlHttpRequest.Binding = new Saml2RedirectBinding();
+                }
             }
 
             if (validate)

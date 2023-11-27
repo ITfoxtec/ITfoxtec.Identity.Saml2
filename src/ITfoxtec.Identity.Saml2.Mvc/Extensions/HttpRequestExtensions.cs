@@ -2,6 +2,7 @@
 using System.Web;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Mvc
 {
@@ -30,7 +31,14 @@ namespace ITfoxtec.Identity.Saml2.Mvc
             }
             else
             {
-                samlHttpRequest.Binding = new Saml2RedirectBinding();
+                if (samlHttpRequest.Query.AllKeys.Contains(Saml2Constants.Message.SamlArt))
+                {
+                    samlHttpRequest.Binding = new Saml2ArtifactBinding();
+                }
+                else
+                {
+                    samlHttpRequest.Binding = new Saml2RedirectBinding();
+                }
             }
 
             if (validate)
