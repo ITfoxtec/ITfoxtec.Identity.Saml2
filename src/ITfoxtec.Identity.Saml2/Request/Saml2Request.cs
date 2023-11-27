@@ -12,6 +12,9 @@ using System.IdentityModel.Tokens;
 #else
 using Microsoft.IdentityModel.Tokens.Saml2;
 #endif
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {

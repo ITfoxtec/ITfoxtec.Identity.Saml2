@@ -41,19 +41,19 @@ namespace TestWebApp.Controllers
         }
 
         public ActionResult AssertionConsumerService()
-        {       
-            var binding = new Saml2PostBinding();
+        {
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
             var saml2AuthnResponse = new Saml2AuthnResponse(config);
 
-            binding.ReadSamlResponse(Request.ToGenericHttpRequest(validate: true), saml2AuthnResponse);
+            httpRequest.Binding.ReadSamlResponse(httpRequest, saml2AuthnResponse);
             if (saml2AuthnResponse.Status != Saml2StatusCodes.Success)
             {
                 throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
             }
-            binding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2AuthnResponse);
+            httpRequest.Binding.Unbind(httpRequest, saml2AuthnResponse);
             saml2AuthnResponse.CreateSession(claimsAuthenticationManager: new DefaultClaimsAuthenticationManager());
 
-            var relayStateQuery = binding.GetRelayStateQuery();
+            var relayStateQuery = httpRequest.Binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
             return Redirect(returnUrl);
         }
@@ -73,8 +73,8 @@ namespace TestWebApp.Controllers
 
         public ActionResult LoggedOut()
         {
-            var binding = new Saml2PostBinding();
-            binding.Unbind(Request.ToGenericHttpRequest(validate: true), new Saml2LogoutResponse(config));
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
+            httpRequest.Binding.Unbind(httpRequest, new Saml2LogoutResponse(config));
 
             FederatedAuthentication.SessionAuthenticationModule.DeleteSessionTokenCookie();
             FederatedAuthentication.SessionAuthenticationModule.SignOut();
@@ -85,11 +85,11 @@ namespace TestWebApp.Controllers
         public ActionResult SingleLogout()
         {
             Saml2StatusCodes status;
-            var requestBinding = new Saml2PostBinding();
+            var httpRequest = Request.ToGenericHttpRequest(validate: true);
             var logoutRequest = new Saml2LogoutRequest(config, ClaimsPrincipal.Current);
             try
             {
-                requestBinding.Unbind(Request.ToGenericHttpRequest(validate: true), logoutRequest);
+                httpRequest.Binding.Unbind(httpRequest, logoutRequest);
                 status = Saml2StatusCodes.Success;
                 logoutRequest.DeleteSession();
             }
@@ -101,7 +101,7 @@ namespace TestWebApp.Controllers
             }
 
             var responsebinding = new Saml2PostBinding();
-            responsebinding.RelayState = requestBinding.RelayState;
+            responsebinding.RelayState = httpRequest.Binding.RelayState;
             var saml2LogoutResponse = new Saml2LogoutResponse(config)
             {
                 InResponseToAsString = logoutRequest.IdAsString,

@@ -20,9 +20,18 @@ namespace ITfoxtec.Identity.Saml2.Mvc
                 Method = request.HttpMethod,
                 QueryString = request.Url.Query,
                 Query = request.QueryString,
-                Form = "POST".Equals(request.HttpMethod, StringComparison.InvariantCultureIgnoreCase) ? request.Form : null,
                 Body = ReadBody(request, readBodyAsString)
             };
+
+            if ("POST".Equals(request.HttpMethod, StringComparison.InvariantCultureIgnoreCase))
+            {
+                samlHttpRequest.Form = request.Form;
+                samlHttpRequest.Binding = new Saml2PostBinding();
+            }
+            else
+            {
+                samlHttpRequest.Binding = new Saml2RedirectBinding();
+            }
 
             if (validate)
             {
