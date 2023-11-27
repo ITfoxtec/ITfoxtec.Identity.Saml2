@@ -1,7 +1,6 @@
 ﻿using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
