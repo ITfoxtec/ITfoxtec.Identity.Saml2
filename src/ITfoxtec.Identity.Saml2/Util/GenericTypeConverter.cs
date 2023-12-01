@@ -1,5 +1,4 @@
-﻿using Schemas = ITfoxtec.Identity.Saml2.Schemas;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Xml;
 using ITfoxtec.Identity.Saml2.Schemas;
@@ -107,7 +106,8 @@ namespace ITfoxtec.Identity.Saml2.Util
 
         static T GenericConvertValue<T, U>(U value)
         {
-            return (T)Convert.ChangeType(value, typeof(T));
+            var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+            return (T)(value == null ? null : Convert.ChangeType(value, type));
         }
 
         static T? GenericConvertValueToNullable<T>(string value) where T : struct
