@@ -32,6 +32,10 @@ namespace TestWebAppCore.Controllers
 
             return binding.Bind(new Saml2AuthnRequest(config)
             {
+                //AssertionConsumerServiceIndex = 0,
+                //AttributeConsumingServiceIndex = 0,
+                //AssertionConsumerServiceUrl = new Uri("https://test.com"),
+
                 //ForceAuthn = true,
                 Subject = new Subject { NameID = new NameID { ID = "abcd" } },
                 NameIdPolicy = new NameIdPolicy { AllowCreate = true, Format = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" },
