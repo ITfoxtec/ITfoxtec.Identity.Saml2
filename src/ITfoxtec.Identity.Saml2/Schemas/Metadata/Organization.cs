@@ -6,8 +6,8 @@ using System.Xml.Linq;
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
     /// <summary>
-    /// The ContactPerson element specifies basic contact information about a person responsible in some
-    /// capacity for a SAML entity or role. The use of this element is always optional. Its content is informative in
+    /// The Organization element specifies basic contact information about the company or organization that is publishing the metadata document.
+    /// The use of this element is always optional. Its content is informative in
     /// nature and does not directly map to any core SAML elements or attributes.
     /// </summary>
     public class Organization
