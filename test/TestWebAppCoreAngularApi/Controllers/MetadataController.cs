@@ -70,6 +70,8 @@ namespace TestWebAppCoreAngularApi.Controllers
                     TelephoneNumber = "22222222",
                 }
             };
+            entityDescriptor.Organization = new Organization("Some Organization",  "Some Organization Display Name" , "http://some-organization.com");
+            
             return new Saml2Metadata(entityDescriptor).CreateMetadata().ToActionResult();
         }
 

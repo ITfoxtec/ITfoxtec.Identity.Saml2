@@ -42,6 +42,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public const string AttributeNameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
         public const string AttributeNameFormatUri = "urn:oasis:names:tc:SAML:2.0:attrname-format:uri";
+        public const string AttributeLanguageFormat = "xml:lang";
 
         public class Message
         {
@@ -52,6 +53,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             public const string IdPSsoDescriptor = "IDPSSODescriptor";            
 
             public const string ContactPerson = "ContactPerson";
+            public const string Organization = "Organization";
 
             public const string EntityId = "entityID";
             
@@ -130,6 +132,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             public const string Type = "type";
     
             public const string FriendlyName = "FriendlyName"; 
+
+            public const string OrganizationName = "OrganizationName";
+            public const string OrganizationDisplayName = "OrganizationDisplayName";
+            public const string OrganizationURL = "OrganizationURL";
+
+
         }
 
         public class KeyTypes

@@ -92,6 +92,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public IEnumerable<ContactPerson> ContactPersons { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// Optional element specifying the organization associated with the entity described by the metadata.
+        /// </summary>
+        public Organization Organization { get; set; }  
+
         public EntityDescriptor()
         { }
 
@@ -156,6 +162,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             else if (ContactPerson != null)
             {
                 yield return ContactPerson.ToXElement();
+            }
+            
+            if (Organization != null)
+            {
+                yield return Organization.ToXElement();
             }
         }
 
