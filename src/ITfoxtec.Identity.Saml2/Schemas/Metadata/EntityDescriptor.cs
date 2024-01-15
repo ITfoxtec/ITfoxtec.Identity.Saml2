@@ -81,6 +81,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Optional]
+        /// Optional element specifying the organization associated with the entity described by the metadata.
+        /// </summary>
+        public Organization Organization { get; set; }
+
+        /// <summary>
+        /// [Optional]
         /// Optional element identifying various kinds of contact personnel.
         /// </summary>
         [Obsolete("The ContactPerson method is deprecated. Please use ContactPersons which is a list of contact persons.")]
@@ -144,6 +150,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             if (IdPSsoDescriptor != null)
             {
                 yield return IdPSsoDescriptor.ToXElement();
+            }
+
+            if (Organization != null)
+            {
+                yield return Organization.ToXElement();
             }
 
             if (ContactPersons != null)

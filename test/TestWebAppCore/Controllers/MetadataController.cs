@@ -50,6 +50,7 @@ namespace TestWebApp.Controllers
                     new AttributeConsumingService { ServiceName = new ServiceName("Some SP", "en"), RequestedAttributes = CreateRequestedAttributes() }
                 },
             };
+            entityDescriptor.Organization = new Organization("Some Organization", "Some Organization Display Name", "http://some-organization.com");
             entityDescriptor.ContactPersons = new[] { 
                 new ContactPerson(ContactTypes.Administrative)
                 {
