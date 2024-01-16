@@ -27,13 +27,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Required]
-        /// OrganizationDisplayName is an optional string element that specifies the display name of the organization.
+        /// Specifies the display name of the organization.
         /// </summary>
         public string OrganizationDisplayName { get; protected set; }
 
         /// <summary>
         /// [Required]
-        /// OrganizationURL is an optional anyURI element that specifies the URL of the organization.
+        /// Specifies the URL of the organization.
         /// </summary>
         public string OrganizationURL { get; protected set; }
 
