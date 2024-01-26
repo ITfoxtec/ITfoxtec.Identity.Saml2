@@ -166,6 +166,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string AllowCreate = "AllowCreate";
 
+            internal const string NameQualifier = "NameQualifier";
+
             internal const string SpNameQualifier = "SPNameQualifier";
             
             internal const string Extensions = "Extensions";
