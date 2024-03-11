@@ -284,7 +284,7 @@ namespace ITfoxtec.Identity.Saml2
             return assertionElementCache;
         }
 
-        private XmlElement GetAssertionElementReference()
+        protected XmlElement GetAssertionElementReference()
         {
             var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
             if (assertionElements.Count != 1)

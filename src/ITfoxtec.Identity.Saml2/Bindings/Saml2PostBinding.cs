@@ -28,7 +28,7 @@ namespace ITfoxtec.Identity.Saml2
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
         }
 
-        protected internal override void BindInternal(Saml2Request saml2RequestResponse, string messageName)
+        protected override void BindInternal(Saml2Request saml2RequestResponse, string messageName)
         {
             BindInternal(saml2RequestResponse);
 

@@ -19,7 +19,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public string Signature { get; protected set; }
 
-        protected internal override void BindInternal(Saml2Request saml2RequestResponse, string messageName)
+        protected override void BindInternal(Saml2Request saml2RequestResponse, string messageName)
         {
             base.BindInternal(saml2RequestResponse);
 

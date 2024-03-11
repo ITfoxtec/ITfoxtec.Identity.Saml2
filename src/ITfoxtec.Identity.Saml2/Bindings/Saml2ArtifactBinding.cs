@@ -22,7 +22,7 @@ namespace ITfoxtec.Identity.Saml2
             CertificateIncludeOption = X509IncludeOption.EndCertOnly;
         }
 
-        protected internal override void BindInternal(Saml2Request saml2Request, string messageName)
+        protected override void BindInternal(Saml2Request saml2Request, string messageName)
         {
             if (!(saml2Request is Saml2ArtifactResolve saml2ArtifactResolve))
                 throw new ArgumentException("Only Saml2ArtifactResolve is supported");

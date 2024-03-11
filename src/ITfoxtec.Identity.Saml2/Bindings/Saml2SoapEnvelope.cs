@@ -21,7 +21,7 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public string SoapResponseXml { get; set; }
 
-        protected internal override void BindInternal(Saml2Request saml2Request, string messageName)
+        protected override void BindInternal(Saml2Request saml2Request, string messageName)
         {
             if (!(saml2Request is Saml2ArtifactResponse))
                 throw new ArgumentException("Only Saml2ArtifactResponse is supported");
