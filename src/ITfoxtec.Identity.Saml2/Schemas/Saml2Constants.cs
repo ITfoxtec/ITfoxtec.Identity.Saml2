@@ -166,6 +166,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string AllowCreate = "AllowCreate";
 
+            internal const string NameQualifier = "NameQualifier";
+
             internal const string SpNameQualifier = "SPNameQualifier";
             
             internal const string Extensions = "Extensions";
@@ -193,6 +195,22 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string Envelope = "Envelope";
 
             internal const string Body = "Body";
+
+            internal const string Scoping = "Scoping";
+
+            internal const string RequesterID = "RequesterID";
+
+            internal const string IDPList = "IDPList";
+
+            internal const string IDPEntry = "IDPEntry";
+
+            internal const string ProviderID = "ProviderID";
+
+            internal const string Name = "Name";
+
+            internal const string Loc = "Loc";
+
+            internal const string GetComplete = "GetComplete";
         }
     }
 }

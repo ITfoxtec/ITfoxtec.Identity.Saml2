@@ -38,6 +38,8 @@ namespace TestWebAppCoreAzureKeyVault.Identity
         {
             yield return GetClaim(principal, Saml2ClaimTypes.NameId);
             yield return GetClaim(principal, Saml2ClaimTypes.NameIdFormat);
+            yield return GetClaim(principal, Saml2ClaimTypes.NameQualifier);
+            yield return GetClaim(principal, Saml2ClaimTypes.SPNameQualifier);
             yield return GetClaim(principal, Saml2ClaimTypes.SessionIndex);
         }
 

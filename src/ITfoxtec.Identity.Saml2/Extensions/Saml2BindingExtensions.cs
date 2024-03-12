@@ -10,19 +10,19 @@ namespace ITfoxtec.Identity.Saml2
     {
         public static T Bind<T>(this T binding, Saml2Request saml2Request) where T : Saml2Binding
         {
-            binding.BindInternal(saml2Request, Saml2Constants.Message.SamlRequest);
+            binding.ApplyBinding(saml2Request, Saml2Constants.Message.SamlRequest);
             return binding;
         }
 
         public static T Bind<T>(this T binding, Saml2Response saml2Response) where T : Saml2Binding
         {
-            binding.BindInternal(saml2Response, Saml2Constants.Message.SamlResponse);
+            binding.ApplyBinding(saml2Response, Saml2Constants.Message.SamlResponse);
             return binding;
         }
 
         public static T Bind<T>(this T binding, Saml2ArtifactResolve saml2ArtifactResolve) where T : Saml2Binding
         {
-            binding.BindInternal(saml2ArtifactResolve, Saml2Constants.Message.SamlArt);
+            binding.ApplyBinding(saml2ArtifactResolve, Saml2Constants.Message.SamlArt);
             return binding;
         }
 

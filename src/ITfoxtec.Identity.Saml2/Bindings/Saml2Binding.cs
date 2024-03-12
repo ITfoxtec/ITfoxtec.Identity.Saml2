@@ -28,7 +28,7 @@ namespace ITfoxtec.Identity.Saml2
         public Saml2Binding()
         { }
 
-        protected internal virtual void BindInternal(Saml2Request saml2RequestResponse, bool createXml = true)
+        protected virtual void BindInternal(Saml2Request saml2RequestResponse, bool createXml = true)
         {
             if (saml2RequestResponse == null)
                 throw new ArgumentNullException(nameof(saml2RequestResponse));
@@ -54,7 +54,12 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected internal abstract void BindInternal(Saml2Request saml2RequestResponse, string messageName);
+        internal void ApplyBinding(Saml2Request saml2RequestResponse, string messageName)
+        {
+            BindInternal(saml2RequestResponse, messageName);
+        }
+
+        protected abstract void BindInternal(Saml2Request saml2RequestResponse, string messageName);
 
         public Saml2Request Unbind(HttpRequest request, Saml2Request saml2Request)
         {

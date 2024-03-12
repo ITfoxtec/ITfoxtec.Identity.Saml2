@@ -94,6 +94,14 @@ namespace ITfoxtec.Identity.Saml2.Tokens
                 {
                     identity.AddClaim(new Claim(Saml2ClaimTypes.NameIdFormat, saml2Response.NameId.Format.OriginalString));
                 }
+                if (saml2Response.NameId.NameQualifier != null)
+                {
+                    identity.AddClaim(new Claim(Saml2ClaimTypes.NameQualifier, saml2Response.NameId.NameQualifier));
+                }
+                if (saml2Response.NameId.SPNameQualifier != null)
+                {
+                    identity.AddClaim(new Claim(Saml2ClaimTypes.SPNameQualifier, saml2Response.NameId.SPNameQualifier));
+                }
             }
 
             var sessionIndex = (saml2SecurityToken.Assertion.Statements.Where(s => s is Saml2AuthenticationStatement).FirstOrDefault() as Saml2AuthenticationStatement)?.SessionIndex;
