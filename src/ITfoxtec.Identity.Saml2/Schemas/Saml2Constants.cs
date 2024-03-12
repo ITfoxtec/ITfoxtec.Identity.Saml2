@@ -195,6 +195,25 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string Envelope = "Envelope";
 
             internal const string Body = "Body";
+
+            internal const string Scoping = "Scoping";
+
+            internal const string RequesterID = "RequesterID";
+            internal const string IDP = "IDP";
+
+            internal const string IDPEntry = "IDPEntry";
+
+            internal const string ProviderID = "ProviderID";
+
+            internal const string Name = "Name";
+
+            internal const string Loc = "Loc";
+
+            internal const string Binding = "Binding";
+            internal const string GetComplete = "GetComplete";
+
+
+
         }
     }
 }

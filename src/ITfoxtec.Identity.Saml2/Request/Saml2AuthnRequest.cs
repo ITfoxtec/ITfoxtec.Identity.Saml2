@@ -116,6 +116,13 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public Condition Conditions { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// If present, specifies the scoping of the request.
+        /// </summary>
+        public Scoping Scoping { get; set; }
+
+
         public Saml2AuthnRequest(Saml2Configuration config) : base(config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
@@ -185,6 +192,11 @@ namespace ITfoxtec.Identity.Saml2
             {
                 yield return RequestedAuthnContext.ToXElement();
             }
+
+            if (Scoping != null)
+            {
+                yield return Scoping.ToXElement();
+            }
         }
 
         protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
@@ -208,6 +220,9 @@ namespace ITfoxtec.Identity.Saml2
             NameIdPolicy = XmlDocument.DocumentElement[Saml2Constants.Message.NameIdPolicy, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<NameIdPolicy>();
 
             RequestedAuthnContext = XmlDocument.DocumentElement[Saml2Constants.Message.RequestedAuthnContext, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<RequestedAuthnContext>();
+
+            Scoping = XmlDocument.DocumentElement[Saml2Constants.Message.Scoping, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<Scoping>();
+
         }
 
         protected override void ValidateElementName()
