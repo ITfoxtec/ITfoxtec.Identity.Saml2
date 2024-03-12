@@ -167,8 +167,13 @@ namespace TestIdPCore.Controllers
                 saml2AuthnResponse.SessionIndex = sessionIndex;
 
                 var claimsIdentity = new ClaimsIdentity(claims);
-                saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single(), NameIdentifierFormats.Persistent);
                 //saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single());
+                saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single(), NameIdentifierFormats.Persistent);
+                //saml2AuthnResponse.NameId = new Saml2NameIdentifier(claimsIdentity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single(), NameIdentifierFormats.Persistent) 
+                //{
+                //    NameQualifier = "somedomain.com", 
+                //    SPNameQualifier = "sub.somedomain.com"
+                //};
                 saml2AuthnResponse.ClaimsIdentity = claimsIdentity;
 
                 
