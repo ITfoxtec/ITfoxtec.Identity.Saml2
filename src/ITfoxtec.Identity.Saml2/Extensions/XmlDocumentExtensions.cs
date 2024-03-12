@@ -10,7 +10,7 @@ namespace ITfoxtec.Identity.Saml2
     /// <summary>
     /// Extension methods for XmlDocument
     /// </summary>
-    public static class XmlDocumentExtensions
+    internal static class XmlDocumentExtensions
     {
         /// <summary>
         /// Signs an XmlDocument with an XML signature using the signing certificate given as argument to the method.
@@ -42,7 +42,7 @@ namespace ITfoxtec.Identity.Saml2
         /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the assertion</param>
         /// <param name="xmlCanonicalizationMethod">The Signature XML canonicalization method used to sign the assertion</param>
         /// <param name="includeOption">Certificate include option</param>
-        public static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption)
+        internal static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption)
         {
             if (certificate == null)
             {

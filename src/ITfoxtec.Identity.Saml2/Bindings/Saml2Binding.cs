@@ -54,7 +54,7 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        public void ApplyBinding(Saml2Request saml2RequestResponse, string messageName)
+        internal void ApplyBinding(Saml2Request saml2RequestResponse, string messageName)
         {
             BindInternal(saml2RequestResponse, messageName);
         }
