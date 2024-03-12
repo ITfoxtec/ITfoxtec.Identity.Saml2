@@ -112,9 +112,18 @@ namespace ITfoxtec.Identity.Saml2
         /// <summary>
         /// [Optional]
         /// If present, specifies an Audience
-        /// Part of the OIOSAML standard used for conditions on request.
+        /// Specifies the SAML conditions the requester expects to limit the validity and/or use of the resulting
+        /// assertion(s).
         /// </summary>
         public Condition Conditions { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        ///  Specifies a set of identity providers trusted by the requester to authenticate the presenter, as well as
+        ///  limitations and context related to proxying of the &lt;AuthnRequest&gt; message to subsequent identity
+        ///  providers by the responder.
+        /// </summary>
+        public Scoping Scoping { get; set; }
 
         public Saml2AuthnRequest(Saml2Configuration config) : base(config)
         {
@@ -185,6 +194,11 @@ namespace ITfoxtec.Identity.Saml2
             {
                 yield return RequestedAuthnContext.ToXElement();
             }
+
+            if (Scoping != null)
+            {
+                yield return Scoping.ToXElement();
+            }
         }
 
         protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
@@ -208,6 +222,8 @@ namespace ITfoxtec.Identity.Saml2
             NameIdPolicy = XmlDocument.DocumentElement[Saml2Constants.Message.NameIdPolicy, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<NameIdPolicy>();
 
             RequestedAuthnContext = XmlDocument.DocumentElement[Saml2Constants.Message.RequestedAuthnContext, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<RequestedAuthnContext>();
+
+            Scoping = XmlDocument.DocumentElement[Saml2Constants.Message.Scoping, Saml2Constants.ProtocolNamespace.OriginalString].GetElementOrNull<Scoping>();
         }
 
         protected override void ValidateElementName()

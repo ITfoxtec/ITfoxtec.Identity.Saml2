@@ -16,10 +16,22 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         /// </summary>
         public const string elementName = Saml2Constants.Message.Conditions;
 
-        public List<ICondition> Items { get; set; }
+        /// <summary>
+        /// [Any Number]
+        /// A condition of a type defined in an extension schema.
+        /// </summary>
+        public IEnumerable<ICondition> Items { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// Specifies the earliest time instant at which the assertion is valid. 
+        /// </summary>
         public DateTimeOffset? NotOnOrAfter { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// Specifies the time instant at which the assertion has expired. 
+        /// </summary>
         public DateTimeOffset? NotBefore { get; set; }
 
         public XElement ToXElement()
