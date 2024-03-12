@@ -199,7 +199,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string Scoping = "Scoping";
 
             internal const string RequesterID = "RequesterID";
-            internal const string IDP = "IDP";
+
+            internal const string IDPList = "IDPList";
 
             internal const string IDPEntry = "IDPEntry";
 
@@ -209,11 +210,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             internal const string Loc = "Loc";
 
-            internal const string Binding = "Binding";
             internal const string GetComplete = "GetComplete";
-
-
-
         }
     }
 }

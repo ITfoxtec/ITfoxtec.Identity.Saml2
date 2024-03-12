@@ -1,20 +1,26 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Xml.Linq;
-using ITfoxtec.Identity.Saml2.Schemas.Conditions;
 
 namespace ITfoxtec.Identity.Saml2.Schemas
 {
     /// <summary>
-    /// Implementation of Saml2:IDPListType
+    /// The element specifies the identity providers trusted by the requester to authenticate the presenter.
     /// </summary>
-    public class IDP
+    public class IDPList
     {
-        public const string elementName = Saml2Constants.Message.IDP;
+        public const string elementName = Saml2Constants.Message.IDPList;
 
-        public IDPEntry IDPEntry { get; set; }
+        /// <summary>
+        /// [One or More]
+        /// Information about a single identity provider.
+        /// </summary>
+        public IEnumerable<IDPEntry> IDPEntry { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// If the IDPList is not complete, using this element specifies a URI reference that can be used to       
+        /// retrieve the complete list.
+        /// </summary>
         public string GetComplete { get; set; }
 
         public XElement ToXElement()
@@ -37,7 +43,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             if (IDPEntry != null)
             {   
-                yield return IDPEntry.ToXElement();
+                foreach (var entry in IDPEntry)
+                {
+                    yield return entry.ToXElement();
+                }
             }
         }
     }
