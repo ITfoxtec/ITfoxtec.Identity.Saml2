@@ -57,6 +57,16 @@ namespace ITfoxtec.Identity.Saml2
                     NameId = new Saml2NameIdentifier(ReadClaimValue(identity, Saml2ClaimTypes.NameId), new Uri(nameIdFormat));
 
                 }
+                var nameIdNameQualifier = ReadClaimValue(identity, Saml2ClaimTypes.NameQualifier, false);
+                if (!string.IsNullOrEmpty(nameIdNameQualifier))
+                {
+                    NameId.NameQualifier = nameIdNameQualifier;
+                }
+                var nameIdSPNameQualifier = ReadClaimValue(identity, Saml2ClaimTypes.SPNameQualifier, false);
+                if (!string.IsNullOrEmpty(nameIdSPNameQualifier))
+                {
+                    NameId.SPNameQualifier = nameIdSPNameQualifier;
+                }
                 SessionIndex = ReadClaimValue(identity, Saml2ClaimTypes.SessionIndex, false);
             }
         }
@@ -103,15 +113,20 @@ namespace ITfoxtec.Identity.Saml2
 
             if (NameId != null)
             {
-                object[] nameIdContent;
+                var nameIdContent = new List<object>() { NameId.Value };
                 if (NameId.Format != null)
                 {
-                    nameIdContent = new object[] { NameId.Value, new XAttribute(Schemas.Saml2Constants.Message.Format, NameId.Format) };
+                    nameIdContent.Add(new XAttribute(Schemas.Saml2Constants.Message.Format, NameId.Format));
                 }
-                else
+                if (NameId.NameQualifier != null)
                 {
-                    nameIdContent = new object[] { NameId.Value };
+                    nameIdContent.Add(new XAttribute(Schemas.Saml2Constants.Message.NameQualifier, NameId.NameQualifier));
                 }
+                if (NameId.SPNameQualifier != null)
+                {
+                    nameIdContent.Add(new XAttribute(Schemas.Saml2Constants.Message.SpNameQualifier, NameId.SPNameQualifier));
+                }
+
                 yield return new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.NameId, nameIdContent);
             }
 
@@ -126,6 +141,8 @@ namespace ITfoxtec.Identity.Saml2
             base.Read(xml, validate, detectReplayedTokens);
 
             NameId = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.NameId, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetValueOrNull<Saml2NameIdentifier>();
+            NameId.NameQualifier = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.NameId, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetAttribute(Schemas.Saml2Constants.Message.NameQualifier);
+            NameId.SPNameQualifier = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.NameId, Schemas.Saml2Constants.AssertionNamespace.OriginalString].GetAttribute(Schemas.Saml2Constants.Message.SpNameQualifier);
 
             SessionIndex = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.SessionIndex, Schemas.Saml2Constants.ProtocolNamespace.OriginalString].GetValueOrNull<string>();
         }
