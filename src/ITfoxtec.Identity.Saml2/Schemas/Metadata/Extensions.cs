@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 {
     /// <summary>
-    /// This extension point contains optional protocol message extension XML elements that are agreed on between 
+    /// This extension point contains optional metadata extension XML elements that are agreed on between 
     /// the communicating parties.
     /// </summary>
     public class Extensions
