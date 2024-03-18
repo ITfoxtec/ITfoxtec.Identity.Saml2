@@ -72,12 +72,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Optional]
-        /// This extension point contains optional protocol message extension XML elements that are agreed on between 
+        /// This extension point contains optional metadata extension XML elements that are agreed on between 
         /// the communicating parties. No extension schema is required in order to make use of this extension point, 
         /// and even if one is provided, the lax validation setting does not impose a requirement for the extension 
         /// to be valid. SAML extension elements MUST be namespace-qualified in a non-SAML-defined namespace.
         /// </summary>
-        public Schemas.Extensions Extensions { get; set; }
+        public Extensions Extensions { get; set; }
 
         /// <summary>
         /// Configure default encryption methods used by .NET.
