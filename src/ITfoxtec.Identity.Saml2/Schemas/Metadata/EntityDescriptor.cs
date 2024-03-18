@@ -98,6 +98,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// </summary>
         public IEnumerable<ContactPerson> ContactPersons { get; set; }
 
+        /// <summary>
+        /// [Optional]
+        /// This extension point contains optional protocol message extension XML elements that are agreed on between 
+        /// the communicating parties. No extension schema is required in order to make use of this extension point, 
+        /// and even if one is provided, the lax validation setting does not impose a requirement for the extension 
+        /// to be valid. SAML extension elements MUST be namespace-qualified in a non-SAML-defined namespace.
+        /// </summary>
+        public Schemas.Extensions Extensions { get; set; }
+
         public EntityDescriptor()
         { }
 
@@ -142,6 +151,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
             yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
 
+            if (Extensions != null) 
+            {
+                yield return Extensions.ToXElement();
+            }
+            
             if (SPSsoDescriptor != null)
             {
                 yield return SPSsoDescriptor.ToXElement();
