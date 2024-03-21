@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
@@ -11,11 +12,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.AttributeConsumingService;
 
+        [Obsolete("The ServiceName method is deprecated. Please use ServiceNames which is a list of service names.")]
+        public ServiceName ServiceName { get; set; }
+
         /// <summary>
         /// [Required]
         /// Language-qualified names for the service.
         /// </summary>
-        public ServiceName ServiceName { get; set; }
+        public IEnumerable<ServiceName> ServiceNames { get; set; }
 
         /// <summary>
         /// [Required]
@@ -37,7 +41,17 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Index, 0);
             yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, true);
 
-            yield return ServiceName.ToXElement();
+            if (ServiceNames != null)
+            {
+                foreach (var serviceName in ServiceNames)
+                {
+                    yield return serviceName.ToXElement();
+                }
+            } 
+            else
+            {
+                yield return ServiceName.ToXElement();
+            }
 
             if (RequestedAttributes != null)
             {
