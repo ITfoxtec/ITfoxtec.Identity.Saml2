@@ -54,6 +54,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 yield return new XAttribute(Saml2MetadataConstants.Message.WantAuthnRequestsSigned, WantAuthnRequestsSigned.Value);
             }
 
+            if (Extensions != null)
+            {
+                yield return Extensions.ToXElement();
+            }
+
             if (EncryptionCertificates != null)
             {
                 foreach (var encryptionCertificate in EncryptionCertificates)
