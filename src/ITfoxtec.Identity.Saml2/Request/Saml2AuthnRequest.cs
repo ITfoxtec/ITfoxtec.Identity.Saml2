@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Linq;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
+using System.Security.Principal;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -91,8 +92,10 @@ namespace ITfoxtec.Identity.Saml2
 
         /// <summary>
         /// [Optional] 
+        /// Specifies the human-readable name of the requester for use by the presenter's user agent or the
+        /// identity provider.
         /// </summary>
-        public string? ProviderName { get; set; }
+        public string ProviderName { get; set; }
 
         /// <summary>
         /// [Optional]
