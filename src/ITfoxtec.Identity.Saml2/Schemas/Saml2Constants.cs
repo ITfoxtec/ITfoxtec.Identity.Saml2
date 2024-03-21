@@ -211,6 +211,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             internal const string Loc = "Loc";
 
             internal const string GetComplete = "GetComplete";
+            
+            internal const string ProviderName = "ProviderName";
+
         }
     }
 }
