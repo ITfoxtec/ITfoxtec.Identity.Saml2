@@ -9,15 +9,16 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.RequestedAttribute;
 
-        public RequestedAttribute(string name, bool isRequired = true, string nameFormat = Saml2MetadataConstants.AttributeNameFormat)
+        public RequestedAttribute(string name, bool isRequired = true, string nameFormat = Saml2MetadataConstants.AttributeNameFormat, string friendlyName = null)
         {
             Name = name;
             IsRequired = isRequired;
             NameFormat = nameFormat;
+            FriendlyName = friendlyName;
         }
 
-        public RequestedAttribute(string name, string attributeValue, bool isRequired = true, string nameFormat = Saml2MetadataConstants.AttributeNameFormat)
-            : this(name, isRequired, nameFormat)
+        public RequestedAttribute(string name, string attributeValue, bool isRequired = true, string nameFormat = Saml2MetadataConstants.AttributeNameFormat, string friendlyName = null)
+            : this(name, isRequired, nameFormat, friendlyName)
         {
             AttributeValue = attributeValue;
         }
@@ -27,6 +28,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public bool IsRequired { get; protected set; }
 
         public string NameFormat { get; protected set; }
+
+        public string FriendlyName { get; protected set; }
 
         public string AttributeValue { get; protected set; }
 
@@ -50,6 +53,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Name, Name);
             yield return new XAttribute(Saml2MetadataConstants.Message.NameFormat, NameFormat);
             yield return new XAttribute(Saml2MetadataConstants.Message.IsRequired, IsRequired);
+
+            if (!string.IsNullOrEmpty(FriendlyName))
+            {
+                yield return new XAttribute(Saml2MetadataConstants.Message.FriendlyName, FriendlyName);
+            }
 
             if (AttributeValue != null) 
             {

@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Linq;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
+using System.Security.Principal;
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -90,6 +91,13 @@ namespace ITfoxtec.Identity.Saml2
         public Uri ProtocolBinding { get; set; }
 
         /// <summary>
+        /// [Optional] 
+        /// Specifies the human-readable name of the requester for use by the presenter's user agent or the
+        /// identity provider.
+        /// </summary>
+        public string ProviderName { get; set; }
+
+        /// <summary>
         /// [Optional]
         /// If present, specifies a filter for possible responses. Such a query asks the question "What assertions
         /// containing authentication statements do you have for this subject that satisfy the authentication
@@ -175,6 +183,11 @@ namespace ITfoxtec.Identity.Saml2
                 yield return new XAttribute(Saml2Constants.Message.ProtocolBinding, ProtocolBinding);
             }
 
+            if (!string.IsNullOrEmpty(ProviderName))
+            {
+                yield return new XAttribute(Saml2Constants.Message.ProviderName, ProviderName);
+            }
+
             if (Conditions != null)
             {
                 yield return Conditions.ToXElement();
@@ -216,6 +229,8 @@ namespace ITfoxtec.Identity.Saml2
             AttributeConsumingServiceIndex = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.AttributeConsumingServiceIndex].GetValueOrNull<int?>();
 
             ProtocolBinding = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.ProtocolBinding].GetValueOrNull<Uri>();
+
+            ProviderName = XmlDocument.DocumentElement.Attributes[Saml2Constants.Message.ProviderName].GetValueOrNull<string>();
 
             Subject = XmlDocument.DocumentElement[Saml2Constants.Message.Subject, Saml2Constants.AssertionNamespace.OriginalString].GetElementOrNull<Subject>();
 
