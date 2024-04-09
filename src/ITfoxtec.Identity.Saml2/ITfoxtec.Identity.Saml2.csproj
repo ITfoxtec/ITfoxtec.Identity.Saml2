@@ -46,7 +46,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.0.3" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
@@ -66,7 +66,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 	  <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.0.3" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.0" />
 	  <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
@@ -86,7 +86,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 	<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
-	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
+	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
 	<PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
 	<PackageReference Include="System.ServiceModel.Security" Version="4.10.2" />
   </ItemGroup>
@@ -106,8 +106,8 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0'">
 	<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.10.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0'">
@@ -126,9 +126,9 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
 	<PackageReference Include="Microsoft.Extensions.Http" Version="3.1.10" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.4.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.7.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
@@ -146,9 +146,9 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.4.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.7.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
