@@ -47,7 +47,7 @@ namespace ITfoxtec.Identity.Saml2
 
         public string AllowedIssuer { get; set; }
 
-        public List<X509Certificate2> SignatureValidationCertificates { get; protected set; } = new List<X509Certificate2>();
+        public List<X509Certificate2> SignatureValidationCertificates { get; set; } = new List<X509Certificate2>();
         public X509CertificateValidationMode CertificateValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
         public X509RevocationMode RevocationMode { get; set; } = X509RevocationMode.Online;
         public X509CertificateValidator CustomCertificateValidator { get; set; }
@@ -66,7 +66,7 @@ namespace ITfoxtec.Identity.Saml2
         public bool DetectReplayedTokens { get; set; } = false;
 
         public bool AudienceRestricted { get; set; } = true;
-        public List<string> AllowedAudienceUris { get; protected set; } = new List<string>();
+        public List<string> AllowedAudienceUris { get; set; } = new List<string>();
 
         /// <summary>
         /// Sign and validate signed authn requests.
