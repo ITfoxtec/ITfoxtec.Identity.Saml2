@@ -32,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
         public XElement ToXElement()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespace + elementName);
+            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
 
             envelope.Add(GetXContent());
 
