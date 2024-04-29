@@ -12,14 +12,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.AttributeConsumingService;
 
-        [Obsolete("The ServiceName method is deprecated. Please use ServiceNames which is a list of service names.")]
-        public ServiceName ServiceName { get; set; }
-
         /// <summary>
         /// [Required]
         /// Language-qualified names for the service.
         /// </summary>
-        public IEnumerable<ServiceName> ServiceNames { get; set; }
+        public IEnumerable<LocalizedName> ServiceNames { get; set; }
 
         /// <summary>
         /// [Required]
@@ -45,13 +42,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             {
                 foreach (var serviceName in ServiceNames)
                 {
-                    yield return serviceName.ToXElement();
+                    yield return serviceName.ToXElement(Saml2MetadataConstants.Message.ServiceName);
                 }
             } 
-            else
-            {
-                yield return ServiceName.ToXElement();
-            }
 
             if (RequestedAttributes != null)
             {

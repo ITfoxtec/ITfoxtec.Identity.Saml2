@@ -46,7 +46,7 @@ namespace TestWebApp.Controllers
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
-                    new AttributeConsumingService { ServiceName = new ServiceName("ITfoxtecIdentitySaml2-dev", "en"), RequestedAttributes = CreateRequestedAttributes() }
+                    new AttributeConsumingService { ServiceNames = new LocalizedName[] { new LocalizedName("ITfoxtecIdentitySaml2-dev", "en") }, RequestedAttributes = CreateRequestedAttributes() }
                 },
             };
             entityDescriptor.SPSsoDescriptor.SetDefaultEncryptionMethods();
