@@ -5,8 +5,6 @@ The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provid
 * **Support .NET 8.0**
 * **Support .NET 7.0**
 * **Support .NET 6.0**
-* **Support .NET 5.0**
-* **Support .NET Core 3.1**
 * **Support .NET Standard 2.1**
 * **Support .NET Framework 4.6.1 and 4.7.2**
 
