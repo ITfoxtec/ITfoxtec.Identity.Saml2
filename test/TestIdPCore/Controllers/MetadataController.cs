@@ -5,7 +5,6 @@ using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TestWebApp.Controllers
 {
@@ -27,38 +26,38 @@ namespace TestWebApp.Controllers
             entityDescriptor.IdPSsoDescriptor = new IdPSsoDescriptor
             {
                 WantAuthnRequestsSigned = config.SignAuthnRequest,
-                SigningCertificates = new X509Certificate2[]
-                {
+                SigningCertificates =
+                [
                     config.SigningCertificate
-                },
+                ],
                 //EncryptionCertificates = config.DecryptionCertificates,
-                SingleSignOnServices = new SingleSignOnService[]
-                {
+                SingleSignOnServices =
+                [
                     new SingleSignOnService { Binding = ProtocolBindings.HttpRedirect, Location = config.SingleSignOnDestination }
-                },
-                SingleLogoutServices = new SingleLogoutService[]
-                {
+                ],
+                SingleLogoutServices =
+                [
                     new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = config.SingleLogoutDestination }
-                },
-                ArtifactResolutionServices = new ArtifactResolutionService[]
-                {
+                ],
+                ArtifactResolutionServices =
+                [
                     new ArtifactResolutionService { Binding = ProtocolBindings.ArtifactSoap, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
-                },
-                NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
-                Attributes = new SamlAttribute[] 
-                {
+                ],
+                NameIDFormats = [NameIdentifierFormats.X509SubjectName],
+                Attributes =
+                [
                     new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.6", friendlyName: "eduPersonPrincipalName"), 
                     new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.1", new string[] { "member", "student", "employee" }) 
-                }
+                ]
             };
-            var organization = new Organization() {
-                OrganizationNames = new LocalizedName[] { new LocalizedName("Some Organization", "en") },
-                OrganizationDisplayNames = new LocalizedName[] { new LocalizedName("Some Organization Display Name", "en") },
-                OrganizationURLs = new LocalizedUri[] { new LocalizedUri(new Uri("http://some-organization.com"), "en") }
-            };
+            var organization = new Organization(
+                [new LocalizedNameType("Some Organization", "en")],
+                [new LocalizedNameType("Some Organization Display Name", "en")],
+                [new LocalizedUriType(new Uri("http://some-organization.com"), "en")]);
         
             entityDescriptor.Organization = organization;
-            entityDescriptor.ContactPersons = new[] {
+            entityDescriptor.ContactPersons = 
+            [
                 new ContactPerson(ContactTypes.Administrative)
                 {
                     Company = "Some Company",
@@ -75,7 +74,7 @@ namespace TestWebApp.Controllers
                     EmailAddress = "sometech@some-domain.com",
                     TelephoneNumber = "22222222",
                 }
-            };
+            ];
             return new Saml2Metadata(entityDescriptor).CreateMetadata().ToActionResult();
         }
     }

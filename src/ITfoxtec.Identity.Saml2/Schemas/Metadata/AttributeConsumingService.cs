@@ -16,7 +16,14 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// [Required]
         /// Language-qualified names for the service.
         /// </summary>
-        public IEnumerable<LocalizedName> ServiceNames { get; set; }
+        [Obsolete("The ServiceName method is deprecated. Please use ServiceNames which is a list of service names.")]
+        public LocalizedNameType ServiceName { get; set; }
+
+        /// <summary>
+        /// [Required]
+        /// Language-qualified names for the service.
+        /// </summary>
+        public IEnumerable<LocalizedNameType> ServiceNames { get; set; }
 
         /// <summary>
         /// [Required]
@@ -42,9 +49,13 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             {
                 foreach (var serviceName in ServiceNames)
                 {
-                    yield return serviceName.ToXElement(Saml2MetadataConstants.Message.ServiceName);
+                    yield return serviceName.ToXElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.ServiceName);
                 }
-            } 
+            }
+            else if (ServiceName != null)
+            {
+                yield return ServiceName.ToXElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.ServiceName);
+            }
 
             if (RequestedAttributes != null)
             {

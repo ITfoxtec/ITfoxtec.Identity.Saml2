@@ -6,12 +6,19 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     /// <summary>
     /// The LocalizedName element specifies a language specific name.
     /// </summary>
-    public class LocalizedName
+    public class LocalizedNameType
     {
-        public LocalizedName(string value, string lang)
+        /// <param name="name">The name.</param>
+        public LocalizedNameType(string name)
+        {
+            Name = name;
+        }
+
+        /// <param name="name">The name.</param>
+        /// <param name="lang">The language.</param>
+        public LocalizedNameType(string name, string lang) : this(name) 
         {
             Lang = lang;
-            Value = value;
         }
 
         /// <summary>
@@ -20,9 +27,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public string Lang { get; protected set; }
 
         /// <summary>
-        /// The text value.
+        /// The Name.
         /// </summary>
-        public string Value { get; protected set; }
+        public string Name { get; protected set; }
 
         public XElement ToXElement(XName elementName)
         {
@@ -35,8 +42,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected IEnumerable<XObject> GetXContent()
         {
-            yield return new XAttribute(XNamespace.Xml + "lang", Lang);
-            yield return new XText(Value);
+            if (Lang != null)
+            {
+                yield return new XAttribute(XNamespace.Xml + Saml2MetadataConstants.Message.Lang, Lang);
+            }
+
+            yield return new XText(Name);
         }
     }
 }

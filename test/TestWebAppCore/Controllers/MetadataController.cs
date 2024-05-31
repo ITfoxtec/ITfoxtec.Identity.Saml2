@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TestWebApp.Controllers
 {
@@ -31,34 +30,34 @@ namespace TestWebApp.Controllers
             {
                 AuthnRequestsSigned = config.SignAuthnRequest,
                 WantAssertionsSigned = true,
-                SigningCertificates = new X509Certificate2[]
-                {
+                SigningCertificates =
+                [
                     config.SigningCertificate
-                },
+                ],
                 //EncryptionCertificates = config.DecryptionCertificates,
-                SingleLogoutServices = new SingleLogoutService[]
-                {
+                SingleLogoutServices =
+                [
                     new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/SingleLogout"), ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut") }
-                },
-                NameIDFormats = new Uri[] { NameIdentifierFormats.X509SubjectName },
-                AssertionConsumerServices = new AssertionConsumerService[]
-                {
+                ],
+                NameIDFormats = [NameIdentifierFormats.X509SubjectName],
+                AssertionConsumerServices =
+                [
                     new AssertionConsumerService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },                    
-                },
-                AttributeConsumingServices = new AttributeConsumingService[]
-                {
-                    new AttributeConsumingService { ServiceNames = new LocalizedName[] { new LocalizedName("Some SP", "en") }, RequestedAttributes = CreateRequestedAttributes() }
-                },
+                ],
+                AttributeConsumingServices =
+                [
+                    new AttributeConsumingService { ServiceNames = [new LocalizedNameType("Some SP", "en")], RequestedAttributes = CreateRequestedAttributes() }
+                ],
             };
 
-            var organization = new Organization() {
-                OrganizationNames = new LocalizedName[] { new LocalizedName("Some Organization", "en") },
-                OrganizationDisplayNames = new LocalizedName[] { new LocalizedName("Some Organization Display Name", "en") },
-                OrganizationURLs = new LocalizedUri[] { new LocalizedUri(new Uri("http://some-organization.com"), "en") }
-            };
+            var organization = new Organization(
+                [new LocalizedNameType("Some Organization", "en")],
+                [new LocalizedNameType("Some Organization Display Name", "en")],
+                [new LocalizedUriType(new Uri("http://some-organization.com"), "en")]);
 
             entityDescriptor.Organization = organization;
-            entityDescriptor.ContactPersons = new[] { 
+            entityDescriptor.ContactPersons = 
+            [
                 new ContactPerson(ContactTypes.Administrative)
                 {
                     Company = "Some Company",
@@ -75,7 +74,7 @@ namespace TestWebApp.Controllers
                     EmailAddress = "sometech@some-domain.com",
                     TelephoneNumber = "22222222",
                 }
-            };
+            ];
             return new Saml2Metadata(entityDescriptor).CreateMetadata().ToActionResult();
         }
 
