@@ -47,10 +47,17 @@ namespace TestWebApp.Controllers
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
-                    new AttributeConsumingService { ServiceName = new ServiceName("Some SP", "en"), RequestedAttributes = CreateRequestedAttributes() }
+                    new AttributeConsumingService { ServiceNames = new LocalizedName[] { new LocalizedName("Some SP", "en") }, RequestedAttributes = CreateRequestedAttributes() }
                 },
             };
-            entityDescriptor.Organization = new Organization("Some Organization", "Some Organization Display Name", "http://some-organization.com");
+
+            var organization = new Organization() {
+                OrganizationNames = new LocalizedName[] { new LocalizedName("Some Organization", "en") },
+                OrganizationDisplayNames = new LocalizedName[] { new LocalizedName("Some Organization Display Name", "en") },
+                OrganizationURLs = new LocalizedUri[] { new LocalizedUri(new Uri("http://some-organization.com"), "en") }
+            };
+
+            entityDescriptor.Organization = organization;
             entityDescriptor.ContactPersons = new[] { 
                 new ContactPerson(ContactTypes.Administrative)
                 {

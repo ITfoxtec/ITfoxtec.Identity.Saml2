@@ -51,7 +51,13 @@ namespace TestWebApp.Controllers
                     new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.1", new string[] { "member", "student", "employee" }) 
                 }
             };
-            entityDescriptor.Organization = new Organization("Some Organization", "Some Organization Display Name", "http://some-organization.com");
+            var organization = new Organization() {
+                OrganizationNames = new LocalizedName[] { new LocalizedName("Some Organization", "en") },
+                OrganizationDisplayNames = new LocalizedName[] { new LocalizedName("Some Organization Display Name", "en") },
+                OrganizationURLs = new LocalizedUri[] { new LocalizedUri(new Uri("http://some-organization.com"), "en") }
+            };
+        
+            entityDescriptor.Organization = organization;
             entityDescriptor.ContactPersons = new[] {
                 new ContactPerson(ContactTypes.Administrative)
                 {

@@ -50,7 +50,7 @@ namespace TestWebApp.Controllers
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
-                    new AttributeConsumingService { ServiceName = new ServiceName("Some SP", "en"), RequestedAttributes = CreateRequestedAttributes() }
+                    new AttributeConsumingService { ServiceNames = new LocalizedName[] { new LocalizedName("Some SP", "en") }, RequestedAttributes = CreateRequestedAttributes() }
                 },
             };
             entityDescriptor.ContactPersons = new[] {

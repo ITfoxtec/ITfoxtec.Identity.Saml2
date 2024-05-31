@@ -12,30 +12,23 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.Organization;
 
-        public Organization(string name, string displayName, string url)
-        {
-            OrganizationName = name;
-            OrganizationDisplayName = displayName;
-            OrganizationURL = url;
-        }
-
         /// <summary>
         /// [Required]
         /// Specifies the name of the organization responsible for the SAML entity or role.
         /// </summary>
-        public string OrganizationName { get; protected set; }
+        public IEnumerable<LocalizedName> OrganizationNames { get; set; }
 
         /// <summary>
         /// [Required]
         /// Specifies the display name of the organization.
         /// </summary>
-        public string OrganizationDisplayName { get; protected set; }
+        public IEnumerable<LocalizedName> OrganizationDisplayNames { get; set; }
 
         /// <summary>
         /// [Required]
         /// Specifies the URL of the organization.
         /// </summary>
-        public string OrganizationURL { get; protected set; }
+        public IEnumerable<LocalizedUri> OrganizationURLs { get; set; }
 
         public XElement ToXElement()
         {
@@ -48,19 +41,28 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected IEnumerable<XObject> GetXContent()
         {
-            if (OrganizationName != null)
+            if (OrganizationNames != null)
             {
-                yield return new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.OrganizationName, OrganizationName);
+                foreach (var name in OrganizationNames)
+                {
+                    yield return name.ToXElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.OrganizationName);
+                }
             }
 
-            if (OrganizationDisplayName != null)
+            if (OrganizationDisplayNames != null)
             {
-                yield return new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.OrganizationDisplayName, OrganizationDisplayName);
+                foreach (var displayName in OrganizationDisplayNames)
+                {
+                    yield return displayName.ToXElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.OrganizationDisplayName);
+                }
             }
 
-            if (OrganizationURL != null)
+            if (OrganizationURLs != null)
             {
-                yield return new XElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.OrganizationURL, OrganizationURL);
+                foreach (var url in OrganizationURLs)
+                {
+                    yield return url.ToXElement(Saml2MetadataConstants.MetadataNamespaceX + Saml2MetadataConstants.Message.OrganizationURL);
+                }
             }
         }
     }
