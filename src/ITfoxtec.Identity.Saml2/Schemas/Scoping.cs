@@ -31,7 +31,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
         public XElement ToXElement()
         {
-            var envelope = new XElement(Saml2Constants.ProtocolNamespaceNameX + elementName);
+            var envelope = new XElement(Saml2Constants.ProtocolNamespaceX + elementName);
 
             envelope.Add(GetXContent());
 
@@ -40,7 +40,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
         protected virtual IEnumerable<XObject> GetXContent()
         {
-            yield return new XAttribute(Saml2Constants.ProtocolNamespaceNameX, Saml2Constants.ProtocolNamespaceNameX);
+            yield return new XAttribute(Saml2Constants.ProtocolNamespaceNameX, Saml2Constants.ProtocolNamespaceX);
 
             if (RequesterID != null)
             {

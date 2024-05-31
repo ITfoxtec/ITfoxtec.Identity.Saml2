@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>TestWebAppCoreAzureKeyVault</AssemblyName>
     <PackageId>TestWebAppCoreAzureKeyVault</PackageId>
-    <Version>5.0.0</Version>
+    <Version>8.0.0</Version>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <Copyright>Copyright © 2019</Copyright>
@@ -24,9 +24,9 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-    <PackageReference Include="ITfoxtec.Identity" Version="2.5.6" />
-    <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.2.0" />
-	<PackageReference Include="Azure.Identity" Version="1.5.0" />
+    <PackageReference Include="ITfoxtec.Identity" Version="2.5.45" />
+    <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.6.0" />
+	<PackageReference Include="Azure.Identity" Version="1.10.4" />
 	<PackageReference Include="RSAKeyVaultProvider" Version="2.1.1" />
   </ItemGroup>
 </Project>
