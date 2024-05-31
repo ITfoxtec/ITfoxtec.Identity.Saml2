@@ -88,7 +88,9 @@ namespace ITfoxtec.Identity.Saml2
 
         private XmlElement GetAssertionElementReference()
         {
-            var assertionElements = GetInnerArtifactElementXml().SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']");
+            // Select all Assertion elements in the document that are at the top of their respective Assertion hierarchy.
+            // If the document contains <Assertion><Assertion></Assertion></Assertion> only the outer (hierarchical parent) Assertion is selected.
+            var assertionElements = GetInnerArtifactElementXml().SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']/ancestor-or-self::*[local-name()='{Schemas.Saml2Constants.Message.Assertion}'][last()]");
             if (assertionElements.Count != 1)
             {
                 throw new Saml2RequestException("There is not exactly one Assertion element in the inner Artifact element.");
