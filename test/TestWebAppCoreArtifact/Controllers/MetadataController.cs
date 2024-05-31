@@ -49,7 +49,7 @@ namespace TestWebAppArtifact.Controllers
                 },
                 AttributeConsumingServices = new AttributeConsumingService[]
                 {
-                    new AttributeConsumingService { ServiceName = new ServiceName("Some SP", "en"), RequestedAttributes = CreateRequestedAttributes() }
+                    new AttributeConsumingService { ServiceNames = new LocalizedNameType[] { new LocalizedNameType("Some SP", "en") }, RequestedAttributes = CreateRequestedAttributes() }
                 },
             };
             entityDescriptor.ContactPersons = new[] { 
