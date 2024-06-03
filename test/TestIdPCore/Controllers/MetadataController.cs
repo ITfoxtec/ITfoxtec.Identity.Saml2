@@ -58,7 +58,7 @@ namespace TestWebApp.Controllers
             entityDescriptor.Organization = organization;
             entityDescriptor.ContactPersons = 
             [
-                new ContactPerson(ContactTypes.Administrative)
+                new ContactPerson(ContactTypes.Administrative, "en")
                 {
                     Company = "Some Company",
                     GivenName = "Some Given Name",
@@ -66,7 +66,7 @@ namespace TestWebApp.Controllers
                     EmailAddress = "some@some-domain.com",
                     TelephoneNumber = "11111111",
                 },
-                new ContactPerson(ContactTypes.Technical)
+                new ContactPerson(ContactTypes.Technical, "en")
                 {
                     Company = "Some Company",
                     GivenName = "Some tech Given Name",
