@@ -10,14 +10,27 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     public class LocalizedUriType
     {
         /// <param name="uri">The URI.</param>
-        public LocalizedUriType(Uri uri)
+        public LocalizedUriType(string uri)
         {
             Uri = uri;
         }
 
         /// <param name="uri">The URI.</param>
+        public LocalizedUriType(Uri uri)
+        {
+            Uri = uri?.OriginalString;
+        }
+
+        /// <param name="uri">The URI.</param>
         /// <param name="lang">The language.</param>
-        public LocalizedUriType(Uri uri, string lang) : this(uri) 
+        public LocalizedUriType(string uri, string lang) : this(uri) 
+        {
+            Lang = lang;
+        }
+
+        /// <param name="uri">The URI.</param>
+        /// <param name="lang">The language.</param>
+        public LocalizedUriType(Uri uri, string lang) : this(uri)
         {
             Lang = lang;
         }
@@ -30,7 +43,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <summary>
         /// The URI.
         /// </summary>
-        public Uri Uri { get; protected set; }
+        public string Uri { get; protected set; }
 
         public XElement ToXElement(XName elementName)
         {
@@ -48,7 +61,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
                 yield return new XAttribute(XNamespace.Xml + Saml2MetadataConstants.Message.Lang, Lang);
             }
 
-            yield return new XText(Uri.OriginalString);
+            yield return new XText(Uri);
         }
     }
 }

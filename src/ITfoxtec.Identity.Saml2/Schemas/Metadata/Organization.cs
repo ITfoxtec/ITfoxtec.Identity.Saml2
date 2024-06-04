@@ -16,7 +16,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public Organization() { }
 
-        public Organization(string name, string displayName, Uri url)
+        public Organization(string name, string displayName, string url)
         {
             OrganizationNames = new[] { new LocalizedNameType(name) };
             OrganizationDisplayNames = new[] { new LocalizedNameType(displayName) }; ;
@@ -49,7 +49,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// Specifies the URL of the organization.
         /// </summary>
         [Obsolete("The OrganizationURL method is deprecated. Please use OrganizationURLs which is a list of LocalizedUriType's.")]
-        public string OrganizationURL { get { return OrganizationURLs?.Select(o => o.Uri?.OriginalString).FirstOrDefault(); } }
+        public string OrganizationURL { get { return OrganizationURLs?.Select(o => o.Uri).FirstOrDefault(); } }
 
         /// <summary>
         /// [Required]
