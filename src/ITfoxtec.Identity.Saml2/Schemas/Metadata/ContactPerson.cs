@@ -12,10 +12,9 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.ContactPerson;
 
-        public ContactPerson(ContactTypes contactType, string locale = null)
+        public ContactPerson(ContactTypes contactType)
         {
             ContactType = contactType;
-            Locale = locale;
         }
 
         /// <summary>
@@ -24,12 +23,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// technical, support, administrative, billing, and other.
         /// </summary>
         public ContactTypes ContactType { get; protected set; }
-
-        /// <summary>
-        /// [Optional]
-        /// Specifies the localization of the ContactPerson.
-        /// </summary>
-        public string Locale { get; protected set; }
 
         /// <summary>
         /// [Optional]
@@ -74,11 +67,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         protected IEnumerable<XObject> GetXContent()
         {
             yield return new XAttribute(Saml2MetadataConstants.Message.ContactType, ContactType.ToString().ToLowerInvariant());
-
-            if (Locale != null)
-            {
-                yield return new XAttribute(XNamespace.Xml + "lang", Locale);
-            }
 
             if (Company != null)
             {
