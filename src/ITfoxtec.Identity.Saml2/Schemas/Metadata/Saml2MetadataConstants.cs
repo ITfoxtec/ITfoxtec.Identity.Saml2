@@ -47,6 +47,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             public const string EntityDescriptor = "EntityDescriptor";
 
+            public const string EntitiesDescriptor = "EntitiesDescriptor";
+
             public const string SPSsoDescriptor = "SPSSODescriptor";
 
             public const string IdPSsoDescriptor = "IDPSSODescriptor";
