@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -23,15 +24,18 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
     {
         const string elementName = Saml2MetadataConstants.Message.EntityDescriptor;
 
+        public Saml2Configuration Config { get; protected set; }
+
         /// <summary>
         /// Specifies the unique identifier of the SAML entity whose metadata is described by the element's contents.
         /// </summary>
-        public string EntityId { get; set; }
+        public string EntityId { get; protected set; }
 
         /// <summary>
+        /// [Optional]
         /// A document-unique identifier for the element, typically used as a reference point when signing.
         /// </summary>
-        public Saml2Id Id { get; set; } = new Saml2Id();
+        public Saml2Id Id { get; protected set; }
 
         /// <summary>
         /// The ID as string.
@@ -39,8 +43,27 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <value>The ID string.</value>
         public string IdAsString
         {
-            get { return Id.Value; }
+            get { return Id?.Value; }
         }
+
+        /// <summary>
+        /// [Optional]
+        /// Optional attribute indicates the expiration time of the metadata contained in the element and any contained elements.
+        /// Metadata is valid until in days from now.
+        /// </summary>
+        public int? ValidUntil { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// An metadata XML signature that authenticates the containing element and its contents.
+        /// </summary>
+        public X509Certificate2 MetadataSigningCertificate { get; protected set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Default EndCertOnly (Only the end certificate is included in the X.509 chain information).
+        /// </summary>
+        public X509IncludeOption CertificateIncludeOption { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -87,6 +110,31 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public EntityDescriptor()
         { }
 
+        public EntityDescriptor(Saml2Configuration config, bool signMetadata = true) : this()
+        {
+            if (config == null) throw new ArgumentNullException(nameof(config));
+
+            Config = config;
+            EntityId = config.Issuer;
+            Id = new Saml2Id();
+            if (signMetadata)
+            {
+                MetadataSigningCertificate = config.SigningCertificate;
+                CertificateIncludeOption = X509IncludeOption.EndCertOnly;
+            }
+        }
+
+        public XmlDocument ToXmlDocument()
+        {
+            var envelope = ToXElement();
+            var xmlDocument = envelope.ToXmlDocument();
+            if(MetadataSigningCertificate != null)
+            {
+                xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, CertificateIncludeOption, IdAsString);
+            }
+            return xmlDocument;
+        }
+
         public XElement ToXElement()
         {
             var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
@@ -102,6 +150,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             }
             yield return new XAttribute(Saml2MetadataConstants.Message.EntityId, EntityId);
             yield return new XAttribute(Saml2MetadataConstants.Message.Id, IdAsString);
+            if (ValidUntil.HasValue)
+            {
+                yield return new XAttribute(Saml2MetadataConstants.Message.ValidUntil, DateTimeOffset.UtcNow.AddDays(ValidUntil.Value).UtcDateTime.ToString(Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
+            }
+            yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
 
             if (Extensions != null) 
             {
