@@ -1,5 +1,18 @@
-﻿using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+﻿using ITfoxtec.Identity.Saml2.Schemas;
+using ITfoxtec.Identity.Saml2.Schemas.Metadata;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.Xml;
 using System.Xml;
+using System.Xml.Linq;
+#if NETFULL
+using System.IdentityModel.Tokens;
+#else
+using Microsoft.IdentityModel.Tokens.Saml2;
+#endif
 
 namespace ITfoxtec.Identity.Saml2
 {
@@ -11,7 +24,7 @@ namespace ITfoxtec.Identity.Saml2
         /// <param name="entityDescriptor">The entityDescriptor element contains the metadata.</param>
         public Saml2Metadata(EntityDescriptor entityDescriptor)
         {
-            EntityDescriptor = entityDescriptor;
+            EntitiesDescriptor = entitiesDescriptor;
         }
 
         /// <param name="entitiesDescriptor">The entitiesDescriptor element contains the metadata for an optionally named group of SAML entities.</param>
@@ -19,7 +32,6 @@ namespace ITfoxtec.Identity.Saml2
         {
             EntitiesDescriptor = entitiesDescriptor;
         }
-
         /// <summary>
         /// Either the EntityDescriptor or EntitiesDescriptor is required.
         /// EntityDescriptor contains the metadata.
@@ -31,7 +43,7 @@ namespace ITfoxtec.Identity.Saml2
         /// EntitiesDescriptor contains the metadata for an optionally named group of SAML entities.
         /// </summary>
         public EntitiesDescriptor EntitiesDescriptor { get; protected set; }
-
+        
         /// <summary>
         /// Saml2 metadata Xml Document.
         /// </summary>
