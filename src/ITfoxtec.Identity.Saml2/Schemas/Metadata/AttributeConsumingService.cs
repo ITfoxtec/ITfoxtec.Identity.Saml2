@@ -21,6 +21,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Required]
+        /// A unique numeric index of the service.
+        /// </summary>
+        public int Index { get; set; } = 0;
+
+        /// <summary>
+        /// [Required]
         /// Language-qualified names for the service.
         /// </summary>
         public IEnumerable<LocalizedNameType> ServiceNames { get; set; }
@@ -30,6 +36,12 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// A required element specifying attributes required or desired by this service.
         /// </summary>
         public IEnumerable<RequestedAttribute> RequestedAttributes { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Identifies if this service is the default service.
+        /// </summary>
+        public bool IsDefault { get; set; } = true;
 
         public XElement ToXElement()
         {
@@ -42,8 +54,11 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         protected IEnumerable<XObject> GetXContent()
         {
-            yield return new XAttribute(Saml2MetadataConstants.Message.Index, 0);
-            yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, true);
+            yield return new XAttribute(Saml2MetadataConstants.Message.Index, Index);
+            if (IsDefault)
+            {
+                yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, true);
+            }
 
             if (ServiceNames != null)
             {
