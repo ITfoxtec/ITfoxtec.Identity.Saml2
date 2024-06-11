@@ -21,7 +21,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Required]
-        /// A unique numeric index of the service.
+        /// A required attribute that assigns a unique integer value to the element so that it can be referenced
+        /// in a protocol message.
         /// </summary>
         public int Index { get; set; } = 0;
 
@@ -39,7 +40,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         /// <summary>
         /// [Optional]
-        /// Identifies if this service is the default service.
+        /// Identifies the default service supported by the service provider. Useful if the specific service is not
+        /// otherwise indicated by application context.If omitted, the value is assumed to be false
         /// </summary>
         public bool IsDefault { get; set; } = true;
 
@@ -57,7 +59,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             yield return new XAttribute(Saml2MetadataConstants.Message.Index, Index);
             if (IsDefault)
             {
-                yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, true);
+                yield return new XAttribute(Saml2MetadataConstants.Message.IsDefault, IsDefault);
             }
 
             if (ServiceNames != null)
