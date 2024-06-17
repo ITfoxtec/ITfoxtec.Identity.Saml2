@@ -87,6 +87,13 @@ namespace ITfoxtec.Identity.Saml2.Util
                     Comparison = ConvertValue<AuthnContextComparisonTypes>(xmlNode.Attributes[Schemas.Saml2Constants.Message.Comparison]?.Value, xmlNode),
                 });
             }
+            else if (genericType == typeof(Scoping))
+            {
+                return GenericConvertValue<T, Scoping>(new Scoping
+                {
+                    RequesterID = GetAuthnContextClassRef(xmlNode.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.RequesterID}']")),
+                });
+            }
             else
             {
                 throw new NotSupportedException($"Unable to convert element {genericType}.");
