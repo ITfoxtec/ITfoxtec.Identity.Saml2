@@ -33,12 +33,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         }
 
          protected virtual IEnumerable<XObject> GetXContent()
-        {
-            yield return new XAttribute(Saml2Constants.ProtocolNamespaceNameX, Saml2Constants.ProtocolNamespaceX);
-
+         {
             if (GetComplete != null)
             {
-                yield return new XAttribute(Saml2Constants.Message.GetComplete, GetComplete);
+                yield return new XElement(Saml2Constants.Message.GetComplete, GetComplete);
             }
 
             if (IDPEntry != null)
