@@ -40,9 +40,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
         }
 
          protected virtual IEnumerable<XObject> GetXContent()
-        {
-            yield return new XAttribute(Saml2Constants.ProtocolNamespaceNameX, Saml2Constants.ProtocolNamespaceX);
-
+         {
             if (ProviderID != null)
             {
                 yield return new XAttribute(Saml2Constants.Message.ProviderID, ProviderID);
