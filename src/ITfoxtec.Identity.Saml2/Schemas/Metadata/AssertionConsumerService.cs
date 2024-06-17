@@ -39,7 +39,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// A required attribute that assigns a unique integer value to the endpoint so that it can be
         /// referenced in a protocol message.
         /// </summary>
-        public int Index { get; internal set; }
+        public int Index { get; set; }
 
         public XElement ToXElement(int index)
         {

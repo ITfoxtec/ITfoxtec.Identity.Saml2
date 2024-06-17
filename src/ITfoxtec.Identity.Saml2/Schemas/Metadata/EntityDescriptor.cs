@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,6 +32,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         public string EntityId { get; protected set; }
 
         /// <summary>
+        /// [Optional]
         /// A document-unique identifier for the element, typically used as a reference point when signing.
         /// </summary>
         public Saml2Id Id { get; protected set; }
@@ -42,8 +43,15 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// <value>The ID string.</value>
         public string IdAsString
         {
-            get { return Id.Value; }
+            get { return Id?.Value; }
         }
+
+        /// <summary>
+        /// [Optional]
+        /// Optional attribute indicates the expiration time of the metadata contained in the element and any contained elements.
+        /// Metadata is valid until in days from now.
+        /// </summary>
+        public int? ValidUntil { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -56,14 +64,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// Default EndCertOnly (Only the end certificate is included in the X.509 chain information).
         /// </summary>
         public X509IncludeOption CertificateIncludeOption { get; set; }
-
-        /// <summary>
-        /// [Optional]
-        /// Optional attribute indicates the expiration time of the metadata contained in the element and any contained elements.
-        /// 
-        /// Metadata is valid until in days from now.
-        /// </summary>
-        public int? ValidUntil { get; set; }
 
         /// <summary>
         /// [Optional]
@@ -126,15 +126,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public XmlDocument ToXmlDocument()
         {
-            var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
-
-            envelope.Add(GetXContent());
+            var envelope = ToXElement();
             var xmlDocument = envelope.ToXmlDocument();
             if(MetadataSigningCertificate != null)
             {
                 xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, CertificateIncludeOption, IdAsString);
             }
             return xmlDocument;
+        }
+
+        public XElement ToXElement()
+        {
+            var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
+            envelope.Add(GetXContent());
+            return envelope;
         }
 
         protected IEnumerable<XObject> GetXContent()
