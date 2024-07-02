@@ -8,18 +8,29 @@ namespace ITfoxtec.Identity.Saml2
     /// </summary>
     public class Saml2Metadata
     {
-        /// <param name="entityDescriptor">[Required] The EntitiesDescriptor element contains the metadata for an optionally named group of SAML entities.</param>
+        /// <param name="entityDescriptor">The entityDescriptor element contains the metadata.</param>
         public Saml2Metadata(EntityDescriptor entityDescriptor)
         {
             EntityDescriptor = entityDescriptor;
         }
 
+        /// <param name="entitiesDescriptor">The entitiesDescriptor element contains the metadata for an optionally named group of SAML entities.</param>
+        public Saml2Metadata(EntitiesDescriptor entitiesDescriptor)
+        {
+            EntitiesDescriptor = entitiesDescriptor;
+        }
         /// <summary>
-        /// [Required]
-        /// The EntitiesDescriptor element contains the metadata for an optionally named group of SAML entities.
+        /// Either the EntityDescriptor or EntitiesDescriptor is required.
+        /// EntityDescriptor contains the metadata.
         /// </summary>
         public EntityDescriptor EntityDescriptor { get; protected set; }
 
+        /// <summary>
+        /// Either the EntityDescriptor or EntitiesDescriptor is required.
+        /// EntitiesDescriptor contains the metadata for an optionally named group of SAML entities.
+        /// </summary>
+        public EntitiesDescriptor EntitiesDescriptor { get; protected set; }
+        
         /// <summary>
         /// Saml2 metadata Xml Document.
         /// </summary>
@@ -38,7 +49,14 @@ namespace ITfoxtec.Identity.Saml2
         /// </summary>
         public Saml2Metadata CreateMetadata()
         {
-            XmlDocument = EntityDescriptor.ToXmlDocument();
+            if (EntityDescriptor != null)
+            {
+                XmlDocument = EntityDescriptor.ToXmlDocument();
+            }
+            else
+            {
+                XmlDocument = EntitiesDescriptor.ToXmlDocument();
+            }
             return this;
         }
     }
