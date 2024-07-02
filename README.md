@@ -19,21 +19,24 @@ The package supports redirect binding, post binding and artifact binding.
 > *SAML 2.0 is an old standard with its shortcomings, and therefore it is often a better choice to use OpenID Connect in an application.*  
 > You can likewise use FoxIDs to translate from the Danish [NemLog-in3 (MitID)](https://www.foxids.com/docs/up-party-howto-saml-2.0-nemlogin) and [Context Handler](https://www.foxids.com/docs/howto-saml-2.0-context-handler) to OpenID Connect.
 
-The ITfoxtec Identity Saml2 package supports signing/encryption certificates in Azure Key Vault. 
-Please see the [TestWebAppCoreAzureKeyVault](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreAzureKeyVault) sample. 
-
-The ITfoxtec Identity Saml2 package is tested for compliance with AD FS, Azure AD, Azure AD B2C, the Danish NemLog-in3 (MitID), the Danish Context Handler and many other IdPs and RPs.
+The ITfoxtec Identity Saml2 package is tested for compliance with Microsoft Entra ID (Azure AD), AD FS, Azure AD B2C, the Danish NemLog-in3 (MitID), the Danish Context Handler (in Danish called Fælleskommunal Adgangsstyring) and many other IdPs and RPs.
 
 Please see the [test samples](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test").
-The [TestWebAppCoreNemLogin3Sp](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/master/test/TestWebAppCoreNemLogin3Sp) sample show how to implement an NemLog-in3 Service Provider (SP).
 
-> You can use the [SAML 2.0 tool](https://www.foxids.com/tools/Saml) to decode tokens and create self-signed certificates with the [certificate tool](https://www.foxids.com/tools/Certificate).
+## Sample for specifik IdP - paid service
+Please contact <a href="mailto:anders@itfoxtec.com">Anders Revsgaard (anders@itfoxtec.com)</a> at <a href="https://www.itfoxtec.com">ITfoxtec</a> if you need a sample for a specific IdP like e.g. the Danish NemLog-in (MitID) or Context Handler.
+
+It is a payed service where you can buy a ready to use sample pack for a IdP or request a custom sample.
 
 ### More information
 You can read more on [ITfoxtec Identity Saml2 Project Home Page](https://itfoxtec.com/identitysaml2).
 
 ### Support
 If you have questions please ask them on <a href="https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2">Stack Overflow</a>. Tag your questions with 'itfoxtec-identity-saml2' and I will answer as soon as possible.
+
+If needed, contact <a href="mailto:anders@itfoxtec.com">Anders Revsgaard (anders@itfoxtec.com)</a> at <a href="https://www.itfoxtec.com">ITfoxtec</a> and ask for paid consultancy.
+
+> You can use the [SAML 2.0 tool](https://www.foxids.com/tools/Saml) to decode tokens and create self-signed certificates with the [certificate tool](https://www.foxids.com/tools/Certificate).
 
 ### Open source donations by PayPal 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=QVQN5ZNP2RK4Y)
