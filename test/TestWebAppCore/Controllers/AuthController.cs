@@ -45,6 +45,20 @@ namespace TestWebAppCore.Controllers
                 //    Comparison = AuthnContextComparisonTypes.Exact,
                 //    AuthnContextClassRef = new string[] { AuthnContextClassTypes.PasswordProtectedTransport.OriginalString },
                 //},
+                Scoping = new Scoping 
+                { 
+                    IDPList = new IDPList
+                    { 
+                        IDPEntry = [new IDPEntry 
+                        {
+                            ProviderID = "https://qaz.org",
+                            Name = "xxx",
+                            Loc = "https://wsx.org"
+                        }], 
+                        GetComplete = "xxx" 
+                    }, 
+                    RequesterID = ["https://xyz.org"] 
+                }
             }).ToActionResult();
         }
 
