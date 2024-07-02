@@ -23,18 +23,18 @@ The ITfoxtec Identity Saml2 package is tested for compliance with Microsoft Entr
 
 Please see the [test samples](test).
 
-## Sample for specifik IdP - paid service
-Please contact [Anders Revsgaard (anders@itfoxtec.com)](mailto:anders@itfoxtec.com) at [ITfoxtec](https://www.itfoxtec.com) if you need a sample for a specific IdP like e.g. the Danish NemLog-in (MitID) or Context Handler.
+## Customized samples - paid service
+Contact [Anders Revsgaard (anders@itfoxtec.com)](mailto:anders@itfoxtec.com) at [ITfoxtec](https://www.itfoxtec.com) if you need a sample for a specific IdP such as the Danish NemLog-in (MitID) or Context Handler.
 
-It is a payed service where you can buy a ready to use sample pack for a IdP or request a custom sample.
+It is a paid service where you can buy a ready-to-use sample package for an IdP or request a customized sample.
 
 ### More information
 You can read more on [ITfoxtec Identity Saml2 Project Home Page](https://itfoxtec.com/identitysaml2).
 
 ### Support
-If you have questions please ask them on [Stack Overflow](https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2). Tag your questions with 'itfoxtec-identity-saml2' and I will answer as soon as possible.
+If you have questions please ask them on [Stack Overflow](https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2) and tag with 'itfoxtec-identity-saml2'.
 
-If needed, contact [Anders Revsgaard (anders@itfoxtec.com)](mailto:anders@itfoxtec.com) at [ITfoxtec](https://www.itfoxtec.com) and ask for paid consultancy.
+Contact [Anders Revsgaard (anders@itfoxtec.com)](mailto:anders@itfoxtec.com) at [ITfoxtec](https://www.itfoxtec.com) for paid consultancy.
 
 > You can use the [SAML 2.0 tool](https://www.foxids.com/tools/Saml) to decode tokens and create self-signed certificates with the [certificate tool](https://www.foxids.com/tools/Certificate).
 
