@@ -30,10 +30,10 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.12.0</AssemblyVersion>
-    <FileVersion>4.12.0</FileVersion>
+    <AssemblyVersion>4.12.6</AssemblyVersion>
+    <FileVersion>4.12.6</FileVersion>
     <Copyright>Copyright © 2024</Copyright>
-    <Version>4.12.0-beta1</Version>
+    <Version>4.12.6</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -43,8 +43,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.6.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.0.2" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
@@ -64,7 +63,6 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 	  <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.0.3" />
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.0" />
 	  <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
@@ -84,7 +82,6 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
 	<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="6.28.1" />
-	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
 	<PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
 	<PackageReference Include="System.ServiceModel.Security" Version="4.10.2" />
   </ItemGroup>
@@ -103,7 +100,6 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 	
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="5.4.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.7.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
