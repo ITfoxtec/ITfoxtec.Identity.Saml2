@@ -38,10 +38,10 @@ namespace ITfoxtec.Identity.Saml2.MvcCore.Configuration
                     {
                         o.Cookie.Domain = cookieDomain;
                     }
-					if (!string.IsNullOrWhiteSpace(cookieName))
-					{
-						o.Cookie.Name = cookieName;
-					}
+                    if (!string.IsNullOrWhiteSpace(cookieName))
+                    {
+                        o.Cookie.Name = cookieName;
+                    }
 				});
 
             return services;
