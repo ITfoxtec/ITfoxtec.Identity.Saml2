@@ -247,7 +247,7 @@ namespace ITfoxtec.Identity.Saml2
 
             Cryptography.SignatureAlgorithm.ValidateAlgorithm(Config.SignatureAlgorithm);
             Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(Config.XmlCanonicalizationMethod);
-            XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, certificateIncludeOption);
+            XmlDocument.SignAssertion(GetAssertionElementReference(), Config.SigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, certificateIncludeOption, Config.KeyInfoName);
         }
 
         protected internal override void Read(string xml, bool validate = false, bool detectReplayedTokens = true)
