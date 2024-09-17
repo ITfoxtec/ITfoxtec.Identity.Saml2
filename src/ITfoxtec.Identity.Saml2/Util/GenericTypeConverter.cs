@@ -43,7 +43,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             }
             else if(genericType == typeof(AuthnContextComparisonTypes))
             {
-                if (Enum.TryParse(value, out AuthnContextComparisonTypes authnContextComparisonTypes))
+                if (Enum.TryParse(value, true, out AuthnContextComparisonTypes authnContextComparisonTypes))
                 {
                     return GenericConvertValue<T, AuthnContextComparisonTypes>(authnContextComparisonTypes);
                 }
