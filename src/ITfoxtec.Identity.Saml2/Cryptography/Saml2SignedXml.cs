@@ -36,6 +36,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             ComputeSignature();
 
             KeyInfo = new KeyInfo();
+            KeyInfo.AddClause(new KeyInfoName(Convert.ToBase64String(Saml2Signer.Certificate.GetCertHash())));
             KeyInfo.AddClause(new KeyInfoX509Data(Saml2Signer.Certificate, includeOption));
         }
 
