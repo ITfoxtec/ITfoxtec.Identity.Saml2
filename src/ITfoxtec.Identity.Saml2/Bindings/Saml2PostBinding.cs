@@ -50,7 +50,7 @@ namespace ITfoxtec.Identity.Saml2
                 {
                     Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.Config.SignatureAlgorithm);
                     Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(saml2RequestResponse.Config.XmlCanonicalizationMethod);
-                    XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, saml2RequestResponse.Config.XmlCanonicalizationMethod, CertificateIncludeOption, saml2RequestResponse.IdAsString, saml2RequestResponse.Config.KeyInfoName);
+                    XmlDocument = XmlDocument.SignDocument(saml2RequestResponse.Config.SigningCertificate, saml2RequestResponse.Config.SignatureAlgorithm, saml2RequestResponse.Config.XmlCanonicalizationMethod, CertificateIncludeOption, saml2RequestResponse.IdAsString);
                 }
             }
 

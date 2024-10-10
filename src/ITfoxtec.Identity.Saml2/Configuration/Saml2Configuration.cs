@@ -77,7 +77,5 @@ namespace ITfoxtec.Identity.Saml2
         /// Sign type for the authn responses created by the library.
         /// </summary>
         public Saml2AuthnResponseSignTypes AuthnResponseSignType { get; set; } = Saml2AuthnResponseSignTypes.SignResponse;
-
-        public string KeyInfoName { get; set; }
     }
 }
