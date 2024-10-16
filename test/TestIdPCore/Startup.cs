@@ -42,6 +42,8 @@ namespace TestIdPCore
                 }
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
+                saml2Configuration.IncludeKeyInfoName = true;
+
                 return saml2Configuration;
             });
 

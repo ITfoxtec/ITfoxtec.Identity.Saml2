@@ -20,7 +20,8 @@ namespace ITfoxtec.Identity.Saml2
         /// <param name="xmlCanonicalizationMethod">The Signature XML canonicalization method used to sign the document</param>
         /// <param name="includeOption">Certificate include option</param>
         /// <param name="id">The id of the topmost element in the XML document</param>
-        internal static XmlDocument SignDocument(this XmlDocument xmlDocument, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption, string id)
+        /// <param name="includeKeyInfoName">Include key info name clause in signature</param>
+        internal static XmlDocument SignDocument(this XmlDocument xmlDocument, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption, string id, bool includeKeyInfoName)
         {
             if (certificate == null)
             {
@@ -28,7 +29,7 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             var signedXml = new Saml2SignedXml(xmlDocument.DocumentElement, certificate, signatureAlgorithm, xmlCanonicalizationMethod);
-            signedXml.ComputeSignature(includeOption, id);
+            signedXml.ComputeSignature(includeOption, id, includeKeyInfoName);
 
             var issuer = xmlDocument.DocumentElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString];
             xmlDocument.DocumentElement.InsertAfter(xmlDocument.ImportNode(signedXml.GetXml(), true), issuer);
@@ -42,7 +43,8 @@ namespace ITfoxtec.Identity.Saml2
         /// <param name="signatureAlgorithm">The Signature Algorithm used to sign the assertion</param>
         /// <param name="xmlCanonicalizationMethod">The Signature XML canonicalization method used to sign the assertion</param>
         /// <param name="includeOption">Certificate include option</param>
-        internal static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption)
+        /// <param name="includeKeyInfoName">Include key info name clause in signature</param>
+        internal static void SignAssertion(this XmlDocument xmlDocument, XmlElement xmlAssertionElement, X509Certificate2 certificate, string signatureAlgorithm, string xmlCanonicalizationMethod, X509IncludeOption includeOption, bool includeKeyInfoName)
         {
             if (certificate == null)
             {
@@ -52,7 +54,7 @@ namespace ITfoxtec.Identity.Saml2
             var id = xmlAssertionElement.GetAttribute(Saml2Constants.Message.Id);
 
             var signedXml = new Saml2SignedXml(xmlAssertionElement, certificate, signatureAlgorithm, xmlCanonicalizationMethod);
-            signedXml.ComputeSignature(includeOption, id);
+            signedXml.ComputeSignature(includeOption, id, includeKeyInfoName);
 
             var issuer = xmlAssertionElement[Saml2Constants.Message.Issuer, Saml2Constants.AssertionNamespace.OriginalString];
             xmlAssertionElement.InsertAfter(xmlDocument.ImportNode(signedXml.GetXml(), true), issuer);
