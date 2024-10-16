@@ -22,7 +22,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             Saml2Signer = new Saml2Signer(certificate, signatureAlgorithm);
         }
 
-        public void ComputeSignature(X509IncludeOption includeOption, string id)
+        public void ComputeSignature(X509IncludeOption includeOption, string id, bool includeKeyInfoName)
         {
             var reference = new Reference("#" + id);
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
@@ -36,7 +36,10 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             ComputeSignature();
 
             KeyInfo = new KeyInfo();
-            KeyInfo.AddClause(new KeyInfoName(Convert.ToBase64String(Saml2Signer.Certificate.GetCertHash())));
+            if (includeKeyInfoName)
+            {
+                KeyInfo.AddClause(new KeyInfoName(Convert.ToBase64String(Saml2Signer.Certificate.GetCertHash())));
+            }
             KeyInfo.AddClause(new KeyInfoX509Data(Saml2Signer.Certificate, includeOption));
         }
 

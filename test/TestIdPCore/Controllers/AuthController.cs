@@ -244,7 +244,8 @@ namespace TestIdPCore.Controllers
                 SigningCertificate = config.SigningCertificate,
                 SignatureAlgorithm = config.SignatureAlgorithm,
                 CertificateValidationMode = config.CertificateValidationMode,
-                RevocationMode = config.RevocationMode
+                RevocationMode = config.RevocationMode,
+                IncludeKeyInfoName = config.IncludeKeyInfoName,
             };
 
             rpConfig.AllowedAudienceUris.AddRange(config.AllowedAudienceUris);
