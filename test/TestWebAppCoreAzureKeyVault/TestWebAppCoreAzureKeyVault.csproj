@@ -26,7 +26,7 @@
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="ITfoxtec.Identity" Version="2.5.45" />
     <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.6.0" />
-	<PackageReference Include="Azure.Identity" Version="1.10.4" />
+	<PackageReference Include="Azure.Identity" Version="1.13.1" />
 	<PackageReference Include="RSAKeyVaultProvider" Version="2.1.1" />
   </ItemGroup>
 </Project>
