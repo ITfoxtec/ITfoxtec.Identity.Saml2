@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net7.0;net6.0;net48;net462</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>	
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net48;net462</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Authors>Anders Revsgaard</Authors>
     <Company>ITfoxtec</Company>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
@@ -12,6 +12,7 @@
     <Title>ITfoxtec Identity SAML 2.0 MVC Core</Title>
     <Description>ASP.NET MVC Core is supported by the ITfoxtec Identity SAML2 MVC Core package which helps to integrate the ITfoxtec Identity SAML2 package and add support for SAML-P and SAML 2.0 tokens.
 
+      Support .NET 9.0
       Support .NET 8.0
       Support .NET 7.0 
       Support .NET 6.0 
@@ -42,8 +43,24 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 
   <ItemGroup>
     <ProjectReference Include="..\ITfoxtec.Identity.Saml2\ITfoxtec.Identity.Saml2.csproj" />
-  </ItemGroup>	
-		
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net9.0'">
+    <DefineConstants>NET90;NET</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
@@ -59,7 +76,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591;1573</NoWarn>
   </PropertyGroup>
-	
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
@@ -75,7 +92,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591;1573</NoWarn>
   </PropertyGroup>
-	
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
