@@ -2,6 +2,7 @@
 
 The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP).
 
+* **Support .NET 9.0**
 * **Support .NET 8.0**
 * **Support .NET 7.0**
 * **Support .NET 6.0**
@@ -19,7 +20,7 @@ The package supports redirect binding, post binding and artifact binding.
 > *SAML 2.0 is an old standard with its shortcomings, and therefore it is often a better choice to use OpenID Connect in an application.*  
 > You can likewise use FoxIDs to translate from the Danish [NemLog-in3 (MitID)](https://www.foxids.com/docs/up-party-howto-saml-2.0-nemlogin) and [Context Handler](https://www.foxids.com/docs/howto-saml-2.0-context-handler) to OpenID Connect.
 
-The ITfoxtec Identity Saml2 package is tested for compliance with Microsoft Entra ID (Azure AD), AD FS, Azure AD B2C, the Danish NemLog-in3 (MitID), the Danish Context Handler (in Danish called Fælleskommunal Adgangsstyring) and many other IdPs and RPs.
+The ITfoxtec Identity Saml2 package is tested for compliance with Microsoft Entra ID (Azure AD), AD FS, Azure AD B2C, the Danish NemLog-in3 (MitID), the Danish Context Handler (in Danish called FÃ¦lleskommunal Adgangsstyring) and many other IdPs and RPs.
 
 Please see the [test samples](test).
 
