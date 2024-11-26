@@ -31,10 +31,10 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.13.3</AssemblyVersion>
-    <FileVersion>4.13.3</FileVersion>
+    <AssemblyVersion>4.14.0</AssemblyVersion>
+    <FileVersion>4.14.0</FileVersion>
     <Copyright>Copyright © 2024</Copyright>
-    <Version>4.13.3</Version>
+    <Version>4.14.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -45,7 +45,6 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.2.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
@@ -83,7 +82,7 @@ Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Descrip
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.7.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="7.3.1" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
   </ItemGroup>
