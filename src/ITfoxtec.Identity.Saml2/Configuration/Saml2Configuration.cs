@@ -30,6 +30,8 @@ namespace ITfoxtec.Identity.Saml2
         public bool ValidateArtifact { get; set; } = true;
 
         public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
+
+        // Optionally set a canonicalization method, default "http://www.w3.org/2001/10/xml-exc-c14n#". E.g, set "http://www.w3.org/2001/10/xml-exc-c14n#WithComments" for Amazon.
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
 
         public X509Certificate2 SigningCertificate { get; set; }
