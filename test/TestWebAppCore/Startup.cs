@@ -11,7 +11,6 @@ using ITfoxtec.Identity.Saml2;
 using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.IdentityModel.Logging;
 
 namespace TestWebAppCore
@@ -34,7 +33,7 @@ namespace TestWebAppCore
 
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
-                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
                 //saml2Configuration.DecryptionCertificates.Add(saml2Configuration.SigningCertificate);
                 //Alternatively load the certificate by thumbprint from the machines Certificate Store.
                 //saml2Configuration.SigningCertificate = CertificateUtil.Load(StoreName.My, StoreLocation.LocalMachine, X509FindType.FindByThumbprint, Configuration["Saml2:SigningCertificateThumbprint"]);
