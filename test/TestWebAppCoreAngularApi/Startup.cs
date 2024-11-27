@@ -16,7 +16,6 @@ using ITfoxtec.Identity.Saml2.Schemas;
 using System.Net;
 using System.Threading.Tasks;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TestWebAppCoreAngularApi
 {
@@ -37,7 +36,7 @@ namespace TestWebAppCoreAngularApi
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
                 //saml2Configuration.SignAuthnRequest = true;
-                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
 
                 //saml2Configuration.SignatureValidationCertificates.Add(CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SignatureValidationCertificateFile"])));
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
