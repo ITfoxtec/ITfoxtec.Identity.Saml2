@@ -77,11 +77,10 @@ namespace ITfoxtec.Identity.Saml2.Util
         {
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
 
-            var encoding = new System.Text.UTF8Encoding();
 #if NETFULL || NETSTANDARD || NET60 || NET70 || NET80
-            return new X509Certificate2(encoding.GetBytes(certificate));
+            return new X509Certificate2(Convert.FromBase64String(certificate));
 #else
-            return X509CertificateLoader.LoadCertificate(encoding.GetBytes(certificate));
+            return X509CertificateLoader.LoadCertificate(Convert.FromBase64String(certificate));
 #endif
         }
 
@@ -90,11 +89,10 @@ namespace ITfoxtec.Identity.Saml2.Util
             if (string.IsNullOrWhiteSpace(certificate)) throw new ArgumentNullException(nameof(certificate));
             if (password == null) throw new ArgumentNullException(nameof(password));
 
-            var encoding = new System.Text.UTF8Encoding();
 #if NETFULL || NETSTANDARD || NET60 || NET70 || NET80
-            return new X509Certificate2(encoding.GetBytes(certificate), password);
+            return new X509Certificate2(Convert.FromBase64String(certificate), password);
 #else
-            return X509CertificateLoader.LoadPkcs12(encoding.GetBytes(certificate), password);
+            return X509CertificateLoader.LoadPkcs12(Convert.FromBase64String(certificate), password);
 #endif
         }
 
