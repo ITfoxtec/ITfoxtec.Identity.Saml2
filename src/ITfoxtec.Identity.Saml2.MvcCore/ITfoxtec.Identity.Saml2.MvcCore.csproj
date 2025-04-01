@@ -5,7 +5,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Authors>Anders Revsgaard</Authors>
-    <Company>ITfoxtec</Company>
+    <Company>FoxIDs</Company>
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <AssemblyName>ITfoxtec.Identity.Saml2.MvcCore</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2.MvcCore</PackageId>
@@ -26,10 +26,12 @@ Support signing/encryption certificates in Azure Key Vault.
 
 Tested for compliance with AD FS, Azure AD and Azure AD B2C. 
 
-Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.</Description>
+Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.
+
+The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3 ASP.NET MVC Core</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageIconUrl>https://itfoxtec.com/favicon.ico</PackageIconUrl>
+    <PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>4.15.3</AssemblyVersion>
     <FileVersion>4.15.3</FileVersion>
     <Copyright>Copyright © 2025</Copyright>
