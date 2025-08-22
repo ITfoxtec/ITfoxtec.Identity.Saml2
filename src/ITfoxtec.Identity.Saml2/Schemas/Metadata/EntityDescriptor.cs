@@ -322,10 +322,6 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
 #endif
 
-#if DEBUG
-            // accept self-signed certificates for development purposes
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => { return true; };
-#endif
             using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(spMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(spMetadataUrl))
             {
                 // Handle the response

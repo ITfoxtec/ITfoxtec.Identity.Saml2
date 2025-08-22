@@ -12,6 +12,7 @@ using ITfoxtec.Identity.Saml2.Schemas.Metadata;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
 using Microsoft.IdentityModel.Logging;
+using System.Net;
 
 namespace TestWebAppCore
 {
@@ -30,6 +31,11 @@ namespace TestWebAppCore
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityModelEventSource.ShowPII = true;
+
+#if DEBUG
+            // Accept self-signed certificates for development purposes
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => { return true; };
+#endif
 
             services.BindConfig<Saml2Configuration>(Configuration, "Saml2", (serviceProvider, saml2Configuration) =>
             {
