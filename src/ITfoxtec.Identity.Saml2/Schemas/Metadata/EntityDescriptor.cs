@@ -321,6 +321,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         )
         {
 #endif
+
             using (var response = cancellationToken.HasValue ? await httpClient.GetAsync(spMetadataUrl, cancellationToken.Value) : await httpClient.GetAsync(spMetadataUrl))
             {
                 // Handle the response
