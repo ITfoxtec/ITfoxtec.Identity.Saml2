@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Xml;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System.Collections.Generic;
-using Microsoft.VisualBasic;
 
 #if NETFULL
 using System.IdentityModel.Tokens;
