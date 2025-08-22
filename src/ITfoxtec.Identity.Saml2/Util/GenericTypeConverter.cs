@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Xml;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
+
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -114,6 +116,11 @@ namespace ITfoxtec.Identity.Saml2.Util
         static T GenericConvertValue<T, U>(U value)
         {
             var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+            if (type == typeof(bool) && value is string stringValue)
+            {
+                if (stringValue == "0") return (T)(object)false;
+                if (stringValue == "1") return (T)(object)true;
+            }
             return (T)(value == null ? null : Convert.ChangeType(value, type));
         }
 
@@ -125,6 +132,11 @@ namespace ITfoxtec.Identity.Saml2.Util
             }
             else
             {
+                if (typeof(T) == typeof(bool))
+                {
+                    if (value == "0") return (T?)(object)false;
+                    if (value == "1") return (T?)(object)true;
+                }
                 return (T)Convert.ChangeType(value, typeof(T));
             }
         }

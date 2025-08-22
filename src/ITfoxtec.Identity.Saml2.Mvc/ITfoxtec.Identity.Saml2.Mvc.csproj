@@ -28,10 +28,10 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) and Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3 ASP.NET MVC</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.15.3</AssemblyVersion>
-    <FileVersion>4.15.3</FileVersion>
+    <AssemblyVersion>4.16.0</AssemblyVersion>
+    <FileVersion>4.16.0</FileVersion>
     <Copyright>Copyright © 2025</Copyright>
-    <Version>4.15.3</Version>
+    <Version>4.16.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
