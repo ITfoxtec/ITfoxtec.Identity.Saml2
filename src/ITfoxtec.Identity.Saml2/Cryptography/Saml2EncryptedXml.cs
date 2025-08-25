@@ -39,16 +39,31 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             EncryptionPrivateKey = encryptionPrivateKey;
         }
 
-        public virtual XmlElement EncryptAassertion(XmlElement assertionElement)
+        public virtual XmlElement EncryptAassertion(XmlElement assertionElement, string encryptionMethod)
         {
             using (var encryptionAlgorithm = Aes.Create())
             {
-                encryptionAlgorithm.KeySize = 256;
+                encryptionMethod = string.IsNullOrEmpty(encryptionMethod)
+                    ? Saml2EncryptionAlgorithms.XmlEncAES256Url
+                    : encryptionMethod;
+                switch (encryptionMethod)
+                {
+                    case Saml2EncryptionAlgorithms.XmlEncAES128Url:
+                    case Saml2EncryptionAlgorithms.XmlEncAES128KeyWrapUrl:
+                        encryptionAlgorithm.KeySize = 128; break;
+                    case Saml2EncryptionAlgorithms.XmlEncAES192Url:
+                    case Saml2EncryptionAlgorithms.XmlEncAES192KeyWrapUrl:
+                        encryptionAlgorithm.KeySize = 192; break;
+                    case Saml2EncryptionAlgorithms.XmlEncSHA512Url:
+                        encryptionAlgorithm.KeySize = 512; break;
+                    default:
+                        encryptionAlgorithm.KeySize = 256; break;
+                }
 
                 var encryptedData = new EncryptedData
                 {
                     Type = XmlEncElementUrl,
-                    EncryptionMethod = new EncryptionMethod(XmlEncAES256Url),
+                    EncryptionMethod = new EncryptionMethod(encryptionMethod),
                     KeyInfo = new KeyInfo()
                 };
                 encryptedData.KeyInfo.AddClause(new KeyInfoEncryptedKey(new EncryptedKey
