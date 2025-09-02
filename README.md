@@ -40,6 +40,3 @@ If you have questions please ask them on [Stack Overflow](https://stackoverflow.
 Contact [Anders Revsgaard (anders@foxids.com)](mailto:anders@foxids.com) at [FoxIDs](https://www.foxids.com) for paid consultancy.
 
 > You can use the [SAML 2.0 tool](https://www.foxids.com/tools/saml) to decode tokens and create self-signed certificates with the [certificate tool](https://www.foxids.com/tools/certificate).
-
-### Open source donations by PayPal 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=QVQN5ZNP2RK4Y)
