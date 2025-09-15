@@ -31,16 +31,6 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 throw new NotSupportedException("AES192 Key Wrap is rarely supported. Use AES128 or AES256 Key Wrap instead.");
             }
-
-            // --- Message Digest ---
-            else if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncSHA256Url, StringComparison.InvariantCulture))
-            {
-                return;
-            }
-            else if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncSHA512Url, StringComparison.InvariantCulture))
-            {
-                return;
-            }
             throw new NotSupportedException($"Unsupported encryption algorithm: {encryptionAlgorithm}");
         }
     }

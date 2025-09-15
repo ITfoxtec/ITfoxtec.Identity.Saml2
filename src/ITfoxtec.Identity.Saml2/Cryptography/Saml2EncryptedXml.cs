@@ -54,8 +54,6 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
                     case Saml2EncryptionAlgorithms.XmlEncAES192Url:
                     case Saml2EncryptionAlgorithms.XmlEncAES192KeyWrapUrl:
                         encryptionAlgorithm.KeySize = 192; break;
-                    case Saml2EncryptionAlgorithms.XmlEncSHA512Url:
-                        encryptionAlgorithm.KeySize = 512; break;
                     default:
                         encryptionAlgorithm.KeySize = 256; break;
                 }
