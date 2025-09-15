@@ -28,6 +28,7 @@ namespace ITfoxtec.Identity.Saml2
 
         internal IEnumerable<X509Certificate2> DecryptionCertificates { get; private set; }
         internal X509Certificate2 EncryptionCertificate { get; private set; }
+        internal string EncryptionAlgorithm { get; private set; }
 
         /// <summary>
         /// Claims Identity.
@@ -76,6 +77,8 @@ namespace ITfoxtec.Identity.Saml2
                     throw new ArgumentException("No RSA Public Key present in Encryption Certificate.");
                 }
             }
+            EncryptionAlgorithm = config.EncryptionAlgorithm;
+
             Saml2SecurityTokenHandler = Saml2ResponseSecurityTokenHandler.GetSaml2SecurityTokenHandler(IdentityConfiguration);
         }
 
@@ -385,6 +388,9 @@ namespace ITfoxtec.Identity.Saml2
                 return;
             }
 
+            //Validate EncryptionMethod
+            Cryptography.EncryptionAlgorithm.ValidateAlgorithm(Config.EncryptionAlgorithm);
+
             var envelope = new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.EncryptedAssertion);
             var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];
             XmlDocument.DocumentElement.InsertAfter(XmlDocument.ImportNode(envelope.ToXmlDocument().DocumentElement, true), status);
@@ -392,7 +398,7 @@ namespace ITfoxtec.Identity.Saml2
             var assertionElement = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Assertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             assertionElement.ParentNode.RemoveChild(assertionElement);
 
-            var encryptedDataElement = new Saml2EncryptedXml(EncryptionCertificate.GetRSAPublicKey()).EncryptAassertion(assertionElement);
+            var encryptedDataElement = new Saml2EncryptedXml(EncryptionCertificate.GetRSAPublicKey()).EncryptAassertion(assertionElement, EncryptionAlgorithm);
 
             var encryptedAssertionElement = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.EncryptedAssertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString];
             encryptedAssertionElement.AppendChild(XmlDocument.ImportNode(encryptedDataElement, true));
