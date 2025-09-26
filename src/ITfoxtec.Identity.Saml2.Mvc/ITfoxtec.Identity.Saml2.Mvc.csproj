@@ -47,7 +47,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNet.Razor" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.3.0" />
-    <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.IdentityModel.Services" />    
