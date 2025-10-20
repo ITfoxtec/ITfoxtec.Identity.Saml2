@@ -251,7 +251,7 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        protected SignatureValidation ValidateXmlSignature(XmlElement xmlElement)
+        protected virtual SignatureValidation ValidateXmlSignature(XmlElement xmlElement)
         {
             var xmlSignatures = xmlElement.SelectNodes($"*[local-name()='{Schemas.Saml2Constants.Message.Signature}' and namespace-uri()='{SignedXml.XmlDsigNamespaceUrl}']");
             if (xmlSignatures.Count == 0)
