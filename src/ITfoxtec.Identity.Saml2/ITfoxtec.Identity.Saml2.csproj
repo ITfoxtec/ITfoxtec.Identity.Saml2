@@ -36,7 +36,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
     <AssemblyVersion>4.17.0</AssemblyVersion>
     <FileVersion>4.17.0</FileVersion>
-    <Copyright>Copyright © 2025</Copyright>
+    <Copyright>Copyright © 2026</Copyright>
     <Version>4.17.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
