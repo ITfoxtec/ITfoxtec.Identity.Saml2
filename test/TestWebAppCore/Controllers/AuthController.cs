@@ -74,7 +74,8 @@ namespace TestWebAppCore.Controllers
                 throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
             }
             httpRequest.Binding.Unbind(httpRequest, saml2AuthnResponse);
-            await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
+            await saml2AuthnResponse.CreateSessionAsync(HttpContext,
+                claimsTransform: (claimsPrincipal) => Task.FromResult(ClaimsTransform.Transform(claimsPrincipal)));
 
             var relayStateQuery = httpRequest.Binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
