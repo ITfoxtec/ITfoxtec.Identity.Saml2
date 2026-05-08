@@ -51,7 +51,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.7" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.18.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
-    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="10.0.652802" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>NET100;NET</DefineConstants>
@@ -70,7 +70,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.14.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.8" />
-    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net9.0'">
     <DefineConstants>NET90;NET</DefineConstants>
@@ -89,7 +89,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.14.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.2" />
-    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
     <DefineConstants>NET80;NET</DefineConstants>
@@ -108,7 +108,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.14.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
-    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="6.2.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <DefineConstants>NET70;NET</DefineConstants>
@@ -127,7 +127,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.14.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.2" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.10.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="6.2.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <DefineConstants>NET60;NET</DefineConstants>
@@ -146,7 +146,7 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
 	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.14.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.1" />
-    <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="10.0.652802" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>NETSTANDARD21;NETSTANDARD</DefineConstants>
