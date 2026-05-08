@@ -55,7 +55,8 @@ namespace TestWebAppCoreAngularApi.Controllers
                 throw new AuthenticationException($"SAML Response status: {saml2AuthnResponse.Status}");
             }
             binding.Unbind(Request.ToGenericHttpRequest(validate: true), saml2AuthnResponse);
-            await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
+            await saml2AuthnResponse.CreateSessionAsync(HttpContext,
+                claimsTransform: (claimsPrincipal) => Task.FromResult(ClaimsTransform.Transform(claimsPrincipal)));
 
             var relayStateQuery = binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");

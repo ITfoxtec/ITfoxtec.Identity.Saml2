@@ -62,7 +62,8 @@ namespace TestWebAppCoreArtifact.Controllers
                 throw new AuthenticationException($"SAML Artifact Response status '{saml2ArtifactResponse.Status}' and SAML Response status '{saml2AuthnResponse.Status}'");
             }
 
-            await saml2AuthnResponse.CreateSession(HttpContext, claimsTransform: (claimsPrincipal) => ClaimsTransform.Transform(claimsPrincipal));
+            await saml2AuthnResponse.CreateSessionAsync(HttpContext,
+                claimsTransform: (claimsPrincipal) => Task.FromResult(ClaimsTransform.Transform(claimsPrincipal)));
 
             var relayStateQuery = httpRequest.Binding.GetRelayStateQuery();
             var returnUrl = relayStateQuery.ContainsKey(relayStateReturnUrl) ? relayStateQuery[relayStateReturnUrl] : Url.Content("~/");
