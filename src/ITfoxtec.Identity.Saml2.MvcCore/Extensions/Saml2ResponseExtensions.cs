@@ -21,15 +21,21 @@ namespace ITfoxtec.Identity.Saml2.MvcCore
             {
                 asyncClaimsTransform = (ClaimsPrincipal principal) => Task.FromResult(claimsTransform(principal));
             }
-            return CreateSession(saml2AuthnResponse, httpContext, lifetime, isPersistent, asyncClaimsTransform);
+            return CreateSessionInternal(saml2AuthnResponse, httpContext, lifetime, isPersistent, asyncClaimsTransform);
         }
 
         /// <summary>
-        /// Create a Claims Principal and a Federated Authentication Session for the authenticated user.
+        /// Create a Claims Principal and a Federated Authentication Session for the authenticated user with an asynchronous claims transform.
         /// </summary>
         /// <param name="lifetime">The period from the current time during which the token is valid. Default use the security token valid to time.</param>
         /// <param name="isPersistent">If the IsPersistent property is true, the cookie is written as a persistent cookie. Persistent cookies remain valid after the browser is closed until they expire.</param>
-        public static async Task<ClaimsPrincipal> CreateSession(this Saml2AuthnResponse saml2AuthnResponse, HttpContext httpContext, TimeSpan? lifetime = null, bool isPersistent = false, Func<ClaimsPrincipal, Task<ClaimsPrincipal>> claimsTransform = null)
+        /// <param name="claimsTransform">Asynchronously transforms the created claims principal before the authentication session is created.</param>
+        public static Task<ClaimsPrincipal> CreateSessionAsync(this Saml2AuthnResponse saml2AuthnResponse, HttpContext httpContext, TimeSpan? lifetime = null, bool isPersistent = false, Func<ClaimsPrincipal, Task<ClaimsPrincipal>> claimsTransform = null)
+        {
+            return CreateSessionInternal(saml2AuthnResponse, httpContext, lifetime, isPersistent, claimsTransform);
+        }
+
+        private static async Task<ClaimsPrincipal> CreateSessionInternal(Saml2AuthnResponse saml2AuthnResponse, HttpContext httpContext, TimeSpan? lifetime, bool isPersistent, Func<ClaimsPrincipal, Task<ClaimsPrincipal>> claimsTransform)
         {
             if (httpContext.User.Identity.IsAuthenticated)
             {
