@@ -37,6 +37,8 @@ The company name ITfoxtec has changed to FoxIDs but the components will keep the
     <DelaySign>false</DelaySign>
     <PackageProjectUrl>https://itfoxtec.com/IdentitySaml2</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2</RepositoryUrl>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
   </PropertyGroup>
 
   <ItemGroup>
