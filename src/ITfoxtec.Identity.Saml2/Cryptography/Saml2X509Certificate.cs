@@ -13,10 +13,21 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         /// Private RSA key.
         /// </summary>
         public RSA RSA { get; protected set; }
-    
-        public Saml2X509Certificate(X509Certificate2 certificate, RSA rsa): base(certificate)
+
+        public Saml2X509Certificate(X509Certificate2 certificate, RSA rsa) : base(certificate)
         {
             RSA = rsa;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RSA?.Dispose();
+                RSA = null;
+            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>
