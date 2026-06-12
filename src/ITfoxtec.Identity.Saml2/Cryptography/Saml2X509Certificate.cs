@@ -9,6 +9,8 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     /// </summary>
     public class Saml2X509Certificate : X509Certificate2
     {
+        private X509Certificate2 certificate;
+
         /// <summary>
         /// Private RSA key.
         /// </summary>
@@ -16,6 +18,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
         public Saml2X509Certificate(X509Certificate2 certificate, RSA rsa) : base(certificate)
         {
+            this.certificate = certificate;
             RSA = rsa;
         }
 
@@ -25,6 +28,8 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 RSA?.Dispose();
                 RSA = null;
+                certificate?.Dispose();
+                certificate = null;
             }
 
             base.Dispose(disposing);
