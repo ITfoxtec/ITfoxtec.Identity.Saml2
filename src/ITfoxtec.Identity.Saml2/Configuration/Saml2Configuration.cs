@@ -31,6 +31,11 @@ namespace ITfoxtec.Identity.Saml2
 
         public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
 
+        /// <summary>
+        /// Signature algorithm used only to validate signatures. If null or white space, SignatureAlgorithm is used.
+        /// </summary>
+        public string SignatureValidationAlgorithm { get; set; }
+
         // Optionally set a canonicalization method, default "http://www.w3.org/2001/10/xml-exc-c14n#". E.g, set "http://www.w3.org/2001/10/xml-exc-c14n#WithComments" for Amazon.
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
 
