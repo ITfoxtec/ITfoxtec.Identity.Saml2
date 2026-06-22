@@ -44,7 +44,6 @@ namespace TestWebAppCore
             {
                 if (Configuration.GetValue<bool>("Saml2:UseEcdsaSigningCertificate"))
                 {
-                    saml2Configuration.SignatureAlgorithm = Saml2SecurityAlgorithms.EcdsaSha256Signature;
                     saml2Configuration.SigningCertificate = CreateEcdsaSigningCertificate(saml2Configuration);
                 }
                 else

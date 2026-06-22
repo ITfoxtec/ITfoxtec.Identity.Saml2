@@ -97,7 +97,7 @@ namespace ITfoxtec.Identity.Saml2
             if (saml2RequestResponse.SignatureValidationCertificates == null || saml2RequestResponse.SignatureValidationCertificates.Count() < 1)
                 saml2RequestResponse.SignatureValidationCertificates = saml2RequestResponse.Config.SignatureValidationCertificates;
             if (saml2RequestResponse.SignatureAlgorithm == null)
-                saml2RequestResponse.SignatureAlgorithm = saml2RequestResponse.Config.SignatureAlgorithm;
+                saml2RequestResponse.SignatureAlgorithm = string.IsNullOrWhiteSpace(saml2RequestResponse.Config.SignatureValidationAlgorithm) ? saml2RequestResponse.Config.SignatureAlgorithm : saml2RequestResponse.Config.SignatureValidationAlgorithm;
             if (saml2RequestResponse.XmlCanonicalizationMethod == null)
                 saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
 
