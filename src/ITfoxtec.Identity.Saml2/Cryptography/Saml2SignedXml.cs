@@ -32,7 +32,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
 
             AddReference(reference);
             SignedInfo.SignatureMethod = Saml2Signer.SignatureAlgorithm;
-            SigningKey = Saml2Signer.Certificate.GetSamlRSAPrivateKey();
+            SigningKey = Saml2Signer.Certificate.GetSamlPrivateKey(Saml2Signer.SignatureAlgorithm);
             ComputeSignature();
 
             KeyInfo = new KeyInfo();
@@ -63,7 +63,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             var reference = SignedInfo.References[0] as Reference;
             AssertReferenceValid(reference);
 
-            return CheckSignature(Saml2Signer.Certificate.GetRSAPublicKey());
+            return CheckSignature(Saml2Signer.Certificate.GetSamlPublicKey(Saml2Signer.SignatureAlgorithm));
         }
 
         private void AssertReferenceValid(Reference reference)

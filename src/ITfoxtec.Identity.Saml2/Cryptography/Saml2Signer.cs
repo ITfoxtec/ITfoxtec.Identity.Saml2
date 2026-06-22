@@ -21,6 +21,11 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA384SignatureDescription), Saml2SecurityAlgorithms.RsaSha384Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPKCS1SHA512SignatureDescription), Saml2SecurityAlgorithms.RsaSha512Signature);
             CryptoConfig.AddAlgorithm(typeof(RSAPSSSHA256SignatureDescription), Saml2SecurityAlgorithms.RsaPssSha256Signature);
+#if NET && !NET70 && !NET60
+            CryptoConfig.AddAlgorithm(typeof(ECDSASHA256SignatureDescription), Saml2SecurityAlgorithms.EcdsaSha256Signature);
+            CryptoConfig.AddAlgorithm(typeof(ECDSASHA384SignatureDescription), Saml2SecurityAlgorithms.EcdsaSha384Signature);
+            CryptoConfig.AddAlgorithm(typeof(ECDSASHA512SignatureDescription), Saml2SecurityAlgorithms.EcdsaSha512Signature);
+#endif
         }
 #endif
 
@@ -36,14 +41,14 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
         public (AsymmetricSignatureFormatter, HashAlgorithm) CreateFormatter()
         {
             (var signatureDescription, var hashAlgorithm) = GetSignatureDescription();
-            var formatter = signatureDescription.CreateFormatter(Certificate.GetSamlRSAPrivateKey());
+            var formatter = signatureDescription.CreateFormatter(Certificate.GetSamlPrivateKey(SignatureAlgorithm));
             return (formatter, hashAlgorithm);
         }
 
         public (AsymmetricSignatureDeformatter, HashAlgorithm) CreateDeformatter()
         {
             (var signatureDescription, var hashAlgorithm) = GetSignatureDescription();
-            var deformatter = signatureDescription.CreateDeformatter(Certificate.GetRSAPublicKey());
+            var deformatter = signatureDescription.CreateDeformatter(Certificate.GetSamlPublicKey(SignatureAlgorithm));
             return (deformatter, hashAlgorithm);
         }
 
