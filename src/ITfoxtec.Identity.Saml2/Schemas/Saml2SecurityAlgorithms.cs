@@ -41,5 +41,17 @@
         /// URI for the SHA256-RSA-MGF1 signature method for signing XML.
         /// </summary>
         public const string RsaPssSha256Signature = "http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1";
+        /// <summary>
+        /// URI for the ECDSA-SHA-256 signature method for signing XML.
+        /// </summary>
+        public const string EcdsaSha256Signature = "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256";
+        /// <summary>
+        /// URI for the ECDSA-SHA-384 signature method for signing XML.
+        /// </summary>
+        public const string EcdsaSha384Signature = "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384";
+        /// <summary>
+        /// URI for the ECDSA-SHA-512 signature method for signing XML.
+        /// </summary>
+        public const string EcdsaSha512Signature = "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512";
     }
 }

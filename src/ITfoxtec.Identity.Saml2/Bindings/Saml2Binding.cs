@@ -38,9 +38,9 @@ namespace ITfoxtec.Identity.Saml2
 
             if (saml2RequestResponse.Config.SigningCertificate != null)
             {
-                if (saml2RequestResponse.Config.SigningCertificate.GetSamlRSAPrivateKey() == null)
+                if (saml2RequestResponse.Config.SigningCertificate.GetSamlPrivateKey(saml2RequestResponse.Config.SignatureAlgorithm) == null)
                 {
-                    throw new ArgumentException("No RSA Private Key present in Signing Certificate or missing private key read credentials.");
+                    throw new ArgumentException("No matching private key present in Signing Certificate or missing private key read credentials.");
                 }
             }
 
@@ -101,8 +101,8 @@ namespace ITfoxtec.Identity.Saml2
             if (saml2RequestResponse.XmlCanonicalizationMethod == null)
                 saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
 
-            if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => c.GetRSAPublicKey() == null) > 0)
-                throw new ArgumentException("No RSA Public Key present in at least Signature Validation Certificate.");
+            if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => c.GetSamlPublicKey(saml2RequestResponse.SignatureAlgorithm) == null) > 0)
+                throw new ArgumentException("No matching public key present in at least Signature Validation Certificate.");
         }
 
         protected abstract Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2RequestResponse, string messageName);

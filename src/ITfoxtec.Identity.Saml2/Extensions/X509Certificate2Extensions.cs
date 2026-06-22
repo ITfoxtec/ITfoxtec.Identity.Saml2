@@ -25,6 +25,42 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
+        public static AsymmetricAlgorithm GetSamlPrivateKey(this X509Certificate2 certificate, string signatureAlgorithm)
+        {
+            if (Cryptography.SignatureAlgorithm.IsRsaAlgorithm(signatureAlgorithm))
+            {
+                return certificate.GetSamlRSAPrivateKey();
+            }
+
+#if NET && !NET70 && !NET60
+            if (Cryptography.SignatureAlgorithm.IsEcdsaAlgorithm(signatureAlgorithm))
+            {
+                return certificate.GetECDsaPrivateKey();
+            }
+#endif
+
+            Cryptography.SignatureAlgorithm.ValidateAlgorithm(signatureAlgorithm);
+            throw new InvalidOperationException();
+        }
+
+        public static AsymmetricAlgorithm GetSamlPublicKey(this X509Certificate2 certificate, string signatureAlgorithm)
+        {
+            if (Cryptography.SignatureAlgorithm.IsRsaAlgorithm(signatureAlgorithm))
+            {
+                return certificate.GetRSAPublicKey();
+            }
+
+#if NET && !NET70 && !NET60
+            if (Cryptography.SignatureAlgorithm.IsEcdsaAlgorithm(signatureAlgorithm))
+            {
+                return certificate.GetECDsaPublicKey();
+            }
+#endif
+
+            Cryptography.SignatureAlgorithm.ValidateAlgorithm(signatureAlgorithm);
+            throw new InvalidOperationException();
+        }
+
         /// <summary>
         /// Validates if the certificate is expired in relation to local time.
         /// </summary>
