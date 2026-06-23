@@ -118,22 +118,13 @@ namespace ITfoxtec.Identity.Saml2
                 saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count() > 0)
             {
                 var actualSignatureAlgorithm = request.Query[Saml2Constants.Message.SigAlg];
-                if (saml2RequestResponse.SignatureAlgorithm == null)
+                Cryptography.SignatureAlgorithm.ValidateAlgorithm(actualSignatureAlgorithm);
+                if (!saml2RequestResponse.SignatureValidationAlgorithms.Contains(actualSignatureAlgorithm, StringComparer.InvariantCulture))
                 {
-                    saml2RequestResponse.SignatureAlgorithm = actualSignatureAlgorithm;
+                    throw new InvalidSignatureException($"Illegal signature method {actualSignatureAlgorithm} used in signature.");
                 }
-                else if (!saml2RequestResponse.SignatureAlgorithm.Equals(actualSignatureAlgorithm, StringComparison.InvariantCulture))
-                {
-                    throw new Exception($"Signature Algorithm do not match. Expected algorithm {saml2RequestResponse.SignatureAlgorithm} actual algorithm {actualSignatureAlgorithm}");
-                }
-                if (saml2RequestResponse.XmlCanonicalizationMethod == null)
-                {
-                    saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
-                }
-                Cryptography.SignatureAlgorithm.ValidateAlgorithm(saml2RequestResponse.SignatureAlgorithm);
-                Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(saml2RequestResponse.XmlCanonicalizationMethod);
+                saml2RequestResponse.SignatureAlgorithm = actualSignatureAlgorithm;
                 SignatureAlgorithm = saml2RequestResponse.SignatureAlgorithm;
-                XmlCanonicalizationMethod = saml2RequestResponse.XmlCanonicalizationMethod;
 
                 Signature = request.Query[Saml2Constants.Message.Signature];
                 ValidateQueryStringSignature(saml2RequestResponse, request.QueryString, messageName, Convert.FromBase64String(Signature), saml2RequestResponse.SignatureValidationCertificates);
@@ -167,7 +158,13 @@ namespace ITfoxtec.Identity.Saml2
 
         private void ValidateQueryStringSignature(Saml2Request saml2RequestResponse, string queryString, string messageName, byte[] signatureValue, IEnumerable<X509Certificate2> signatureValidationCertificates)
         {
-            foreach (var signatureValidationCertificate in signatureValidationCertificates)
+            var matchingSignatureValidationCertificates = signatureValidationCertificates.Where(c => c.GetSamlPublicKey(SignatureAlgorithm) != null).ToList();
+            if (matchingSignatureValidationCertificates.Count <= 0)
+            {
+                throw new InvalidSignatureException($"No matching public key present in Signature Validation Certificate for signature method {SignatureAlgorithm}.");
+            }
+
+            foreach (var signatureValidationCertificate in matchingSignatureValidationCertificates)
             {
                 var saml2Sign = new Saml2SignedText(signatureValidationCertificate, SignatureAlgorithm);
                 if (saml2Sign.CheckSignature(Encoding.UTF8.GetBytes(new RawSaml2QueryString(queryString, messageName).SignedQueryString), signatureValue))

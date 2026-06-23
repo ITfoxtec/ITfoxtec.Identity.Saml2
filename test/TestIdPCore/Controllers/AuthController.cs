@@ -243,13 +243,14 @@ namespace TestIdPCore.Controllers
                 ArtifactResolutionService = config.ArtifactResolutionService,
                 SigningCertificate = config.SigningCertificate,
                 SignatureAlgorithm = config.SignatureAlgorithm,
-                SignatureValidationAlgorithm = config.SignatureValidationAlgorithm,
                 CertificateValidationMode = config.CertificateValidationMode,
                 RevocationMode = config.RevocationMode,
                 IncludeKeyInfoName = config.IncludeKeyInfoName,
             };
 
             rpConfig.AllowedAudienceUris.AddRange(config.AllowedAudienceUris);
+            rpConfig.SignatureValidationAlgorithms.AddRange(config.SignatureValidationAlgorithms);
+            rpConfig.XmlCanonicalizationValidationMethods.AddRange(config.XmlCanonicalizationValidationMethods);
 
             if (relyingParty != null) 
             {

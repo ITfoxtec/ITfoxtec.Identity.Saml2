@@ -3,6 +3,7 @@ using ITfoxtec.Identity.Saml2.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
@@ -112,7 +113,11 @@ namespace ITfoxtec.Identity.Saml2
 
         public IEnumerable<X509Certificate2> SignatureValidationCertificates { get; set; }
 
+        public IEnumerable<string> SignatureValidationAlgorithms { get; set; }
+
         public string SignatureAlgorithm { get; set; }
+
+        public IEnumerable<string> XmlCanonicalizationValidationMethods { get; set; }
 
         public string XmlCanonicalizationMethod { get; set; }
 
@@ -263,10 +268,42 @@ namespace ITfoxtec.Identity.Saml2
                 throw new InvalidSignatureException("There is more then one Signature element.");
             }
 
-            foreach (var signatureValidationCertificate in SignatureValidationCertificates)
+            var signatureValidationCertificates = SignatureValidationCertificates.ToList();
+            if (signatureValidationCertificates.Count <= 0)
             {
-                var signedXml = new Saml2SignedXml(xmlElement, signatureValidationCertificate, SignatureAlgorithm, XmlCanonicalizationMethod);
-                signedXml.LoadXml(xmlSignatures[0] as XmlElement);
+                return SignatureValidation.Invalid;
+            }
+
+            var xmlSignature = xmlSignatures[0] as XmlElement;
+            var signedXmlProbe = new Saml2SignedXml(xmlElement, signatureValidationCertificates.First(), SignatureValidationAlgorithms, XmlCanonicalizationValidationMethods);
+            signedXmlProbe.LoadXml(xmlSignature);
+            if (string.IsNullOrWhiteSpace(signedXmlProbe.ActualSignatureMethod))
+            {
+                throw new InvalidSignatureException("Signature method is missing.");
+            }
+            try
+            {
+                Cryptography.SignatureAlgorithm.ValidateAlgorithm(signedXmlProbe.ActualSignatureMethod);
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new InvalidSignatureException($"Illegal signature method {signedXmlProbe.ActualSignatureMethod} used in signature.", ex);
+            }
+            if (!SignatureValidationAlgorithms.Contains(signedXmlProbe.ActualSignatureMethod, StringComparer.InvariantCulture))
+            {
+                throw new InvalidSignatureException($"Illegal signature method {signedXmlProbe.ActualSignatureMethod} used in signature.");
+            }
+
+            var matchingSignatureValidationCertificates = signatureValidationCertificates.Where(c => c.GetSamlPublicKey(signedXmlProbe.ActualSignatureMethod) != null).ToList();
+            if (matchingSignatureValidationCertificates.Count <= 0)
+            {
+                throw new InvalidSignatureException($"No matching public key present in Signature Validation Certificates for signature method {signedXmlProbe.ActualSignatureMethod}.");
+            }
+
+            foreach (var signatureValidationCertificate in matchingSignatureValidationCertificates)
+            {
+                var signedXml = new Saml2SignedXml(xmlElement, signatureValidationCertificate, SignatureValidationAlgorithms, XmlCanonicalizationValidationMethods);
+                signedXml.LoadXml(xmlSignature);
                 if (signedXml.CheckSignature())
                 {
                     // Check if certificate used to sign is valid
