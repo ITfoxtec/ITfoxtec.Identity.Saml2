@@ -1,6 +1,7 @@
 ﻿using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
@@ -96,13 +97,53 @@ namespace ITfoxtec.Identity.Saml2
         {
             if (saml2RequestResponse.SignatureValidationCertificates == null || saml2RequestResponse.SignatureValidationCertificates.Count() < 1)
                 saml2RequestResponse.SignatureValidationCertificates = saml2RequestResponse.Config.SignatureValidationCertificates;
-            if (saml2RequestResponse.SignatureAlgorithm == null)
-                saml2RequestResponse.SignatureAlgorithm = string.IsNullOrWhiteSpace(saml2RequestResponse.Config.SignatureValidationAlgorithm) ? saml2RequestResponse.Config.SignatureAlgorithm : saml2RequestResponse.Config.SignatureValidationAlgorithm;
-            if (saml2RequestResponse.XmlCanonicalizationMethod == null)
-                saml2RequestResponse.XmlCanonicalizationMethod = saml2RequestResponse.Config.XmlCanonicalizationMethod;
+            if (saml2RequestResponse.SignatureValidationAlgorithms == null || saml2RequestResponse.SignatureValidationAlgorithms.Count() < 1)
+                saml2RequestResponse.SignatureValidationAlgorithms = GetSignatureValidationAlgorithms(saml2RequestResponse);
+            if (saml2RequestResponse.XmlCanonicalizationValidationMethods == null || saml2RequestResponse.XmlCanonicalizationValidationMethods.Count() < 1)
+                saml2RequestResponse.XmlCanonicalizationValidationMethods = GetXmlCanonicalizationValidationMethods(saml2RequestResponse);
 
-            if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => c.GetSamlPublicKey(saml2RequestResponse.SignatureAlgorithm) == null) > 0)
+            foreach (var signatureValidationAlgorithm in saml2RequestResponse.SignatureValidationAlgorithms)
+            {
+                Cryptography.SignatureAlgorithm.ValidateAlgorithm(signatureValidationAlgorithm);
+            }
+
+            foreach (var xmlCanonicalizationValidationMethod in saml2RequestResponse.XmlCanonicalizationValidationMethods)
+            {
+                Cryptography.XmlCanonicalizationMethod.ValidateCanonicalizationMethod(xmlCanonicalizationValidationMethod);
+            }
+
+            if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => !saml2RequestResponse.SignatureValidationAlgorithms.Any(a => c.GetSamlPublicKey(a) != null)) > 0)
                 throw new ArgumentException("No matching public key present in at least Signature Validation Certificate.");
+        }
+
+        private IEnumerable<string> GetSignatureValidationAlgorithms(Saml2Request saml2RequestResponse)
+        {
+            if (!string.IsNullOrWhiteSpace(saml2RequestResponse.SignatureAlgorithm))
+            {
+                return new[] { saml2RequestResponse.SignatureAlgorithm };
+            }
+
+            if (saml2RequestResponse.Config.SignatureValidationAlgorithms != null && saml2RequestResponse.Config.SignatureValidationAlgorithms.Count > 0)
+            {
+                return saml2RequestResponse.Config.SignatureValidationAlgorithms;
+            }
+
+            return new[] { saml2RequestResponse.Config.SignatureAlgorithm };
+        }
+
+        private IEnumerable<string> GetXmlCanonicalizationValidationMethods(Saml2Request saml2RequestResponse)
+        {
+            if (!string.IsNullOrWhiteSpace(saml2RequestResponse.XmlCanonicalizationMethod))
+            {
+                return new[] { saml2RequestResponse.XmlCanonicalizationMethod };
+            }
+
+            if (saml2RequestResponse.Config.XmlCanonicalizationValidationMethods != null && saml2RequestResponse.Config.XmlCanonicalizationValidationMethods.Count > 0)
+            {
+                return saml2RequestResponse.Config.XmlCanonicalizationValidationMethods;
+            }
+
+            return new[] { saml2RequestResponse.Config.XmlCanonicalizationMethod };
         }
 
         protected abstract Saml2Request UnbindInternal(HttpRequest request, Saml2Request saml2RequestResponse, string messageName);

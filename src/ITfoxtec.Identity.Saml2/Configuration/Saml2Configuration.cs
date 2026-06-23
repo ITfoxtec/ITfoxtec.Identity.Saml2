@@ -31,13 +31,18 @@ namespace ITfoxtec.Identity.Saml2
 
         public string SignatureAlgorithm { get; set; } = Saml2SecurityAlgorithms.RsaSha256Signature;
 
-        /// <summary>
-        /// Signature algorithm used only to validate signatures. If null or white space, SignatureAlgorithm is used.
-        /// </summary>
-        public string SignatureValidationAlgorithm { get; set; }
-
         // Optionally set a canonicalization method, default "http://www.w3.org/2001/10/xml-exc-c14n#". E.g, set "http://www.w3.org/2001/10/xml-exc-c14n#WithComments" for Amazon.
         public string XmlCanonicalizationMethod { get; set; } = SignedXml.XmlDsigExcC14NTransformUrl;        
+
+        /// <summary>
+        /// Signature algorithms accepted when validating signatures. If empty, SignatureAlgorithm is used.
+        /// </summary>
+        public List<string> SignatureValidationAlgorithms { get; set; } = new List<string>();
+
+        /// <summary>
+        /// XML canonicalization methods accepted when validating signatures. If empty, XmlCanonicalizationMethod is used.
+        /// </summary>
+        public List<string> XmlCanonicalizationValidationMethods { get; set; } = new List<string>();
 
         public X509Certificate2 SigningCertificate { get; set; }
         [Obsolete("DecryptionCertificate are obsolete to support multiple decryption certificates. Use DecryptionCertificates instead.")]
