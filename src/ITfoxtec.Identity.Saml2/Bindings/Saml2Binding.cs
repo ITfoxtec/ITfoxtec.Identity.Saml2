@@ -113,7 +113,7 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             if (saml2RequestResponse.SignatureValidationCertificates != null && saml2RequestResponse.SignatureValidationCertificates.Count(c => !saml2RequestResponse.SignatureValidationAlgorithms.Any(a => c.GetSamlPublicKey(a) != null)) > 0)
-                throw new ArgumentException("No matching public key present in at least Signature Validation Certificate.");
+                throw new ArgumentException("No matching public key present in at least Signature Validation Certificate matching any of the Signature Validation Algorithm.");
         }
 
         private IEnumerable<string> GetSignatureValidationAlgorithms(Saml2Request saml2RequestResponse)

@@ -48,6 +48,10 @@ namespace TestIdPCore
                 {
                     throw new Exception("The IdP signing certificates has expired.");
                 }
+                if (saml2Configuration.SigningCertificate.GetSamlPrivateKey(saml2Configuration.SignatureAlgorithm) == null)
+                {
+                    throw new Exception($"The IdP signing certificate does not support the configured SignatureAlgorithm '{saml2Configuration.SignatureAlgorithm}'.");
+                }
                 saml2Configuration.AllowedAudienceUris.Add(saml2Configuration.Issuer);
 
                 saml2Configuration.IncludeKeyInfoName = true;
@@ -63,13 +67,11 @@ namespace TestIdPCore
 
         private static X509Certificate2 CreateEcdsaSigningCertificate(Saml2Configuration saml2Configuration)
         {
-            using (var ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256))
-            {
-                var request = new CertificateRequest($"CN={saml2Configuration.Issuer}", ecdsa, HashAlgorithmName.SHA256);
-                request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, critical: true));
-                request.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(request.PublicKey, critical: false));
-                return request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-5), DateTimeOffset.UtcNow.AddDays(365));
-            }
+            var ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+            var request = new CertificateRequest($"CN={saml2Configuration.Issuer}", ecdsa, HashAlgorithmName.SHA256);
+            request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, critical: true));
+            request.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(request.PublicKey, critical: false));
+            return request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-5), DateTimeOffset.UtcNow.AddDays(365));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -37,11 +37,27 @@ namespace ITfoxtec.Identity.Saml2
         /// <summary>
         /// Signature algorithms accepted when validating signatures. If empty, SignatureAlgorithm is used.
         /// </summary>
+        /// <remarks>
+        /// Supported values:
+        /// http://www.w3.org/2000/09/xmldsig#rsa-sha1
+        /// http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+        /// http://www.w3.org/2001/04/xmldsig-more#rsa-sha384
+        /// http://www.w3.org/2001/04/xmldsig-more#rsa-sha512
+        /// http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1
+        /// http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256
+        /// http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384
+        /// http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512
+        /// </remarks>
         public List<string> SignatureValidationAlgorithms { get; set; } = new List<string>();
 
         /// <summary>
         /// XML canonicalization methods accepted when validating signatures. If empty, XmlCanonicalizationMethod is used.
         /// </summary>
+        /// <remarks>
+        /// Supported values:
+        /// http://www.w3.org/2001/10/xml-exc-c14n#
+        /// http://www.w3.org/2001/10/xml-exc-c14n#WithComments
+        /// </remarks>
         public List<string> XmlCanonicalizationValidationMethods { get; set; } = new List<string>();
 
         public X509Certificate2 SigningCertificate { get; set; }
