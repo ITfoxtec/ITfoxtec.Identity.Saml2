@@ -49,10 +49,10 @@ namespace TestWebAppCore
                 else
                 {
                     saml2Configuration.SigningCertificate = CertificateUtil.Load(AppEnvironment.MapToPhysicalFilePath(Configuration["Saml2:SigningCertificateFile"]), Configuration["Saml2:SigningCertificatePassword"]);
+                    //Alternatively load the certificate by thumbprint from the machines Certificate Store.
+                    //saml2Configuration.SigningCertificate = CertificateUtil.Load(StoreName.My, StoreLocation.LocalMachine, X509FindType.FindByThumbprint, Configuration["Saml2:SigningCertificateThumbprint"]);
+                    saml2Configuration.DecryptionCertificates.Add(saml2Configuration.SigningCertificate);
                 }
-                //saml2Configuration.DecryptionCertificates.Add(saml2Configuration.SigningCertificate);
-                //Alternatively load the certificate by thumbprint from the machines Certificate Store.
-                //saml2Configuration.SigningCertificate = CertificateUtil.Load(StoreName.My, StoreLocation.LocalMachine, X509FindType.FindByThumbprint, Configuration["Saml2:SigningCertificateThumbprint"]);
                 if (saml2Configuration.SigningCertificate.GetSamlPrivateKey(saml2Configuration.SignatureAlgorithm) == null)
                 {
                     throw new Exception($"The SP signing certificate does not support the configured SignatureAlgorithm '{saml2Configuration.SignatureAlgorithm}'.");
