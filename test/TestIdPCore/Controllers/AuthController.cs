@@ -243,6 +243,8 @@ namespace TestIdPCore.Controllers
                 ArtifactResolutionService = config.ArtifactResolutionService,
                 SigningCertificate = config.SigningCertificate,
                 SignatureAlgorithm = config.SignatureAlgorithm,
+                EncryptionAlgorithm = config.EncryptionAlgorithm,
+                KeyEncryptionAlgorithm = config.KeyEncryptionAlgorithm,
                 CertificateValidationMode = config.CertificateValidationMode,
                 RevocationMode = config.RevocationMode,
                 IncludeKeyInfoName = config.IncludeKeyInfoName,
