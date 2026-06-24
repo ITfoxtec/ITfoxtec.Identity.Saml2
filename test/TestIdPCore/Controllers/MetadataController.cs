@@ -21,35 +21,37 @@ namespace TestWebApp.Controllers
 
         public IActionResult Index()
         {
-            var entityDescriptor = new EntityDescriptor(config);
-            entityDescriptor.ValidUntil = 365;
-            entityDescriptor.IdPSsoDescriptor = new IdPSsoDescriptor
+            var entityDescriptor = new EntityDescriptor(config)
             {
-                WantAuthnRequestsSigned = config.SignAuthnRequest,
-                SigningCertificates =
-                [
-                    config.SigningCertificate
-                ],
-                //EncryptionCertificates = config.DecryptionCertificates,
-                SingleSignOnServices =
-                [
-                    new SingleSignOnService { Binding = ProtocolBindings.HttpRedirect, Location = config.SingleSignOnDestination }
-                ],
-                SingleLogoutServices =
-                [
-                    new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = config.SingleLogoutDestination }
-                ],
-                ArtifactResolutionServices =
-                [
-                    new ArtifactResolutionService { Binding = ProtocolBindings.ArtifactSoap, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
-                ],
-                NameIDFormats = [NameIdentifierFormats.X509SubjectName],
-                Attributes =
-                [
-                    new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.6", friendlyName: "eduPersonPrincipalName"), 
-                    new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.1", new string[] { "member", "student", "employee" }) 
-                ]
+                ValidUntil = 365,
+                IdPSsoDescriptor = new IdPSsoDescriptor
+                {
+                    WantAuthnRequestsSigned = config.SignAuthnRequest,
+                    SigningCertificates =
+                    [
+                        config.SigningCertificate
+                    ],
+                    SingleSignOnServices =
+                    [
+                        new SingleSignOnService { Binding = ProtocolBindings.HttpRedirect, Location = config.SingleSignOnDestination }
+                    ],
+                    SingleLogoutServices =
+                    [
+                        new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = config.SingleLogoutDestination }
+                    ],
+                    ArtifactResolutionServices =
+                    [
+                        new ArtifactResolutionService { Binding = ProtocolBindings.ArtifactSoap, Index = config.ArtifactResolutionService.Index, Location = config.ArtifactResolutionService.Location }
+                    ],
+                    NameIDFormats = [NameIdentifierFormats.X509SubjectName],
+                    Attributes =
+                    [
+                        new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.6", friendlyName: "eduPersonPrincipalName"),
+                        new SamlAttribute("urn:oid:1.3.6.1.4.1.5923.1.1.1.1", ["member", "student", "employee"])
+                    ]
+                }
             };
+
             var organization = new Organization(
                 [new LocalizedNameType("Some Organization", "en")],
                 [new LocalizedNameType("Some Organization Display Name", "en")],

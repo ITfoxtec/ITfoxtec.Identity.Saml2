@@ -187,7 +187,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             }
             else
             {
-                return DecryptKey(encryptedKey.CipherData.CipherValue, EncryptionPrivateKey, (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == XmlEncRSAOAEPUrl));
+                return DecryptKey(encryptedKey.CipherData.CipherValue, EncryptionPrivateKey, (encryptedKey.EncryptionMethod != null) && (encryptedKey.EncryptionMethod.KeyAlgorithm == Saml2EncryptionAlgorithms.XmlEncRSAOAEPUrl));
             }
         }
 
@@ -197,24 +197,40 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             var nsm = new XmlNamespaceManager(xmlElement.OwnerDocument.NameTable);
             nsm.AddNamespace("enc", XmlEncNamespaceUrl);
             nsm.AddNamespace("ds", SignedXml.XmlDsigNamespaceUrl);
+            nsm.AddNamespace("xenc11", "http://www.w3.org/2009/xmlenc11#");
+
             var digestMethodElement = xmlElement.SelectSingleNode("enc:EncryptionMethod/ds:DigestMethod", nsm) as XmlElement;
-            if (digestMethodElement != null)
+            var digestMethod = digestMethodElement?.GetAttribute("Algorithm") ?? Saml2SecurityAlgorithms.Sha256Digest;
+            var mgfElement = xmlElement.SelectSingleNode("enc:EncryptionMethod/xenc11:MGF", nsm) as XmlElement;
+            var mgfMethod = mgfElement?.GetAttribute("Algorithm");
+
+            switch (digestMethod)
             {
-                var method = digestMethodElement.GetAttribute("Algorithm");
-                switch (method)
-                {
-                    case Saml2SecurityAlgorithms.Sha1Digest:
-                        return RSAEncryptionPadding.OaepSHA1;
-                    case Saml2SecurityAlgorithms.Sha256Digest:
-                        return RSAEncryptionPadding.OaepSHA256;
-                    case Saml2SecurityAlgorithms.Sha384Digest:
-                        return RSAEncryptionPadding.OaepSHA384;
-                    case Saml2SecurityAlgorithms.Sha512Digest:
-                        return RSAEncryptionPadding.OaepSHA512;
-                }
+                case Saml2SecurityAlgorithms.Sha1Digest:
+                    ValidateMgfMethod(mgfMethod, Saml2EncryptionAlgorithms.XmlEncMGF1SHA1Url);
+                    return RSAEncryptionPadding.OaepSHA1;
+                case Saml2SecurityAlgorithms.Sha256Digest:
+                    ValidateMgfMethod(mgfMethod, Saml2EncryptionAlgorithms.XmlEncMGF1SHA256Url);
+                    return RSAEncryptionPadding.OaepSHA256;
+                case Saml2SecurityAlgorithms.Sha384Digest:
+                    ValidateMgfMethod(mgfMethod, Saml2EncryptionAlgorithms.XmlEncMGF1SHA384Url);
+                    return RSAEncryptionPadding.OaepSHA384;
+                case Saml2SecurityAlgorithms.Sha512Digest:
+                    ValidateMgfMethod(mgfMethod, Saml2EncryptionAlgorithms.XmlEncMGF1SHA512Url);
+                    return RSAEncryptionPadding.OaepSHA512;
+                default:
+                    throw new NotSupportedException($"Unsupported RSA-OAEP digest method: {digestMethod}");
+            }
+        }
+
+        private static void ValidateMgfMethod(string mgfMethod, string expectedMgfMethod)
+        {
+            if (string.IsNullOrEmpty(mgfMethod) || mgfMethod == expectedMgfMethod)
+            {
+                return;
             }
 
-            return RSAEncryptionPadding.OaepSHA256;
+            throw new NotSupportedException($"Unsupported RSA-OAEP MGF method: {mgfMethod}. Expected {expectedMgfMethod}.");
         }
     }
 }

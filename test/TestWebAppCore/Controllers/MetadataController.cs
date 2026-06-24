@@ -24,31 +24,37 @@ namespace TestWebApp.Controllers
         {
             var defaultSite = new Uri($"{Request.Scheme}://{Request.Host.ToUriComponent()}/");
 
-            var entityDescriptor = new EntityDescriptor(config);
-            entityDescriptor.ValidUntil = 365;
-            entityDescriptor.SPSsoDescriptor = new SPSsoDescriptor
+            var entityDescriptor = new EntityDescriptor(config)
             {
-                AuthnRequestsSigned = config.SignAuthnRequest,
-                WantAssertionsSigned = true,
-                SigningCertificates =
-                [
-                    config.SigningCertificate
-                ],
-                //EncryptionCertificates = config.DecryptionCertificates,
-                SingleLogoutServices =
-                [
-                    new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/SingleLogout"), ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut") }
-                ],
-                NameIDFormats = [NameIdentifierFormats.X509SubjectName],
-                AssertionConsumerServices =
-                [
-                    new AssertionConsumerService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },                    
-                ],
-                AttributeConsumingServices =
-                [
-                    new AttributeConsumingService { ServiceNames = [new LocalizedNameType("Some SP", "en")], RequestedAttributes = CreateRequestedAttributes() }
-                ],
+                ValidUntil = 365,
+                SPSsoDescriptor = new SPSsoDescriptor
+                {
+                    AuthnRequestsSigned = config.SignAuthnRequest,
+                    WantAssertionsSigned = true,
+                    SigningCertificates =
+                    [
+                        config.SigningCertificate
+                    ],
+                    SingleLogoutServices =
+                    [
+                        new SingleLogoutService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/SingleLogout"), ResponseLocation = new Uri(defaultSite, "Auth/LoggedOut") }
+                    ],
+                    NameIDFormats = [NameIdentifierFormats.X509SubjectName],
+                    AssertionConsumerServices =
+                    [
+                        new AssertionConsumerService { Binding = ProtocolBindings.HttpPost, Location = new Uri(defaultSite, "Auth/AssertionConsumerService") },
+                    ],
+                    AttributeConsumingServices =
+                    [
+                        new AttributeConsumingService { ServiceNames = [new LocalizedNameType("Some SP", "en")], RequestedAttributes = CreateRequestedAttributes() }
+                    ],
+                }
             };
+
+            if (config.DecryptionCertificates?.Count > 0)
+            {
+                entityDescriptor.SPSsoDescriptor.EncryptionCertificates = config.DecryptionCertificates;
+            }
 
             var organization = new Organization(
                 [new LocalizedNameType("Some Organization", "en")],

@@ -12,12 +12,29 @@ public class Saml2EncryptedXmlTests
 
     public static IEnumerable<object[]> SupportedEncryptionCombinations()
     {
-        yield return new object[] { Saml2EncryptionAlgorithms.XmlEncAES128Url, Saml2EncryptionAlgorithms.XmlEncRSA15Url };
-        yield return new object[] { Saml2EncryptionAlgorithms.XmlEncAES192Url, Saml2EncryptionAlgorithms.XmlEncRSAOAEPUrl };
-        yield return new object[] { Saml2EncryptionAlgorithms.XmlEncAES256Url, Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url };
-        yield return new object[] { Saml2EncryptionAlgorithms.XmlEncAES128GCMUrl, Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url };
-        yield return new object[] { Saml2EncryptionAlgorithms.XmlEncAES192GCMUrl, Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url };
-        yield return new object[] { Saml2EncryptionAlgorithms.XmlEncAES256GCMUrl, Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url };
+        var dataEncryptionAlgorithms = new[]
+        {
+            Saml2EncryptionAlgorithms.XmlEncAES128Url,
+            Saml2EncryptionAlgorithms.XmlEncAES192Url,
+            Saml2EncryptionAlgorithms.XmlEncAES256Url,
+            Saml2EncryptionAlgorithms.XmlEncAES128GCMUrl,
+            Saml2EncryptionAlgorithms.XmlEncAES192GCMUrl,
+            Saml2EncryptionAlgorithms.XmlEncAES256GCMUrl
+        };
+        var keyEncryptionAlgorithms = new[]
+        {
+            Saml2EncryptionAlgorithms.XmlEncRSA15Url,
+            Saml2EncryptionAlgorithms.XmlEncRSAOAEPUrl,
+            Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url
+        };
+
+        foreach (var dataEncryptionAlgorithm in dataEncryptionAlgorithms)
+        {
+            foreach (var keyEncryptionAlgorithm in keyEncryptionAlgorithms)
+            {
+                yield return new object[] { dataEncryptionAlgorithm, keyEncryptionAlgorithm };
+            }
+        }
     }
 
     [Fact]
@@ -74,6 +91,26 @@ public class Saml2EncryptedXmlTests
         Assert.NotNull(assertion);
         Assert.Equal("https://issuer.example.com", assertion!["Issuer", AssertionNamespace]?.InnerText);
         Assert.Equal("subject@example.com", assertion["Subject", AssertionNamespace]?["NameID", AssertionNamespace]?.InnerText);
+    }
+
+    [Fact]
+    public void DecryptDocument_RejectsUnsupportedRsaOaepMgfMethod()
+    {
+        using var rsa = RSA.Create(2048);
+
+        var encryptedData = EncryptAssertion(
+            rsa,
+            Saml2EncryptionAlgorithms.XmlEncAES256Url,
+            Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url);
+        var namespaces = CreateNamespaceManager(encryptedData);
+        var mgfElement = encryptedData.SelectSingleNode("descendant::enc:EncryptedKey/enc:EncryptionMethod/xenc11:MGF", namespaces) as XmlElement;
+        Assert.NotNull(mgfElement);
+        mgfElement!.SetAttribute("Algorithm", Saml2EncryptionAlgorithms.XmlEncMGF1SHA1Url);
+        var encryptedDocument = CreateEncryptedDocument(encryptedData);
+
+        var exception = Assert.Throws<NotSupportedException>(() => new Saml2EncryptedXml(encryptedDocument, rsa).DecryptDocument());
+
+        Assert.Contains("Unsupported RSA-OAEP MGF method", exception.Message);
     }
 
     [Theory]
