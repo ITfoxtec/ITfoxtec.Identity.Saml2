@@ -20,9 +20,5 @@
         public const string XmlEncAES128KeyWrapUrl = "http://www.w3.org/2001/04/xmlenc#kw-aes128";
         public const string XmlEncAES192KeyWrapUrl = "http://www.w3.org/2001/04/xmlenc#kw-aes192";
         public const string XmlEncAES256KeyWrapUrl = "http://www.w3.org/2001/04/xmlenc#kw-aes256";
-
-        // Message Digest
-        public const string XmlEncSHA256Url = "http://www.w3.org/2001/04/xmlenc#sha256";
-        public const string XmlEncSHA512Url = "http://www.w3.org/2001/04/xmlenc#sha512";
     }
 }
