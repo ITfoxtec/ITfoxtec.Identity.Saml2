@@ -7,31 +7,40 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     {
         public static void ValidateAlgorithm(string encryptionAlgorithm)
         {
+            ValidateDataEncryptionAlgorithm(encryptionAlgorithm);
+        }
+
+        public static void ValidateDataEncryptionAlgorithm(string encryptionAlgorithm)
+        {
             if (string.IsNullOrWhiteSpace(encryptionAlgorithm)) throw new ArgumentNullException(nameof(encryptionAlgorithm));
 
             // --- Symmetric Block Encryption ---
             if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES128Url, StringComparison.InvariantCulture) || 
-                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES256Url, StringComparison.InvariantCulture))
+                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES192Url, StringComparison.InvariantCulture) ||
+                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES256Url, StringComparison.InvariantCulture) ||
+                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES128GCMUrl, StringComparison.InvariantCulture) ||
+                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES192GCMUrl, StringComparison.InvariantCulture) ||
+                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES256GCMUrl, StringComparison.InvariantCulture))
             {
                 return;
             }
-            else if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES192Url, StringComparison.InvariantCulture))
-            {
-                throw new NotSupportedException("AES192 is rarely supported in SAML deployments. Use AES128 or AES256 instead.");
-            }
 
-            // --- Symmetric Key Wrap ---
-            else if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES128KeyWrapUrl, StringComparison.InvariantCulture) ||
-                     encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES256KeyWrapUrl, StringComparison.InvariantCulture))
+            throw new NotSupportedException($"Unsupported data encryption algorithm: {encryptionAlgorithm}");
+        }
+
+        public static void ValidateKeyEncryptionAlgorithm(string keyEncryptionAlgorithm)
+        {
+            if (string.IsNullOrWhiteSpace(keyEncryptionAlgorithm)) throw new ArgumentNullException(nameof(keyEncryptionAlgorithm));
+
+            // --- Key Transport ---
+            if (keyEncryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncRSA15Url, StringComparison.InvariantCulture) ||
+                keyEncryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncRSAOAEPUrl, StringComparison.InvariantCulture) ||
+                keyEncryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncRSAOAEP11Url, StringComparison.InvariantCulture))
             {
                 return;
             }
-            else if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES192KeyWrapUrl, StringComparison.InvariantCulture))
-            {
-                throw new NotSupportedException("AES192 Key Wrap is rarely supported. Use AES128 or AES256 Key Wrap instead.");
-            }
 
-            throw new NotSupportedException($"Unsupported encryption algorithm: {encryptionAlgorithm}");
+            throw new NotSupportedException($"Unsupported key encryption algorithm: {keyEncryptionAlgorithm}");
         }
     }
 }
