@@ -388,8 +388,7 @@ namespace ITfoxtec.Identity.Saml2
                 return;
             }
 
-            //Validate EncryptionMethod
-            Cryptography.EncryptionAlgorithm.ValidateAlgorithm(Config.EncryptionAlgorithm);
+            if (string.IsNullOrWhiteSpace(EncryptionAlgorithm)) throw new ArgumentNullException("EncryptionAlgorithm property");
 
             var envelope = new XElement(Schemas.Saml2Constants.AssertionNamespaceX + Schemas.Saml2Constants.Message.EncryptedAssertion);
             var status = XmlDocument.DocumentElement[Schemas.Saml2Constants.Message.Status, Schemas.Saml2Constants.ProtocolNamespace.OriginalString];

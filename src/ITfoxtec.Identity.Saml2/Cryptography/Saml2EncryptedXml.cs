@@ -39,23 +39,22 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             EncryptionPrivateKey = encryptionPrivateKey;
         }
 
-        public virtual XmlElement EncryptAassertion(XmlElement assertionElement, string encryptionMethod)
+        public virtual XmlElement EncryptAassertion(XmlElement assertionElement, string encryptionMethod = Saml2EncryptionAlgorithms.XmlEncAES256Url)
         {
+            EncryptionAlgorithm.ValidateAlgorithm(encryptionMethod);
+
             using (var encryptionAlgorithm = Aes.Create())
             {
-                encryptionMethod = string.IsNullOrEmpty(encryptionMethod)
-                    ? Saml2EncryptionAlgorithms.XmlEncAES256Url
-                    : encryptionMethod;
                 switch (encryptionMethod)
                 {
                     case Saml2EncryptionAlgorithms.XmlEncAES128Url:
                     case Saml2EncryptionAlgorithms.XmlEncAES128KeyWrapUrl:
                         encryptionAlgorithm.KeySize = 128; break;
-                    case Saml2EncryptionAlgorithms.XmlEncAES192Url:
-                    case Saml2EncryptionAlgorithms.XmlEncAES192KeyWrapUrl:
-                        encryptionAlgorithm.KeySize = 192; break;
-                    default:
+                    case Saml2EncryptionAlgorithms.XmlEncAES256Url:
+                    case Saml2EncryptionAlgorithms.XmlEncAES256KeyWrapUrl:
                         encryptionAlgorithm.KeySize = 256; break;
+                    default:
+                        throw new NotSupportedException($"Unsupported encryption algorithm: {encryptionMethod}");
                 }
 
                 var encryptedData = new EncryptedData

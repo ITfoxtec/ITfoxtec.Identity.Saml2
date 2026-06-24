@@ -7,12 +7,11 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
     {
         public static void ValidateAlgorithm(string encryptionAlgorithm)
         {
+            if (string.IsNullOrWhiteSpace(encryptionAlgorithm)) throw new ArgumentNullException(nameof(encryptionAlgorithm));
+
             // --- Symmetric Block Encryption ---
-            if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES128Url, StringComparison.InvariantCulture))
-            {
-                return;
-            }
-            else if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES256Url, StringComparison.InvariantCulture))
+            if (encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES128Url, StringComparison.InvariantCulture) || 
+                encryptionAlgorithm.Equals(Saml2EncryptionAlgorithms.XmlEncAES256Url, StringComparison.InvariantCulture))
             {
                 return;
             }
@@ -31,6 +30,7 @@ namespace ITfoxtec.Identity.Saml2.Cryptography
             {
                 throw new NotSupportedException("AES192 Key Wrap is rarely supported. Use AES128 or AES256 Key Wrap instead.");
             }
+
             throw new NotSupportedException($"Unsupported encryption algorithm: {encryptionAlgorithm}");
         }
     }
