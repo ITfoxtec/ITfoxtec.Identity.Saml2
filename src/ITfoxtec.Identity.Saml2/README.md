@@ -1,6 +1,6 @@
 # ITfoxtec.Identity.Saml2
 
-ITfoxtec.Identity.Saml2 is an open-source SAML 2.0 / SAML-P library for .NET applications that need to act as a Service Provider (SP), Relying Party (RP), or Identity Provider (IdP).
+ITfoxtec.Identity.Saml2 is the open-source SAML 2.0 / SAML-P library for .NET applications that need to act as a Service Provider (SP), Relying Party (RP), or Identity Provider (IdP).
 
 The package is maintained by [FoxIDs](https://www.foxids.com). The ITfoxtec name remains in the package and namespaces for compatibility with existing integrations.
 
@@ -10,21 +10,13 @@ The package is maintained by [FoxIDs](https://www.foxids.com). The ITfoxtec name
 - SP-initiated and IdP-initiated sign-on.
 - Message signing, signature validation, and encrypted assertions.
 - Redirect Binding, POST Binding, Artifact Binding, and SOAP support.
-- Authn Request, Authn Response, Logout Request, and Logout Response handling.
 - Signing and encryption certificates, including Azure Key Vault scenarios.
+- Authn Request, Authn Response, Logout Request, and Logout Response handling.
 - RSA SHA1, SHA256, SHA384, SHA512, and RSA-PSS SHA256 message signing.
 - ECDSA SHA256, SHA384, and SHA512 signing and signature validation on supported modern .NET targets.
 - Signature algorithm and XML canonicalization validation allowlists for accepting multiple incoming signing profiles.
 - Configurable assertion encryption with AES-CBC, AES-GCM, RSA key transport, and XML Encryption 1.1 RSA-OAEP support.
-- Tested interoperability with Microsoft Entra ID (Azure AD), AD FS, Azure AD B2C, Danish NemLog-in3 (MitID), Danish Context Handler (Faelleskommunal Adgangsstyring), and other IdPs and RPs.
-
-## Packages
-
-| Package | Purpose |
-| ------- | ------- |
-| [ITfoxtec.Identity.Saml2](https://www.nuget.org/packages/ITfoxtec.Identity.Saml2) | Core SAML 2.0 protocol implementation. |
-| [ITfoxtec.Identity.Saml2.MvcCore](https://www.nuget.org/packages/ITfoxtec.Identity.Saml2.MvcCore) | ASP.NET Core MVC integration helpers. |
-| [ITfoxtec.Identity.Saml2.Mvc](https://www.nuget.org/packages/ITfoxtec.Identity.Saml2.Mvc) | ASP.NET MVC 5 integration helpers for .NET Framework. |
+- Interoperability testing with Microsoft Entra ID (Azure AD), AD FS, Azure AD B2C, Danish NemLog-in3 (MitID), Danish Context Handler (Faelleskommunal Adgangsstyring), and other IdPs and RPs.
 
 ## Supported frameworks
 
@@ -38,46 +30,11 @@ The package is maintained by [FoxIDs](https://www.foxids.com). The ITfoxtec name
 
 ## Getting started
 
-Install the core package:
-
 ```bash
 dotnet add package ITfoxtec.Identity.Saml2
 ```
 
-For ASP.NET Core MVC applications, install:
-
-```bash
-dotnet add package ITfoxtec.Identity.Saml2.MvcCore
-```
-
-For ASP.NET MVC 5 applications, install:
-
-```powershell
-Install-Package ITfoxtec.Identity.Saml2.Mvc
-```
-
-Start with the [project page](https://www.foxids.com/components/identitysaml2), [test samples](test), and the ASP.NET Core sample [TestWebAppCore](test/TestWebAppCore).
-
-## Build and test
-
-Restore and build the solution:
-
-```bash
-dotnet restore ITfoxtec.Identity.Saml2.sln
-dotnet build ITfoxtec.Identity.Saml2.sln -c Release
-```
-
-Run the unit tests:
-
-```bash
-dotnet test UnitTest/ITfoxtec.Identity.Saml2.Tests/ITfoxtec.Identity.Saml2.Tests.csproj
-```
-
-Run the ASP.NET Core sample application:
-
-```bash
-dotnet run --project test/TestWebAppCore/TestWebAppCore.csproj
-```
+Start with the [project page](https://www.foxids.com/components/identitysaml2), [test samples](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/tree/development/test), and [GitHub source](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2). The ASP.NET Core MVC helper package is available as [ITfoxtec.Identity.Saml2.MvcCore](https://www.nuget.org/packages/ITfoxtec.Identity.Saml2.MvcCore), and the ASP.NET MVC 5 helper package is available as [ITfoxtec.Identity.Saml2.Mvc](https://www.nuget.org/packages/ITfoxtec.Identity.Saml2.Mvc).
 
 ## When FoxIDs is relevant
 
@@ -93,14 +50,10 @@ FoxIDs is relevant when you need:
 - Migration help, architecture guidance, and paid technical support.
 - [SAML 2.0 tool](https://www.foxids.com/tools/saml) for decoding messages and [certificate tool](https://www.foxids.com/tools/certificate) for creating test certificates.
 
-FoxIDs uses ITfoxtec.Identity.Saml2 for SAML 2.0 protocol handling. These resources are optional; the packages can be used directly with standards-based SAML 2.0 providers and relying parties.
+FoxIDs uses ITfoxtec.Identity.Saml2 for SAML 2.0 protocol handling. These resources are optional; the package can be used directly with standards-based SAML 2.0 providers and relying parties.
 
 ## Support
 
 Use [GitHub issues](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/issues) for bugs and feature requests. For implementation questions, use [Stack Overflow](https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2) with the `itfoxtec-identity-saml2` tag.
 
 Commercial help and custom samples are available from [FoxIDs](https://www.foxids.com) by contacting [anders@foxids.com](mailto:anders@foxids.com).
-
-## License
-
-This project is released under the [BSD-3-Clause license](LICENSE).

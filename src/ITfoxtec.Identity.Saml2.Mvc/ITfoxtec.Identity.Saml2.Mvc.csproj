@@ -10,36 +10,27 @@
     <AssemblyName>ITfoxtec.Identity.Saml2.Mvc</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2.Mvc</PackageId>
     <Title>ITfoxtec Identity SAML 2.0 MVC</Title>
-    <Description>ASP.NET MVC is supported by the ITfoxtec Identity SAML2 MVC package which helps to integrate the ITfoxtec Identity SAML2 package and add support for SAML-P and SAML 2.0 tokens.
-
-      Support .NET Framework 4.8
-
-Support message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
-
-Support redirect binding, post binding and artifact binding.
-
-Support signing/encryption certificates in Azure Key Vault.
-
-Tested for compliance with AD FS, Azure AD and Azure AD B2C. 
-
-Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.
-
-The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
+    <Description>ASP.NET MVC 5 integration helpers for implementing SAML 2.0 with ITfoxtec.Identity.Saml2. Adds request conversion and ActionResult helpers for SAML 2.0 login, logout, metadata, Redirect, POST, Artifact, and SOAP responses in .NET Framework MVC applications. Includes the core library's signature validation and configurable assertion encryption support. The README also explains when FoxIDs can handle SAML 2.0 externally for applications that already support OpenID Connect or WS-Federation.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) and Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3 ASP.NET MVC</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.20.0</AssemblyVersion>
-    <FileVersion>4.20.0</FileVersion>
+    <AssemblyVersion>4.20.1</AssemblyVersion>
+    <FileVersion>4.20.1</FileVersion>
     <Copyright>Copyright © 2026</Copyright>
-    <Version>4.20.0</Version>
+    <Version>4.20.1</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <PackageProjectUrl>https://itfoxtec.com/IdentitySaml2</PackageProjectUrl>
+    <PackageProjectUrl>https://www.foxids.com/components/identitysaml2</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2</RepositoryUrl>
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditMode>all</NuGetAuditMode>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ITfoxtec.Identity.Saml2\ITfoxtec.Identity.Saml2.csproj" />

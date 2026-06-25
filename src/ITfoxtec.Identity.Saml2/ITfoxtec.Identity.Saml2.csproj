@@ -10,42 +10,27 @@
     <AssemblyName>ITfoxtec.Identity.Saml2</AssemblyName>
     <PackageId>ITfoxtec.Identity.Saml2</PackageId>
     <Title>ITfoxtec Identity SAML 2.0</Title>
-    <Description>The ITfoxtec Identity Saml2 package adds SAML-P support for both Identity Provider (IdP) and Relying Party (RP) on top of the SAML 2.0 functionality implemented in .NET.
-
-      Support .NET 10.0
-      Support .NET 9.0
-      Support .NET 8.0
-      Support .NET 7.0
-      Support .NET 6.0
-      Support .NET Standard 2.1 
-      Support .NET Framework 4.6.2 and 4.8 
-
-Support message signing and validation as well as decryption is supported. The package supports SAML 2.0 login, logout, single logout and metadata. Both SP Initiated and IdP Initiated sign on is supported. 
-
-Support redirect binding, post binding and artifact binding.
-
-Support signing/encryption certificates in Azure Key Vault.
-
-Tested for compliance with AD FS, Azure AD and Azure AD B2C. 
-
-Support the Danish NemLog-in 2 / OIOSAML 2 and NemLog-in 3 / OIOSAML 3.
-
-The company name ITfoxtec has changed to FoxIDs but the components will keep the ITfoxtec name as part of the component name for now.</Description>
+    <Description>Open-source SAML 2.0 / SAML-P support for .NET and ASP.NET applications acting as an Identity Provider (IdP), Service Provider (SP), or Relying Party (RP). Supports login, logout, metadata, RSA and ECDSA signing, validation allowlists, configurable AES-CBC/AES-GCM assertion encryption, RSA key encryption, decryption, Redirect, POST, and Artifact bindings, Azure Key Vault certificate scenarios, and tested interoperability with Microsoft Entra ID, AD FS, Azure AD B2C, NemLog-in/OIOSAML, and other SAML 2.0 solutions. The README also explains when FoxIDs can handle SAML 2.0 externally for applications that already support OpenID Connect or WS-Federation.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.20.0</AssemblyVersion>
-    <FileVersion>4.20.0</FileVersion>
+    <AssemblyVersion>4.20.1</AssemblyVersion>
+    <FileVersion>4.20.1</FileVersion>
     <Copyright>Copyright © 2026</Copyright>
-    <Version>4.20.0</Version>
+    <Version>4.20.1</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <PackageProjectUrl>https://itfoxtec.com/IdentitySaml2</PackageProjectUrl>
+    <PackageProjectUrl>https://www.foxids.com/components/identitysaml2</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2</RepositoryUrl>
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditMode>all</NuGetAuditMode>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.7" />
