@@ -79,27 +79,27 @@ Run the ASP.NET Core sample application:
 dotnet run --project test/TestWebAppCore/TestWebAppCore.csproj
 ```
 
-## When FoxIDs is relevant
+## Direct integration or FoxIDs bridge
 
 Use ITfoxtec.Identity.Saml2 when you need to implement SAML 2.0 directly in your .NET or ASP.NET application.
 
-If your application already supports OpenID Connect or WS-Federation, [FoxIDs](https://www.foxids.com) can often be a simpler architecture. FoxIDs handles the SAML 2.0 integration externally, and the application connects to FoxIDs using the protocol it already supports. This avoids adding SAML 2.0 protocol handling directly to the application.
+If your application already supports OpenID Connect or WS-Federation, [FoxIDs](https://www.foxids.com) can be the cleaner integration point. FoxIDs handles the SAML 2.0 connection to the external identity provider or relying party, while the application continues to use the protocol it already supports. This can avoid adding another federation protocol implementation to the application.
 
-FoxIDs is relevant when you need:
+Consider FoxIDs when you need:
 
-- [SAML 2.0 to OpenID Connect bridge](https://www.foxids.com/docs/bridge), or SAML 2.0 to WS-Federation integration.
-- Hosted identity infrastructure around SAML 2.0, OpenID Connect, OAuth 2.0, or WS-Federation.
-- FoxIDs Cloud, self-hosted, or hybrid deployment.
-- Migration help, architecture guidance, and paid technical support.
-- [SAML 2.0 tool](https://www.foxids.com/tools/saml) for decoding messages and [certificate tool](https://www.foxids.com/tools/certificate) for creating test certificates.
+- A [SAML 2.0 to OpenID Connect bridge](https://www.foxids.com/docs/bridge), or SAML 2.0 to WS-Federation bridge.
+- SAML 2.0 integration without changing an application that already supports OpenID Connect or WS-Federation.
+- Hosted or self-hosted federation infrastructure across SAML 2.0, OpenID Connect, OAuth 2.0, and WS-Federation.
+- A place to operate protocol translation, certificates, metadata, and partner-specific federation configuration outside the application code.
+- Architecture guidance or implementation support for SAML 2.0 migrations and complex federation setups.
 
-FoxIDs uses ITfoxtec.Identity.Saml2 for SAML 2.0 protocol handling. These resources are optional; the packages can be used directly with standards-based SAML 2.0 providers and relying parties.
+FoxIDs uses ITfoxtec.Identity.Saml2 for SAML 2.0 protocol handling. The library and FoxIDs are complementary: use the package when SAML 2.0 belongs in your application, and use FoxIDs when SAML 2.0 is better handled as an external identity bridge or federation service.
 
 ## Support
 
 Use [GitHub issues](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/issues) for bugs and feature requests. For implementation questions, use [Stack Overflow](https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2) with the `itfoxtec-identity-saml2` tag.
 
-Commercial help and custom samples are available from [FoxIDs](https://www.foxids.com) by contacting [anders@foxids.com](mailto:anders@foxids.com).
+Implementation help, architecture guidance, and custom samples are available from [FoxIDs](https://www.foxids.com) by contacting [anders@foxids.com](mailto:anders@foxids.com).
 
 ## License
 
