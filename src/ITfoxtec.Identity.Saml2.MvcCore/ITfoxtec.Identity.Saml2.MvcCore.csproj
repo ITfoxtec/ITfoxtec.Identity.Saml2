@@ -41,7 +41,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net10.0'">
     <DefineConstants>NET100;NET</DefineConstants>
