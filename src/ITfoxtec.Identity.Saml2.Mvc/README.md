@@ -45,4 +45,4 @@ The package depends on [ITfoxtec.Identity.Saml2](https://www.nuget.org/packages/
 
 Use [GitHub issues](https://github.com/ITfoxtec/ITfoxtec.Identity.Saml2/issues) for bugs and feature requests. For implementation questions, use [Stack Overflow](https://stackoverflow.com/questions/tagged/itfoxtec-identity-saml2) with the `itfoxtec-identity-saml2` tag.
 
-Implementation help, architecture guidance, and custom samples are available from [FoxIDs](https://www.foxids.com) by contacting [support@foxids.com](mailto:support@foxids.com).
+Implementation help, architecture guidance, and custom samples are available from [FoxIDs](https://www.foxids.com) by contacting [contact@foxids.com](mailto:contact@foxids.com).
