@@ -17,3 +17,17 @@ Automated coverage lives in `UnitTest/` and should be extended for behavior-chan
 
 ## Security & Configuration Tips
 Do not commit secrets or real certificates. Sample apps should load configuration via environment variables, `dotnet user-secrets`, or Azure Key Vault, matching the `TestWebAppCoreAzureKeyVault` example. When sharing traces, sanitize assertions, entity IDs, and thumbprints. Validate new bindings against trusted IdPs (Azure AD, AD FS, NemLog-in) before merging to avoid regressions for both SP and IdP consumers.
+
+## Release / NuGet
+- Releases are published through `.github/workflows/release-nuget.yml` when a GitHub Release is published.
+- The GitHub release must target `main`; make sure `main` contains the release commit before publishing.
+- The GitHub release tag must match `<Version>` in all three package projects exactly:
+  - `src/ITfoxtec.Identity.Saml2/ITfoxtec.Identity.Saml2.csproj`
+  - `src/ITfoxtec.Identity.Saml2.Mvc/ITfoxtec.Identity.Saml2.Mvc.csproj`
+  - `src/ITfoxtec.Identity.Saml2.MvcCore/ITfoxtec.Identity.Saml2.MvcCore.csproj`
+- `<AssemblyVersion>` and `<FileVersion>` must match `<Version>` in all three package projects.
+- Keep the three package projects on the same version for a release.
+- GitHub prerelease status must match the NuGet version: prereleases require a SemVer suffix such as `4.20.2-beta.1`; stable releases must not have a suffix.
+- NuGet publishing uses Trusted Publishing through `NuGet/login@v1`; do not add a long-lived NuGet API key.
+- The GitHub Actions secret `NUGET_USER` must contain the NuGet package owner name.
+- NuGet packages cannot be overwritten. If a version has been published, bump all three package versions before preparing another release.
