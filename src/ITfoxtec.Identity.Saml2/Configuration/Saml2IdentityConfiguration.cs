@@ -56,6 +56,9 @@ namespace ITfoxtec.Identity.Saml2.Configuration
             {
                 configuration.TokenReplayCacheExpirationPeriod = config.TokenReplayCacheExpirationPeriod.Value;
             }
+
+            configuration.MaxClockSkew = config.ClockSkew;
+
             configuration.Initialize();
 #else
             configuration.SaveSigninToken = config.SaveBootstrapContext;
@@ -77,6 +80,8 @@ namespace ITfoxtec.Identity.Saml2.Configuration
                 RevocationMode = config.RevocationMode,
             };
             configuration.DecryptionCertificates = config.DecryptionCertificates;
+            configuration.ClockSkew = config.ClockSkew;
+
             SetCustomCertificateValidator(configuration, config);
 #endif
 

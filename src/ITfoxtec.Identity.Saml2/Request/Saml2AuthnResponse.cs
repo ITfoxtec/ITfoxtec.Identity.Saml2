@@ -326,11 +326,27 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("SubjectConfirmationData Not Found.");
             }
 
+            var notBefore = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotBefore].GetValueOrNull<DateTimeOffset>();
+            if (IsNotBeforeWithSkew(notBefore))
+            {
+                throw new Saml2RequestException($"Assertion has expired. Assertion valid NotBefore {notBefore}.");
+            }
+
             var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
-            if (notOnOrAfter < DateTimeOffset.UtcNow)
+            if (IsNotOnOrAfterWithSkew(notOnOrAfter))
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");
             }
+        }
+
+        private bool IsNotOnOrAfterWithSkew(DateTimeOffset notOnOrAfter)
+        {
+            return notOnOrAfter < DateTimeOffset.UtcNow.Add(Config.ClockSkew);
+        }
+
+        private bool IsNotBeforeWithSkew(DateTimeOffset notBefore)
+        {
+            return notBefore >= DateTimeOffset.UtcNow.Subtract(Config.ClockSkew);
         }
 
 #if NETFULL
