@@ -333,7 +333,11 @@ namespace ITfoxtec.Identity.Saml2
             }
 
             var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset?>();
-            if (notOnOrAfter != null && NowIsOnOrAfter(notOnOrAfter.Value))
+            if (notOnOrAfter == null)
+            {
+                throw new Saml2RequestException("SubjectConfirmationData NotOnOrAfter Not Found.");
+            }
+            if (NowIsOnOrAfter(notOnOrAfter.Value))
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");
             }

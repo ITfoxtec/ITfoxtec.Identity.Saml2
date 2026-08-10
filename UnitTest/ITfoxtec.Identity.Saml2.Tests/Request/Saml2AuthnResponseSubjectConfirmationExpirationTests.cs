@@ -36,11 +36,13 @@ public class Saml2AuthnResponseSubjectConfirmationExpirationTests
     }
 
     [Fact]
-    public void ValidateExpiration_NoNotBeforeOrNotOnOrAfter_DoesNotThrow()
+    public void ValidateExpiration_MissingNotOnOrAfter_Throws()
     {
         var response = new TestSaml2AuthnResponse(new Saml2Configuration());
 
-        response.ValidateExpiration(CreateSubjectElement(notBefore: null, notOnOrAfter: null));
+        var exception = Assert.Throws<Saml2RequestException>(() =>
+            response.ValidateExpiration(CreateSubjectElement(notBefore: null, notOnOrAfter: null)));
+        Assert.Contains("NotOnOrAfter", exception.Message);
     }
 
     [Fact]
@@ -49,8 +51,9 @@ public class Saml2AuthnResponseSubjectConfirmationExpirationTests
         var config = new Saml2Configuration { ClockSkew = TimeSpan.FromMinutes(5) };
         var response = new TestSaml2AuthnResponse(config);
         var notBefore = DateTimeOffset.UtcNow.AddMinutes(3);
+        var notOnOrAfter = DateTimeOffset.UtcNow.AddMinutes(5);
 
-        response.ValidateExpiration(CreateSubjectElement(notBefore, notOnOrAfter: null));
+        response.ValidateExpiration(CreateSubjectElement(notBefore, notOnOrAfter));
     }
 
     [Fact]
@@ -59,9 +62,10 @@ public class Saml2AuthnResponseSubjectConfirmationExpirationTests
         var config = new Saml2Configuration { ClockSkew = TimeSpan.FromMinutes(5) };
         var response = new TestSaml2AuthnResponse(config);
         var notBefore = DateTimeOffset.UtcNow.AddMinutes(8);
+        var notOnOrAfter = DateTimeOffset.UtcNow.AddMinutes(20);
 
         var exception = Assert.Throws<Saml2RequestException>(() =>
-            response.ValidateExpiration(CreateSubjectElement(notBefore, notOnOrAfter: null)));
+            response.ValidateExpiration(CreateSubjectElement(notBefore, notOnOrAfter)));
         Assert.Contains("not valid yet", exception.Message);
     }
 
