@@ -326,27 +326,27 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("SubjectConfirmationData Not Found.");
             }
 
-            var notBefore = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotBefore].GetValueOrNull<DateTimeOffset>();
-            if (IsNotBeforeWithSkew(notBefore))
+            var notBefore = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotBefore].GetValueOrNull<DateTimeOffset?>();
+            if (notBefore != null && NowIsBefore(notBefore.Value))
             {
-                throw new Saml2RequestException($"Assertion has expired. Assertion valid NotBefore {notBefore}.");
+                throw new Saml2RequestException($"Assertion is not valid yet. Assertion valid NotBefore {notBefore}.");
             }
 
-            var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
-            if (IsNotOnOrAfterWithSkew(notOnOrAfter))
+            var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset?>();
+            if (notOnOrAfter != null && NowIsOnOrAfter(notOnOrAfter.Value))
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");
             }
         }
 
-        private bool IsNotOnOrAfterWithSkew(DateTimeOffset notOnOrAfter)
+        private bool NowIsOnOrAfter(DateTimeOffset notOnOrAfter)
         {
-            return notOnOrAfter < DateTimeOffset.UtcNow.Add(Config.ClockSkew);
+            return notOnOrAfter < DateTimeOffset.UtcNow.Subtract(Config.ClockSkew);
         }
 
-        private bool IsNotBeforeWithSkew(DateTimeOffset notBefore)
+        private bool NowIsBefore(DateTimeOffset notBefore)
         {
-            return notBefore >= DateTimeOffset.UtcNow.Subtract(Config.ClockSkew);
+            return notBefore > DateTimeOffset.UtcNow.Add(Config.ClockSkew);
         }
 
 #if NETFULL

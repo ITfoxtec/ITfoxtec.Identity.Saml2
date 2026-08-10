@@ -6,7 +6,6 @@ using System.ServiceModel.Security;
 using System.IdentityModel.Selectors;
 using System.Security.Cryptography.Xml;
 using System.Linq;
-
 #if NETFULL
 using System.IdentityModel.Configuration;
 using System.IdentityModel.Tokens;
