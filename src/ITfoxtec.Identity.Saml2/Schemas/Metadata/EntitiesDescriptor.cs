@@ -96,15 +96,20 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public XmlDocument ToXmlDocument()
         {
-            var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
-
-            envelope.Add(GetXContent());
+            var envelope = ToXElement();
             var xmlDocument = envelope.ToXmlDocument();
             if(MetadataSigningCertificate != null)
             {
                 xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, CertificateIncludeOption, IdAsString, Config.IncludeKeyInfoName);
             }
             return xmlDocument;
+        }
+
+        public XElement ToXElement()
+        {
+            var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
+            envelope.Add(GetXContent());
+            return envelope;
         }
 
         protected IEnumerable<XObject> GetXContent()
