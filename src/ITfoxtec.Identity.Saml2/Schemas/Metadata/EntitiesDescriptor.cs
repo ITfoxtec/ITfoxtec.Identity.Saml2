@@ -96,15 +96,29 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
         public XmlDocument ToXmlDocument()
         {
-            var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
-
-            envelope.Add(GetXContent());
+            var envelope = ToXElement();
             var xmlDocument = envelope.ToXmlDocument();
             if(MetadataSigningCertificate != null)
             {
                 xmlDocument.SignDocument(MetadataSigningCertificate, Config.SignatureAlgorithm, Config.XmlCanonicalizationMethod, CertificateIncludeOption, IdAsString, Config.IncludeKeyInfoName);
             }
             return xmlDocument;
+        }
+
+        /// <summary>
+        /// Creates an unsigned XML element containing the metadata for this group of SAML entities.
+        /// </summary>
+        /// <remarks>
+        /// This method does not sign the metadata, even when a metadata signing certificate is configured.
+        /// Use <see cref="ToXmlDocument"/> to generate an XML document that is signed when a metadata
+        /// signing certificate is configured.
+        /// </remarks>
+        /// <returns>The unsigned metadata XML element.</returns>
+        public XElement ToXElement()
+        {
+            var envelope = new XElement(Saml2MetadataConstants.MetadataNamespaceX + elementName);
+            envelope.Add(GetXContent());
+            return envelope;
         }
 
         protected IEnumerable<XObject> GetXContent()
