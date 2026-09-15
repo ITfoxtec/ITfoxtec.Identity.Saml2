@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 #if NETFULL
 using System.IdentityModel.Tokens;
 #else
@@ -52,6 +53,30 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         /// Metadata is valid until in days from now.
         /// </summary>
         public int? ValidUntil { get; set; }
+
+        /// <summary>
+        /// [Optional]
+        /// Optional attribute indicates how long a metadata consumer should cache this metadata before attempting to re-fetch.
+        /// Value must be an XML Schema duration (https://www.w3.org/TR/xmlschema-2/#duration). Example: P1D, PT12H, P2Y3M.
+        /// Regex used for validation: ^-?P(\d*Y)?(\d*M)?(\d*D)?(T(\d*H)?(\d*M)?(\d*S)?)?$
+        /// Throws <see cref="ArgumentException"/> if set to a non-empty value that does not match the duration pattern.
+        /// </summary>
+        public string CacheDuration
+        {
+            get => _cacheDuration;
+            set
+            {
+                if(!string.IsNullOrEmpty(value) && !CacheDurationRegex.IsMatch(value))
+                {
+                    throw new ArgumentException($"Invalid cacheDuration format. See https://www.w3.org/TR/xmlschema-2/#duration. Value: '{value}'");
+                }
+                _cacheDuration = value;
+            }
+        }
+
+        private string _cacheDuration;
+    // Require at least one date or time component after 'P' using a lookahead. See https://www.w3.org/TR/xmlschema-2/#duration
+    private static readonly Regex CacheDurationRegex = new Regex(@"^-?P(?=\d|T)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$", RegexOptions.Compiled);
 
         /// <summary>
         /// [Optional]
@@ -154,6 +179,10 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             {
                 yield return new XAttribute(Saml2MetadataConstants.Message.ValidUntil, DateTimeOffset.UtcNow.AddDays(ValidUntil.Value).UtcDateTime.ToString(Saml2Constants.DateTimeFormat, CultureInfo.InvariantCulture));
             }
+            if (!string.IsNullOrEmpty(CacheDuration))
+            {
+                yield return new XAttribute(Saml2MetadataConstants.Message.CacheDuration, CacheDuration);
+            }
             yield return new XAttribute(Saml2MetadataConstants.MetadataNamespaceNameX, Saml2MetadataConstants.MetadataNamespace);
 
             if (Extensions != null) 
@@ -208,6 +237,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             Id = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
 
+            CacheDuration = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.CacheDuration].GetValueOrNull<string>();
+
             var idPSsoDescriptorElement = entityDescriptorElement[Saml2MetadataConstants.Message.IdPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
             if (idPSsoDescriptorElement != null)
             {
@@ -235,6 +266,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             EntityId = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.EntityId].GetValueOrNull<string>();
 
             Id = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.Id].GetValueOrNull<Saml2Id>();
+
+            CacheDuration = entityDescriptorElement.Attributes[Saml2MetadataConstants.Message.CacheDuration].GetValueOrNull<string>();
 
             var spSsoDescriptorElement = entityDescriptorElement[Saml2MetadataConstants.Message.SPSsoDescriptor, Saml2MetadataConstants.MetadataNamespace.OriginalString];
             if (spSsoDescriptorElement != null)
