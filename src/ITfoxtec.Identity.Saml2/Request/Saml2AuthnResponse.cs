@@ -326,11 +326,31 @@ namespace ITfoxtec.Identity.Saml2
                 throw new Saml2RequestException("SubjectConfirmationData Not Found.");
             }
 
-            var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset>();
-            if (notOnOrAfter < DateTimeOffset.UtcNow)
+            var notBefore = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotBefore].GetValueOrNull<DateTimeOffset?>();
+            if (notBefore != null && NowIsBefore(notBefore.Value))
+            {
+                throw new Saml2RequestException($"Assertion is not valid yet. Assertion valid NotBefore {notBefore}.");
+            }
+
+            var notOnOrAfter = subjectConfirmationData.Attributes[Schemas.Saml2Constants.Message.NotOnOrAfter].GetValueOrNull<DateTimeOffset?>();
+            if (notOnOrAfter == null)
+            {
+                throw new Saml2RequestException("SubjectConfirmationData NotOnOrAfter Not Found.");
+            }
+            if (NowIsOnOrAfter(notOnOrAfter.Value))
             {
                 throw new Saml2RequestException($"Assertion has expired. Assertion valid NotOnOrAfter {notOnOrAfter}.");
             }
+        }
+
+        private bool NowIsOnOrAfter(DateTimeOffset notOnOrAfter)
+        {
+            return notOnOrAfter < DateTimeOffset.UtcNow.Subtract(Config.ClockSkew);
+        }
+
+        private bool NowIsBefore(DateTimeOffset notBefore)
+        {
+            return notBefore > DateTimeOffset.UtcNow.Add(Config.ClockSkew);
         }
 
 #if NETFULL
