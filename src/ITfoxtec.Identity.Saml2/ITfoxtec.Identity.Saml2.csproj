@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;netstandard2.1;net48;net462</TargetFrameworks>
+    <TargetFrameworks>net11.0;net10.0;net9.0;net8.0;net7.0;net6.0;netstandard2.1;net48;net462</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -15,10 +15,10 @@
     <PackageTags>SAML SAML 2.0 SAML2.0 SAML2 SAML 2 SAML-P SAMLP SSO Identity Provider (IdP) Relying Party (RP) Authentication Metadata OIOSAML OIOSAML 2 OIOSAML 3 NemLogin NemLog-in 2 NemLog-in 3</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageIconUrl>https://www.foxids.com/favicon.ico</PackageIconUrl>
-    <AssemblyVersion>4.21.1</AssemblyVersion>
-    <FileVersion>4.21.1</FileVersion>
+    <AssemblyVersion>4.22.0</AssemblyVersion>
+    <FileVersion>4.22.0</FileVersion>
     <Copyright>Copyright © 2026</Copyright>
-    <Version>4.21.1</Version>
+    <Version>4.22.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ITfoxtec.SAML2.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
@@ -32,10 +32,29 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0'">
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.14" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net11.0'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.23.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.14" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="11.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="10.1.0" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net11.0'">
+    <DefineConstants>NET110;NET</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net11.0|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net11.0|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1573</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.15" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.23.0" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.15" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="10.1.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net10.0'">
@@ -52,9 +71,9 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.22" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.23" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.23.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.22" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.23" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net9.0'">
@@ -91,8 +110,8 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.22.0" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="7.0.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.23.0" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="7.0.3" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="7.0.1" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="6.2.0" />
   </ItemGroup>
@@ -111,7 +130,7 @@
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.1" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.22.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.23.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.2" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="6.2.0" />
   </ItemGroup>
@@ -129,10 +148,9 @@
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
-	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.22.0" />
-    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+	<PackageReference Include="Microsoft.IdentityModel.Tokens.Saml" Version="8.23.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.1" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="10.0.652802" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="10.1.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>NETSTANDARD21;NETSTANDARD</DefineConstants>
@@ -175,7 +193,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
     <Reference Include="mscorlib" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />

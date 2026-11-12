@@ -44,6 +44,7 @@ FoxIDs uses ITfoxtec.Identity.Saml2 for SAML 2.0 protocol handling. The library 
 
 ## Supported frameworks
 
+- .NET 11.0
 - .NET 10.0
 - .NET 9.0
 - .NET 8.0
@@ -53,6 +54,8 @@ FoxIDs uses ITfoxtec.Identity.Saml2 for SAML 2.0 protocol handling. The library 
 - .NET Framework 4.6.2 and 4.8
 
 ## Getting started
+
+Building the solution requires the .NET 11 SDK. The unit tests and the `TestWebAppCore` and `TestIdPCore` samples target .NET 11.
 
 Install the core package:
 

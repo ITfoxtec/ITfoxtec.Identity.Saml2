@@ -32,6 +32,7 @@ The underlying SAML 2.0 implementation supports message signing, signature valid
 
 ## Supported frameworks
 
+- .NET 11.0
 - .NET 10.0
 - .NET 9.0
 - .NET 8.0
