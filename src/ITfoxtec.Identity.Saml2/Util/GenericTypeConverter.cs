@@ -30,7 +30,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             {
                 return GenericConvertValue<T, Saml2Id>(new Saml2Id(value));
             }
-            else if (genericType == typeof(DateTimeOffset))
+            else if (genericType == typeof(DateTimeOffset) || genericType == typeof(DateTimeOffset?))
             {
                 return GenericConvertValue<T, DateTimeOffset>(DateTimeOffset.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal));
             }
