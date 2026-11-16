@@ -1,5 +1,7 @@
 using ITfoxtec.Identity.Saml2.Http;
 using ITfoxtec.Identity.Saml2.Schemas;
+using ITfoxtec.Identity.Saml2.Cryptography;
+using Microsoft.IdentityModel.Tokens.Saml2;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -66,6 +68,38 @@ namespace ITfoxtec.Identity.Saml2.Tests.Bindings
         }
 
         [Theory]
+        [InlineData(false, Saml2AuthnResponseSignTypes.SignResponse)]
+        [InlineData(true, Saml2AuthnResponseSignTypes.SignResponse)]
+        [InlineData(false, Saml2AuthnResponseSignTypes.SignAssertion)]
+        [InlineData(true, Saml2AuthnResponseSignTypes.SignAssertion)]
+        [InlineData(false, Saml2AuthnResponseSignTypes.SignAssertionAndResponse)]
+        [InlineData(true, Saml2AuthnResponseSignTypes.SignAssertionAndResponse)]
+        public void Unbind_AcceptsLegitimateSignedAssertion(bool encryptAssertion, Saml2AuthnResponseSignTypes signType)
+        {
+            using var signingCertificate = CreateCertificate("test-idp");
+            using var encryptionCertificate = CreateCertificate("test-sp");
+            var idpConfig = new Saml2Configuration
+            {
+                Issuer = IdpIssuer,
+                SigningCertificate = signingCertificate,
+                EncryptionCertificate = encryptAssertion ? encryptionCertificate : null,
+                AuthnResponseSignType = signType
+            };
+            var document = new Saml2PostBinding().Bind(CreateResponse(idpConfig, SpIssuer, OriginalSubject)).XmlDocument;
+            var spConfig = CreateSpConfiguration(signingCertificate);
+            if (encryptAssertion)
+            {
+                spConfig.DecryptionCertificates.Add(encryptionCertificate);
+            }
+            var receivedResponse = new Saml2AuthnResponse(spConfig);
+
+            new Saml2PostBinding().Unbind(CreatePostRequest(document), receivedResponse);
+
+            Assert.Equal(OriginalSubject, receivedResponse.NameId.Value);
+            Assert.Equal(OriginalSubject, receivedResponse.ClaimsIdentity.FindFirst(ClaimTypes.Email)?.Value);
+        }
+
+        [Theory]
         [InlineData(false)]
         [InlineData(true)]
         public void Unbind_AcceptsLegitimateResponseSignedAssertion(bool encryptAssertion)
@@ -91,6 +125,113 @@ namespace ITfoxtec.Identity.Saml2.Tests.Bindings
 
             Assert.Equal(OriginalSubject, receivedResponse.NameId.Value);
             Assert.Equal(OriginalSubject, receivedResponse.ClaimsIdentity.FindFirst(ClaimTypes.Email)?.Value);
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Unbind_UsesLegitimateAssertion_WhenUnsignedAssertionIsInsideResponseSignature(bool encryptAssertion)
+        {
+            using var signingCertificate = CreateCertificate("test-idp");
+            using var encryptionCertificate = CreateCertificate("test-sp");
+            var idpConfig = new Saml2Configuration
+            {
+                Issuer = IdpIssuer,
+                SigningCertificate = signingCertificate,
+                EncryptionCertificate = encryptAssertion ? encryptionCertificate : null,
+                AuthnResponseSignType = Saml2AuthnResponseSignTypes.SignAssertionAndResponse
+            };
+            var document = new Saml2PostBinding().Bind(CreateResponse(idpConfig, SpIssuer, OriginalSubject)).XmlDocument;
+            var injectedResponse = CreateResponse(new Saml2Configuration { Issuer = IdpIssuer }, SpIssuer, InjectedSubject);
+            var injectedAssertion = injectedResponse.ToXml().DocumentElement!["Assertion", AssertionNamespace]!;
+            var signatureObject = document.CreateElement("ds", "Object", SignedXml.XmlDsigNamespaceUrl);
+            signatureObject.AppendChild(document.ImportNode(injectedAssertion, true));
+            document.DocumentElement!["Signature", SignedXml.XmlDsigNamespaceUrl]!.AppendChild(signatureObject);
+            var spConfig = CreateSpConfiguration(signingCertificate);
+            if (encryptAssertion)
+            {
+                spConfig.DecryptionCertificates.Add(encryptionCertificate);
+            }
+            var receivedResponse = new Saml2AuthnResponse(spConfig);
+
+            new Saml2PostBinding().Unbind(CreatePostRequest(document), receivedResponse);
+
+            Assert.Equal(OriginalSubject, receivedResponse.NameId.Value);
+            Assert.Equal(OriginalSubject, receivedResponse.ClaimsIdentity.FindFirst(ClaimTypes.Email)?.Value);
+        }
+
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Unbind_AcceptsAssertionWithNestedAdvice(bool encryptAssertion)
+        {
+            using var signingCertificate = CreateCertificate("test-idp");
+            using var encryptionCertificate = CreateCertificate("test-sp");
+            var idpConfig = new Saml2Configuration
+            {
+                Issuer = IdpIssuer,
+                SigningCertificate = signingCertificate,
+                EncryptionCertificate = encryptAssertion ? encryptionCertificate : null,
+                AuthnResponseSignType = Saml2AuthnResponseSignTypes.SignAssertionAndResponse
+            };
+            var response = CreateResponse(idpConfig, SpIssuer, OriginalSubject);
+            response.Saml2SecurityToken.Assertion.Advice = new Saml2Advice();
+            response.Saml2SecurityToken.Assertion.Advice.Assertions.Add(
+                CreateResponse(new Saml2Configuration { Issuer = IdpIssuer }, SpIssuer, "advice@example.test").Saml2SecurityToken.Assertion);
+            var document = new Saml2PostBinding().Bind(response).XmlDocument;
+            var spConfig = CreateSpConfiguration(signingCertificate);
+            if (encryptAssertion)
+            {
+                spConfig.DecryptionCertificates.Add(encryptionCertificate);
+            }
+            var receivedResponse = new Saml2AuthnResponse(spConfig);
+
+            new Saml2PostBinding().Unbind(CreatePostRequest(document), receivedResponse);
+
+            Assert.Equal(OriginalSubject, receivedResponse.NameId.Value);
+            Assert.Single(receivedResponse.Saml2SecurityToken.Assertion.Advice.Assertions);
+        }
+
+        [Theory]
+        [InlineData("nested")]
+        [InlineData("wrong-namespace")]
+        [InlineData("duplicate")]
+        public void Unbind_RejectsResponseWithoutExactlyOneDirectSamlAssertion(string structure)
+        {
+            using var signingCertificate = CreateCertificate("test-idp");
+            var document = CreateResponse(new Saml2Configuration { Issuer = IdpIssuer }, SpIssuer, OriginalSubject).ToXml();
+            var root = document.DocumentElement!;
+            var assertion = root["Assertion", AssertionNamespace]!;
+            switch (structure)
+            {
+                case "nested":
+                    root.RemoveChild(assertion);
+                    var wrapper = document.CreateElement("Wrapper", "urn:test:wrapper");
+                    wrapper.AppendChild(assertion);
+                    root.AppendChild(wrapper);
+                    break;
+                case "wrong-namespace":
+                    var wrongNamespaceAssertion = document.CreateElement("other", "Assertion", "urn:test:other");
+                    wrongNamespaceAssertion.InnerXml = assertion.InnerXml;
+                    root.ReplaceChild(wrongNamespaceAssertion, assertion);
+                    break;
+                case "duplicate":
+                    var duplicate = (XmlElement)assertion.CloneNode(true);
+                    duplicate.SetAttribute("ID", "_duplicate");
+                    root.AppendChild(duplicate);
+                    break;
+            }
+
+            // Sign after changing the structure so rejection cannot be caused by a broken response signature.
+            var signedXml = new Saml2SignedXml(root, signingCertificate,
+                Saml2SecurityAlgorithms.RsaSha256Signature, SignedXml.XmlDsigExcC14NTransformUrl);
+            signedXml.ComputeSignature(X509IncludeOption.EndCertOnly, root.GetAttribute("ID"), false);
+            root.InsertAfter(document.ImportNode(signedXml.GetXml(), true), root["Issuer", AssertionNamespace]);
+
+            Assert.Throws<Saml2RequestException>(() =>
+                new Saml2PostBinding().Unbind(CreatePostRequest(document), new Saml2AuthnResponse(CreateSpConfiguration(signingCertificate))));
         }
 
         private static Saml2AuthnResponse CreateResponse(Saml2Configuration config, string audience, string subject)

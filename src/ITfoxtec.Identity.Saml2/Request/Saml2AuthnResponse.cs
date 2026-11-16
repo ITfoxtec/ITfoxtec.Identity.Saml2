@@ -291,14 +291,16 @@ namespace ITfoxtec.Identity.Saml2
 
         protected XmlElement GetAssertionElementReference()
         {
-            // Select all Assertion elements in the document that are at the top of their respective Assertion hierarchy.
-            // If the document contains <Assertion><Assertion></Assertion></Assertion> only the outer (hierarchical parent) Assertion is selected.
-            var assertionElements = XmlDocument.DocumentElement.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']/ancestor-or-self::*[local-name()='{Schemas.Saml2Constants.Message.Assertion}'][last()]");
+            // Only consume a direct SAML Assertion, never one inside a Signature or another wrapper.
+            var assertionElements = XmlDocument.DocumentElement.ChildNodes.OfType<XmlElement>()
+                .Where(element => element.LocalName == Schemas.Saml2Constants.Message.Assertion &&
+                    element.NamespaceURI == Schemas.Saml2Constants.AssertionNamespace.OriginalString)
+                .ToList();
             if (assertionElements.Count != 1)
             {
-                throw new Saml2RequestException("There is not exactly one Assertion element. Maybe the response is encrypted (set the Saml2Configuration.DecryptionCertificate).");
+                throw new Saml2RequestException("There is not exactly one direct SAML Assertion element. Maybe the response is encrypted (set the Saml2Configuration.DecryptionCertificates).");
             }
-            return assertionElements[0] as XmlElement;
+            return assertionElements[0];
         }
 
         private void ValidateAssertionSubject(XmlNode assertionElement)
@@ -368,7 +370,8 @@ namespace ITfoxtec.Identity.Saml2
                     try
                     {
                         new Saml2EncryptedXml(XmlDocument, decryptionCertificate.GetSamlRSAPrivateKey()).DecryptDocument();
-                        // Stop the look when the message successfully decrypted.
+                        ReplaceDecryptedAssertions();
+                        // Stop the loop when the message successfully decrypted.
                         return;
                     }
                     catch (Exception e)
@@ -380,6 +383,32 @@ namespace ITfoxtec.Identity.Saml2
 #if DEBUG
                 Debug.WriteLine("Saml2P (Decrypted): " + XmlDocument.OuterXml);
 #endif
+            }
+        }
+
+        private void ReplaceDecryptedAssertions()
+        {
+            // DecryptDocument replaces EncryptedData but leaves its EncryptedAssertion wrapper.
+            // Only promote assertions from wrappers that are direct children of the Response.
+            var encryptedAssertionElements = XmlDocument.DocumentElement.ChildNodes.OfType<XmlElement>()
+                .Where(element => element.LocalName == Schemas.Saml2Constants.Message.EncryptedAssertion &&
+                    element.NamespaceURI == Schemas.Saml2Constants.AssertionNamespace.OriginalString)
+                .ToList();
+
+            foreach (var encryptedAssertionElement in encryptedAssertionElements)
+            {
+                var assertionElements = encryptedAssertionElement.ChildNodes.OfType<XmlElement>()
+                    .Where(element => element.LocalName == Schemas.Saml2Constants.Message.Assertion &&
+                        element.NamespaceURI == Schemas.Saml2Constants.AssertionNamespace.OriginalString)
+                    .ToList();
+                if (assertionElements.Count != 1)
+                {
+                    throw new Saml2RequestException("There is not exactly one SAML Assertion element in the decrypted EncryptedAssertion.");
+                }
+
+                var assertionElement = assertionElements[0];
+                encryptedAssertionElement.RemoveChild(assertionElement);
+                XmlDocument.DocumentElement.ReplaceChild(assertionElement, encryptedAssertionElement);
             }
         }
 
