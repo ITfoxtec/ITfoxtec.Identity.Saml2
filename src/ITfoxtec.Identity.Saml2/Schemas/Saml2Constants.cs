@@ -92,6 +92,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas
 
             public const string EncryptedAssertion = "EncryptedAssertion";
 
+            internal const string EncryptedData = "EncryptedData";
+
             public const string Protocol = "Protocol";
 
             public const string AuthnRequest = "AuthnRequest";
