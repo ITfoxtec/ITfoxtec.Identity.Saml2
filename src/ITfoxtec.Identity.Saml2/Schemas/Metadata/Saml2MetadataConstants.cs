@@ -63,6 +63,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             public const string ValidUntil = "validUntil";
             
+            public const string CacheDuration = "cacheDuration";
+            
             public const string ContactType = "contactType";
 
             public const string Company = "Company";
