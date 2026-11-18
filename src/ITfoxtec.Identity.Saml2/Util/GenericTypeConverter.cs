@@ -84,7 +84,7 @@ namespace ITfoxtec.Identity.Saml2.Util
             {
                 return GenericConvertValue<T, RequestedAuthnContext>(new RequestedAuthnContext
                 {
-                    AuthnContextClassRef = GetAuthnContextClassRef(xmlNode.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.AuthnContextClassRef}']")),
+                    AuthnContextClassRef = ReadChildValues(xmlNode, Schemas.Saml2Constants.Message.AuthnContextClassRef, Schemas.Saml2Constants.AssertionNamespace),
                     Comparison = ConvertValue<AuthnContextComparisonTypes>(xmlNode.Attributes[Schemas.Saml2Constants.Message.Comparison]?.Value, xmlNode),
                 });
             }
@@ -92,7 +92,8 @@ namespace ITfoxtec.Identity.Saml2.Util
             {
                 return GenericConvertValue<T, Scoping>(new Scoping
                 {
-                    RequesterID = GetAuthnContextClassRef(xmlNode.SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.RequesterID}']")),
+                    // Earlier versions wrote direct RequesterID children without a namespace.
+                    RequesterID = ReadChildValues(xmlNode, Schemas.Saml2Constants.Message.RequesterID, Schemas.Saml2Constants.ProtocolNamespace, allowUnqualified: true),
                 });
             }
             else
@@ -101,14 +102,19 @@ namespace ITfoxtec.Identity.Saml2.Util
             }
         }
 
-        private static IEnumerable<string> GetAuthnContextClassRef(XmlNodeList xmlNodes)
+        private static IEnumerable<string> ReadChildValues(XmlNode parent, string localName, Uri namespaceUri, bool allowUnqualified = false)
         {
-            foreach (XmlNode xmlNode in xmlNodes)
+            foreach (XmlNode child in parent.ChildNodes)
             {
-                if(!string.IsNullOrWhiteSpace(xmlNode?.InnerText))
+                if (child is XmlElement && child.LocalName == localName &&
+                    (child.NamespaceURI == namespaceUri.OriginalString || (allowUnqualified && child.NamespaceURI.Length == 0)))
                 {
-                    yield return ConvertValue<string>(xmlNode?.InnerText?.Trim(), xmlNode);
-                }                
+                    var value = child.InnerText.Trim();
+                    if (value.Length > 0)
+                    {
+                        yield return value;
+                    }
+                }
             }
         }
 

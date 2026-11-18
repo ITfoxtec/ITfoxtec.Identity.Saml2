@@ -140,11 +140,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             ReadKeyDescriptors(xmlElement);
 
-            var assertionConsumerServicesElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.AssertionConsumerService}']");
-            if (assertionConsumerServicesElements != null)
-            {
-                AssertionConsumerServices = ReadAcsService(assertionConsumerServicesElements);
-            }
+            var assertionConsumerServicesElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.AssertionConsumerService}");
+            AssertionConsumerServices = ReadAcsService(assertionConsumerServicesElements);
 
             ReadArtifactResolutionService(xmlElement);
 

@@ -122,11 +122,8 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
 
             ReadKeyDescriptors(xmlElement);
 
-            var singleSignOnServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleSignOnService}']");
-            if (singleSignOnServiceElements != null)
-            {
-                SingleSignOnServices = ReadServices<SingleSignOnService>(singleSignOnServiceElements);
-            }
+            var singleSignOnServiceElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.SingleSignOnService}");
+            SingleSignOnServices = ReadServices<SingleSignOnService>(singleSignOnServiceElements);
 
             ReadArtifactResolutionService(xmlElement);
 

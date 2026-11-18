@@ -92,8 +92,8 @@ namespace ITfoxtec.Identity.Saml2
                         var saml2ArtifactResponse = new Saml2ArtifactResponse(saml2ArtifactResolve.Config, saml2Request);
                         SetSignatureValidationCertificates(saml2ArtifactResponse);
                         var xml = FromSoapXml(result);
-                        saml2ArtifactResponse.Read(xml, false, false); 
-                        if (saml2ArtifactResponse.Status == Saml2StatusCodes.Success && 
+                        saml2ArtifactResponse.Read(xml, false, false);
+                        if (saml2ArtifactResponse.Status == Saml2StatusCodes.Success &&
                             (saml2Request is Saml2AuthnResponse saml2AuthnResponse ? saml2AuthnResponse.Status == Saml2StatusCodes.Success : true))
                         {
                             saml2ArtifactResponse.Read(xml, saml2ArtifactResponse.SignatureValidationCertificates?.Count() > 0, true);
@@ -125,31 +125,23 @@ namespace ITfoxtec.Identity.Saml2
         {
             var xmlDoc = xml.ToXmlDocument();
 
-            var bodyList = GetNodesByLocalName(xmlDoc.DocumentElement, "Body");
-            if (bodyList.Count != 1)
+            var envelope = xmlDoc.DocumentElement;
+            var soapNamespace = Saml2Constants.SoapEnvironmentNamespace.OriginalString;
+            if (envelope.LocalName != Saml2Constants.Message.Envelope || envelope.NamespaceURI != soapNamespace)
             {
-                throw new Exception("There is not exactly one Body element.");
+                throw new Saml2RequestException("Expected a SOAP Envelope.");
             }
 
-            var faultBody = GetNodeByLocalName(bodyList[0], "Fault");
+            var body = envelope.GetRequiredChild(Saml2Constants.Message.Body, soapNamespace);
+            var faultBody = body["Fault", soapNamespace];
             if (faultBody != null)
             {
-                var faultCode = GetNodeByLocalName(faultBody, "faultcode");
-                var faultString = GetNodeByLocalName(faultBody, "faultstring");
+                var faultCode = faultBody["faultcode", string.Empty]?.InnerText;
+                var faultString = faultBody["faultstring", string.Empty]?.InnerText;
                 throw new Saml2RequestException("SAML 2.0 Artifact SOAP error: " + faultCode + "\n" + faultString);
             }
 
-            return bodyList[0].InnerXml;
-        }
-
-        private XmlNodeList GetNodesByLocalName(XmlNode xe, string localName)
-        {
-            return xe.SelectNodes(string.Format("//*[local-name()='{0}']", localName));
-        }
-
-        private XmlNode GetNodeByLocalName(XmlNode xe, string localName)
-        {
-            return xe.SelectSingleNode(string.Format("//*[local-name()='{0}']", localName));
+            return body.InnerXml;
         }
     }
 }

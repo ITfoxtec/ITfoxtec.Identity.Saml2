@@ -109,46 +109,38 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
             return keyDescriptorElement;
         }
 
+        internal static XmlNodeList SelectMetadataNodes(XmlElement parent, string path)
+        {
+            var namespaces = new XmlNamespaceManager(parent.OwnerDocument.NameTable);
+            namespaces.AddNamespace("md", Saml2MetadataConstants.MetadataNamespace.OriginalString);
+            return parent.SelectNodes(path, namespaces);
+        }
+
         protected void ReadKeyDescriptors(XmlElement xmlElement)
         {
-            var signingKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Signing}') or not(@use)]");
-            if (signingKeyDescriptorElements != null)
-            {
-                SigningCertificates = ReadKeyDescriptorElements(signingKeyDescriptorElements);
-            }
+            var signingKeyDescriptorElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.KeyDescriptor}[@use='{Saml2MetadataConstants.KeyTypes.Signing}' or not(@use)]");
+            SigningCertificates = ReadKeyDescriptorElements(signingKeyDescriptorElements);
 
-            var encryptionKeyDescriptorElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.KeyDescriptor}'][contains(@use,'{Saml2MetadataConstants.KeyTypes.Encryption}') or not(@use)]");
-            if (encryptionKeyDescriptorElements != null)
-            {
-                EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
-            }
+            var encryptionKeyDescriptorElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.KeyDescriptor}[@use='{Saml2MetadataConstants.KeyTypes.Encryption}' or not(@use)]");
+            EncryptionCertificates = ReadKeyDescriptorElements(encryptionKeyDescriptorElements);
         }
 
         protected void ReadSingleLogoutService(XmlElement xmlElement)
         {
-            var singleLogoutServiceElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.SingleLogoutService}']");
-            if (singleLogoutServiceElements != null)
-            {
-                SingleLogoutServices = ReadServices<SingleLogoutService>(singleLogoutServiceElements);
-            }
+            var singleLogoutServiceElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.SingleLogoutService}");
+            SingleLogoutServices = ReadServices<SingleLogoutService>(singleLogoutServiceElements);
         }
 
         protected void ReadArtifactResolutionService(XmlElement xmlElement)
         {
-            var artifactResolutionElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.ArtifactResolutionService}']");
-            if (artifactResolutionElements != null)
-            {
-                ArtifactResolutionServices = ReadServices<ArtifactResolutionService>(artifactResolutionElements);
-            }
+            var artifactResolutionElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.ArtifactResolutionService}");
+            ArtifactResolutionServices = ReadServices<ArtifactResolutionService>(artifactResolutionElements);
         }
 
         protected void ReadNameIDFormat(XmlElement xmlElement)
         {
-            var nameIDFormatElements = xmlElement.SelectNodes($"*[local-name()='{Saml2MetadataConstants.Message.NameIDFormat}']");
-            if (nameIDFormatElements != null)
-            {
-                NameIDFormats = ReadNameIDFormatElements(nameIDFormatElements);
-            }
+            var nameIDFormatElements = SelectMetadataNodes(xmlElement, $"md:{Saml2MetadataConstants.Message.NameIDFormat}");
+            NameIDFormats = ReadNameIDFormatElements(nameIDFormatElements);
         }
 
         protected IEnumerable<Uri> ReadNameIDFormatElements(XmlNodeList nameIDFormatElements)
@@ -163,7 +155,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas.Metadata
         {
             foreach (XmlElement keyDescriptorElement in keyDescriptorElements)
             {
-                var keyInfoElement = keyDescriptorElement.SelectSingleNode($"*[local-name()='{Saml2MetadataConstants.Message.KeyInfo}']") as XmlElement;
+                var keyInfoElement = keyDescriptorElement[Saml2MetadataConstants.Message.KeyInfo, SignedXml.XmlDsigNamespaceUrl];
                 if (keyInfoElement != null)
                 {
                     var keyInfo = new KeyInfo();
