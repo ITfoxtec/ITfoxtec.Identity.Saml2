@@ -8,6 +8,7 @@ using System.Security.Cryptography.Xml;
 using System.Linq;
 #if NETFULL
 using System.IdentityModel.Configuration;
+using System.IdentityModel.Tokens;
 #else
 using Microsoft.IdentityModel.Tokens;
 #endif
@@ -112,5 +113,14 @@ namespace ITfoxtec.Identity.Saml2
         /// Include key info name in signature.
         /// </summary>
         public bool IncludeKeyInfoName { get; set; }
+
+        /// <summary>
+        /// Allowed clock skew for time validation in seconds. Default is 300 seconds.
+        /// </summary>
+#if NETFRAMEWORK
+        public TimeSpan ClockSkew { get; set; } = SecurityTokenHandlerConfiguration.DefaultMaxClockSkew;
+#else
+        public TimeSpan ClockSkew { get; set; } = TokenValidationParameters.DefaultClockSkew;
+#endif
     }
 }
