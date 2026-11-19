@@ -69,49 +69,24 @@ namespace ITfoxtec.Identity.Saml2
             }
         }
 
-        XmlElement assertionElementCache = null;
         protected override XmlElement GetAssertionElement()
         {
-            if (assertionElementCache == null)
+            if (Status != Schemas.Saml2StatusCodes.Success || !(InnerRequest is Saml2AuthnResponse))
             {
-                if (Status == Schemas.Saml2StatusCodes.Success && InnerRequest is Saml2AuthnResponse)
-                {
+                return null;
+            }
+
+            var assertion = GetInnerArtifactElementXml().GetRequiredChild(Schemas.Saml2Constants.Message.Assertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString);
 #if NETFULL || NETSTANDARD || NETCORE || NET50 || NET60
-                    assertionElementCache = GetAssertionElementReference().ToXmlDocument().DocumentElement;
+            return assertion.ToXmlDocument().DocumentElement;
 #else
-                    assertionElementCache = GetAssertionElementReference();
+            return assertion;
 #endif
-                }
-            }
-            return assertionElementCache;
         }
 
-        private XmlElement GetAssertionElementReference()
+        private XmlElement GetInnerArtifactElementXml()
         {
-            // Select all Assertion elements in the document that are at the top of their respective Assertion hierarchy.
-            // If the document contains <Assertion><Assertion></Assertion></Assertion> only the outer (hierarchical parent) Assertion is selected.
-            var assertionElements = GetInnerArtifactElementXml().SelectNodes($"//*[local-name()='{Schemas.Saml2Constants.Message.Assertion}']/ancestor-or-self::*[local-name()='{Schemas.Saml2Constants.Message.Assertion}'][last()]");
-            if (assertionElements.Count != 1)
-            {
-                throw new Saml2RequestException("There is not exactly one Assertion element in the inner Artifact element.");
-            }
-            return assertionElements[0] as XmlElement;
-        }
-
-        XmlNode innerArtifactElementCache = null;
-        private XmlNode GetInnerArtifactElementXml()
-        {
-            if (innerArtifactElementCache == null)
-            {
-                var innerElements = XmlDocument.DocumentElement.SelectNodes(string.Format("//*[local-name()='{0}']", InnerRequest.ElementName));
-                if (innerElements?.Count != 1)
-                {
-                    throw new Saml2RequestException("There is not exactly one inner artifact element.");
-                }
-                innerArtifactElementCache = innerElements[0];
-            }
-
-            return innerArtifactElementCache;
+            return XmlDocument.DocumentElement.GetRequiredChild(InnerRequest.ElementName, Schemas.Saml2Constants.ProtocolNamespace.OriginalString);
         }
     }
 }

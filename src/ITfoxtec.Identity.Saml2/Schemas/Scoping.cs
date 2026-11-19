@@ -44,7 +44,7 @@ namespace ITfoxtec.Identity.Saml2.Schemas
             {
                 foreach (var item in RequesterID)
                 {
-                    yield return new XElement(Saml2Constants.Message.RequesterID, item);
+                    yield return new XElement(Saml2Constants.ProtocolNamespaceX + Saml2Constants.Message.RequesterID, item);
                 }
             }
 

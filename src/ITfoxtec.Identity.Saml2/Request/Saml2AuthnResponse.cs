@@ -387,13 +387,11 @@ namespace ITfoxtec.Identity.Saml2
                     .ToList();
                 foreach (var encryptedAssertionElement in encryptedAssertionElements)
                 {
-                    if (encryptedAssertionElement.ChildNodes.OfType<XmlElement>()
-                        .Count(element => element.LocalName == Schemas.Saml2Constants.Message.EncryptedData && element.NamespaceURI == EncryptedXml.XmlEncNamespaceUrl) != 1 ||
-                        encryptedAssertionElement.ChildNodes.OfType<XmlElement>()
-                        .Any(element => element.LocalName == Schemas.Saml2Constants.Message.Assertion &&
-                            element.NamespaceURI == Schemas.Saml2Constants.AssertionNamespace.OriginalString))
+                    const string invalidEncryptedAssertion = "An EncryptedAssertion must contain exactly one EncryptedData element.";
+                    encryptedAssertionElement.GetRequiredChild(Schemas.Saml2Constants.Message.EncryptedData, EncryptedXml.XmlEncNamespaceUrl, invalidEncryptedAssertion);
+                    if (encryptedAssertionElement[Schemas.Saml2Constants.Message.Assertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString] != null)
                     {
-                        throw new Saml2RequestException("An EncryptedAssertion must contain exactly one EncryptedData element.");
+                        throw new Saml2RequestException(invalidEncryptedAssertion);
                     }
                 }
 
@@ -423,21 +421,9 @@ namespace ITfoxtec.Identity.Saml2
         {
             // DecryptDocument replaces EncryptedData but leaves its EncryptedAssertion wrapper.
             // Retain those wrappers: moving an assertion can change namespaces covered by its signature.
-            var decryptedAssertionElements = new List<XmlElement>();
-            foreach (var encryptedAssertionElement in encryptedAssertionElements)
-            {
-                var assertionElements = encryptedAssertionElement.ChildNodes.OfType<XmlElement>()
-                    .Where(element => element.LocalName == Schemas.Saml2Constants.Message.Assertion &&
-                        element.NamespaceURI == Schemas.Saml2Constants.AssertionNamespace.OriginalString)
-                    .ToList();
-                if (assertionElements.Count != 1)
-                {
-                    throw new Saml2RequestException("There is not exactly one SAML Assertion element in the decrypted EncryptedAssertion.");
-                }
-
-                decryptedAssertionElements.Add(assertionElements[0]);
-            }
-            return decryptedAssertionElements;
+            return encryptedAssertionElements.Select(element => element.GetRequiredChild(
+                Schemas.Saml2Constants.Message.Assertion, Schemas.Saml2Constants.AssertionNamespace.OriginalString,
+                "There is not exactly one SAML Assertion element in the decrypted EncryptedAssertion.")).ToList();
         }
 
         protected internal void EncryptMessage()
